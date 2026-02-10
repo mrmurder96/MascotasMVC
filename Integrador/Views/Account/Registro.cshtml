@@ -1,0 +1,123 @@
+﻿@model Integrador.Models.ViewModels.RegistroViewModel
+
+@{
+    ViewBag.Title = "Registro";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #ffffff); /* Fondo suave */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card-registro {
+        max-width: 500px;
+        margin: 3rem auto;
+        padding: 2rem;
+        border-radius: 1rem;
+        background-color: #ffffffcc; /* Fondo semi-transparente */
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+        .card-registro h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #28a745;
+            font-weight: 700;
+        }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .btn-registro {
+        background-color: #28a745;
+        color: white;
+        font-weight: 600;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+        .btn-registro:hover {
+            background-color: #218838;
+        }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+    a.back-link {
+        display: block;
+        margin-top: 1rem;
+        text-align: center;
+        color: #28a745;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        a.back-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="card-registro">
+    <h2>Registro</h2>
+
+    @using (Html.BeginForm("Registro", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @* Mostrar errores de propiedad también (usar false) *@
+        @Html.ValidationSummary(false, "", new { @class = "text-danger mb-3" })
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Nombres)
+            @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tus nombres" } })
+            @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Apellidos)
+            @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tus apellidos" } })
+            @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Email)
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tu correo" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Password)
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tu contraseña" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.ConfirmPassword)
+            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Confirma tu contraseña" } })
+            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fotos (JPG/PNG) — selecciona al menos una</label>
+            <input type="file" name="Fotos" accept=".jpg,.jpeg,.png" multiple class="form-control" />
+            <small class="form-text text-muted">Máx 2 MB por imagen. Puedes subir varias imágenes.</small>
+
+            @* Mostrar mensaje de validación asociado a la clave "Fotos" *@
+            @Html.ValidationMessage("Fotos", "", new { @class = "text-danger" })
+        </div>
+
+        <div class="d-grid mt-3">
+            <input type="submit" value="Registrarse" class="btn btn-registro" />
+        </div>
+    }
+
+    <a href="@Url.Action("Index", "Home")" class="back-link">Volver al inicio</a>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

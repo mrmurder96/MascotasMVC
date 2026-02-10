@@ -1,0 +1,51 @@
+@model IEnumerable<Integrador.Models.UsuarioImagen>
+
+@{
+    ViewBag.Title = "Mis imágenes";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Mis imágenes</h3>
+        <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-secondary">Volver al perfil</a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">No tienes imágenes subidas.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var img in Model)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <img src="@Url.Action("ObtenerImagen", "Account", new { id = img.Id })" class="card-img-top" style="height:180px; object-fit:cover;" alt="@img.NombreArchivo" />
+                        <div class="card-body p-2">
+                            <p class="small mb-2 text-truncate" title="@img.NombreArchivo">@img.NombreArchivo</p>
+
+                            <div class="d-flex">
+                                @using (Html.BeginForm("EstablecerPerfil", "Account", FormMethod.Post, new { @style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@img.Id" />
+                                    <button class="btn btn-sm btn-success w-100" type="submit">Usar como perfil</button>
+                                }
+                                @using (Html.BeginForm("EliminarImagen", "Account", FormMethod.Post, new { @style = "display:inline; margin-left:6px;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@img.Id" />
+                                    <button class="btn btn-sm btn-danger w-100" type="submit" onclick="return confirm('¿Eliminar imagen?');">Eliminar</button>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted small p-2">
+                            @img.FechaSubida.ToString("g")
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

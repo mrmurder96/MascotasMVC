@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "Perfil usuario♥";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f0f4f8, #d9f0e7);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .welcome-card {
+        background-color: #ffffffcc;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+        .welcome-card h2 {
+            color: #28a745;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-card p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .card-option {
+        background-color: #ffffffcc;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 160px;
+    }
+
+        .card-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-option h3 {
+            color: #28a745;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-option p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+    /* Mini juego */
+    #game-container {
+        display: none;
+        background-color: #ffffffcc;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+        #game-container input {
+            width: 80px;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 0.3rem;
+            border: 1px solid #ccc;
+        }
+
+        #game-container button {
+            background-color: #28a745;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            #game-container button:hover {
+                background-color: #218838;
+            }
+
+    #game-message {
+        margin-top: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Estilos para mensajes flash */
+    .alert {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="welcome-card">
+        <h2>Perfil Usuario ♥</h2>
+        <p>Bienvenido @Session["Nombre"]</p>
+    </div>
+
+    <div class="options-grid">
+        <a href="@Url.Action("Perfil", "Ciudadano")" class="card-option" title="Mi Información">
+            <h3>Mi Información</h3>
+            <p>Visualiza y actualiza tus datos personales y foto de perfil.</p>
+        </a>
+
+        <a href="@Url.Action("Notificaciones", "Ciudadano")" class="card-option" title="Notificaciones">
+            <h3>Notificaciones</h3>
+            <p>Revisa las notificaciones y recordatorios importantes.</p>
+        </a>
+
+        <div class="card-option" onclick="showGame()" role="button" title="Mini Juego" tabindex="0" onkeypress="if(event.key==='Enter') showGame();">
+            <h3>Mini Juego</h3>
+            <p>¡Juega a adivinar el número y diviértete!</p>
+        </div>
+
+        <a href="@Url.Action("Imagenes", "Account")" class="card-option" title="Mis Imágenes">
+            <h3>Mis Imágenes</h3>
+            <p>Gestiona tus fotos: ver, eliminar y elegir foto de perfil.</p>
+        </a>
+
+        <a href="@Url.Action("Centros", "Ciudadano")" class="card-option" title="Centros de adopción">
+            <h3>Centros de adopción</h3>
+            <p>Ver centros en el mapa y seleccionar uno como tu centro preferido.</p>
+        </a>
+
+        <a href="@Url.Action("Index", "Mascotas")" class="card-option" title="Mascotas disponibles">
+            <h3>Mascotas disponibles</h3>
+            <p>Explora las mascotas que puedes adoptar — ver detalles y solicitar adopción.</p>
+        </a>
+
+        <a href="@Url.Action("Index", "Campanas")" class="card-option" title="Campañas">
+            <h3>Campañas</h3>
+            <p>Participa en nuestras campañas activas.</p>
+        </a>
+
+        <a href="@Url.Action("Logout", "Account")" class="card-option" title="Cerrar sesión">
+            <h3>Cerrar sesión</h3>
+            <p>Salir de tu cuenta de forma segura.</p>
+        </a>
+
+        <a href="@Url.Action("Soporte", "Home")" class="card-option" title="Soporte">
+            <h3>Soporte</h3>
+            <p>Contacta con el soporte para asistencia rápida.</p>
+        </a>
+    </div>
+
+    @* Mensajes flash *@
+    @if (TempData["AdopcionSuccess"] != null) {
+        <div class="alert alert-success mt-3">@TempData["AdopcionSuccess"]</div>
+    }
+    @if (TempData["AdopcionWarning"] != null) {
+        <div class="alert alert-warning mt-3">@TempData["AdopcionWarning"]</div>
+    }
+
+    @* Mostrar las solicitudes del usuario (partial action) *@
+    @Html.Action("MySolicitudes", "Adopciones")
+
+    <!-- Mini juego -->
+    <div id="game-container">
+        <h3>Juego: Adivina el Número</h3>
+        <p>Ingresa un número entre 1 y 20:</p>
+        <input type="number" id="guess" min="1" max="20" />
+        <button onclick="checkGuess()">Probar</button>
+        <div id="game-message"></div>
+        <button style="margin-top:1rem;" onclick="restartGame()">Reiniciar Juego</button>
+    </div>
+</div>
+
+<script>
+    let randomNumber = Math.floor(Math.random() * 20) + 1;
+
+    function showGame() {
+        document.getElementById('game-container').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('game-container').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function checkGuess() {
+        const guess = parseInt(document.getElementById('guess').value);
+        const message = document.getElementById('game-message');
+
+        if (isNaN(guess) || guess < 1 || guess > 20) {
+            message.textContent = "Ingresa un número válido entre 1 y 20.";
+            return;
+        }
+
+        if (guess === randomNumber) {
+            message.textContent = "🎉 ¡Felicidades! Adivinaste el número.";
+        } else if (guess < randomNumber) {
+            message.textContent = "⬆️ Muy bajo. Intenta un número mayor.";
+        } else {
+            message.textContent = "⬇️ Muy alto. Intenta un número menor.";
+        }
+    }
+
+    function restartGame() {
+        randomNumber = Math.floor(Math.random() * 20) + 1;
+        document.getElementById('game-message').textContent = '';
+        document.getElementById('guess').value = '';
+    }
+</script>

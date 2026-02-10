@@ -1,0 +1,63 @@
+@model IEnumerable<Integrador.Models.Notificacion>
+
+@{
+    ViewBag.Title = "Notificaciones";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="@Url.Action("Index", "Ciudadano")" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="@Url.Action("Perfil", "Ciudadano")" class="list-group-item list-group-item-action">Mi Perfil</a>
+                <a href="@Url.Action("Notificaciones", "Ciudadano")" class="list-group-item list-group-item-action active">Notificaciones</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h3>Notificaciones</h3>
+
+            @if (TempData["NotificacionesError"] != null)
+            {
+                <div class="alert alert-danger">@TempData["NotificacionesError"]</div>
+            }
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info">No tienes notificaciones.</div>
+            }
+            else
+            {
+                <div class="list-group">
+                    @foreach (var n in Model)
+                    {
+                        var itemClass = n.Leido ? "list-group-item" : "list-group-item list-group-item-action list-group-item-warning";
+                        <div class="@itemClass mb-2">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@n.Titulo</h5>
+                                <small>@n.Fecha.ToString("g")</small>
+                            </div>
+                            <p class="mb-1">@n.Mensaje</p>
+
+                            <div>
+                                @using (Html.BeginForm("MarcarLeida", "Ciudadano", FormMethod.Post, new { @style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@n.Id" />
+                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "")>Marcar como leída</button>
+                                }
+
+                                @using (Html.BeginForm("EliminarNotificacion", "Ciudadano", FormMethod.Post, new { @style = "display:inline; margin-left:8px;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@n.Id" />
+                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('¿Eliminar notificación?');">Eliminar</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            @if (Session["UsuarioId"] != null)
+            {
+                @Html.ActionLink("Pura Compañia ♥", "Index", "Ciudadano", new { area = "" }, new { @class = "navbar-brand" })
+            }
+            else
+            {
+                @Html.ActionLink("Pura Compañia ♥", "Inicio", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            }
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Centros", "Ciudadano")">Centros</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @if (Session["UsuarioId"] != null)
+                    {
+                        @* Enlace para administradores *@
+                        if (Session["Rol"] != null && Session["Rol"].ToString() == "Administrador")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Admin", new { area = "Admin" })">Admin</a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Ciudadano")">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Perfil", "Ciudadano")">Mi Perfil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout", "Account")">Cerrar sesión</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-success me-2" href="@Url.Action("Login", "Account")">Iniciar Sesión</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="@Url.Action("Registro", "Account")">Registrarse</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    @* Mostrar contenido público (adopción, animales) sólo si NO hay sesión iniciada *@
+    @if (Session["UsuarioId"] == null)
+    {
+        <hr class="my-5" />
+
+        <!-- POR QUÉ ADOPTAR -->
+        <div class="row text-center">
+            <div class="col-md-4">
+                <h4 class="text-success">🐶 Salvas una vida</h4>
+                <p>
+                    Miles de animales esperan una segunda oportunidad.
+                    Adoptar cambia su destino.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h4 class="text-success">🏠 Ganas un compañero</h4>
+                <p>
+                    Las mascotas adoptadas crean vínculos fuertes y sinceros.
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h4 class="text-success">❤️ Amor verdadero</h4>
+                <p>
+                    No compres, adopta y construye una historia llena de amor.
+                </p>
+            </div>
+        </div>
+
+        <hr class="my-5" id="adopcion" />
+
+        <!-- ANIMALES EN ADOPCIÓN -->
+        <h2 class="text-center text-success mb-4">
+            Animales disponibles para adopción
+        </h2>
+        <div class="row">
+            <!-- Animal 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="https://place-puppy.com/300x200" class="card-img-top" alt="Mascota">
+                    <div class="card-body">
+                        <h5 class="card-title">Luna</h5>
+                        <p class="card-text">
+                            🐶 Perro <br />
+                            📅 2 años <br />
+                            💉 Vacunada <br />
+                            😊 Juguetona
+                        </p>
+                        <button class="btn btn-outline-success w-100" disabled>
+                            Inicia sesión para adoptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Animal 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="https://placekitten.com/300/200" class="card-img-top" alt="Mascota">
+                    <div class="card-body">
+                        <h5 class="card-title">Milo</h5>
+                        <p class="card-text">
+                            🐱 Gato <br />
+                            📅 1 año <br />
+                            💉 Vacunado <br />
+                            😺 Tranquilo
+                        </p>
+                        <button class="btn btn-outline-success w-100" disabled>
+                            Inicia sesión para adoptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Animal 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="https://place-dog.net/300/200" class="card-img-top" alt="Mascota">
+                    <div class="card-body">
+                        <h5 class="card-title">Max</h5>
+                        <p class="card-text">
+                            🐕 Perro <br />
+                            📅 3 años <br />
+                            💉 Vacunado <br />
+                            🛡 Protector
+                        </p>
+                        <button class="btn btn-outline-success w-100" disabled>
+                            Inicia sesión para adoptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5" />
+
+        <!-- MENSAJE FINAL -->
+        <div class="text-center mb-5">
+            <h3 class="text-success">¿Te gustaría adoptar?</h3>
+            <p>
+                Regístrate o inicia sesión para poder adoptar y ver nuestras mascotas disponibles. ♥
+            </p>
+        </div>
+    }
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

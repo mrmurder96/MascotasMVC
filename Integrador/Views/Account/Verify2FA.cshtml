@@ -1,0 +1,42 @@
+@{
+    ViewBag.Title = "Verificación en dos pasos";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow p-4" style="width: 100%; max-width: 480px;">
+        <h3 class="text-center text-success mb-3">Verificación en dos pasos</h3>
+
+        @if (TempData["VerifyInfo"] != null)
+        {
+            <div class="alert alert-info">@TempData["VerifyInfo"]</div>
+        }
+        @if (TempData["VerifyWarning"] != null)
+        {
+            <div class="alert alert-warning">@TempData["VerifyWarning"]</div>
+        }
+
+        @using (Html.BeginForm("Verify2FA", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Código (recibido por email)</label>
+                <input type="text" name="code" class="form-control" required maxlength="10" />
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">Verificar</button>
+            </div>
+        }
+
+        <div class="text-center mt-3">
+            @using (Html.BeginForm("Verify2FA", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="resend" value="true" />
+                <button type="submit" class="btn btn-link">Reenviar código</button>
+            }
+            <a href="@Url.Action("Login","Account")" class="btn btn-link">Cancelar</a>
+        </div>
+    </div>
+</div>

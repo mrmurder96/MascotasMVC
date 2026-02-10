@@ -1,0 +1,28 @@
+csharp Integrador\Models\ViewModels\SolicitudAdopcionViewModel.cs
+using System;
+
+namespace Integrador.Models.ViewModels
+{
+    public class SolicitudAdopcionViewModel
+    {
+        public int Id { get; set; }
+        public int MascotaId { get; set; }
+        public string MascotaNombre { get; set; }
+        public DateTime FechaSolicitud { get; set; }
+        public string Estado { get; set; }
+
+        // Datos del solicitante (prellenados desde sesión/usuario)
+        public string Nombre { get; set; }
+        public string Apellidos { get; set; }
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
+
+        // Datos específicos de la solicitud
+        public DateTime? FechaPreferida { get; set; }
+        public string Motivo { get; set; }
+        public string Experiencia { get; set; }
+        public string Referencias { get; set; }
+        public string Observaciones { get; set; }
+    }
+}

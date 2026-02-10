@@ -1,0 +1,91 @@
+@{
+    ViewBag.Title = "Soporte";
+}
+
+<style>
+    .support-page {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: #ffffffcc;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .support-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .support-header h2 {
+            color: #28a745;
+            margin: 0;
+        }
+
+    .faq-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .faq-item + .faq-item {
+        margin-top: 0.75rem;
+        border-top: 1px dashed #e0e0e0;
+        padding-top: 0.75rem;
+    }
+
+    .faq-question {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .faq-answer {
+        color: #555;
+        margin-top: 0.25rem;
+    }
+
+    .contact-email {
+        margin-top: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+</style>
+
+<div class="support-page" role="main" aria-labelledby="support-title">
+    <div class="support-header">
+        <h2 id="support-title">Soporte — Preguntas frecuentes</h2>
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Ciudadano")">Volver al Perfil</a>
+    </div>
+
+    <p>¿Tienes dudas? Aquí tienes respuestas rápidas y un correo para contactarnos.</p>
+
+    <ul class="faq-list" role="list">
+        <li class="faq-item">
+            <div class="faq-question">¿Cómo solicito la adopción de una mascota?</div>
+            <div class="faq-answer">En la ficha de la mascota pulsa "Solicitar adopción" y sigue las instrucciones. Recibirás un correo de confirmación con los siguientes pasos.</div>
+        </li>
+
+        <li class="faq-item">
+            <div class="faq-question">¿Puedo cambiar mi centro de adopción preferido?</div>
+            <div class="faq-answer">Sí, accede a "Centros de adopción" desde tu perfil y selecciona el centro que prefieras como predeterminado.</div>
+        </li>
+
+        <li class="faq-item">
+            <div class="faq-question">No recibí el correo de confirmación, ¿qué hago?</div>
+            <div class="faq-answer">Revisa la carpeta de spam. Si no está, escríbenos indicando tu usuario y la acción que realizaste.</div>
+        </li>
+
+        <li class="faq-item">
+            <div class="faq-question">¿Cómo cambio mi foto de perfil?</div>
+            <div class="faq-answer">Ve a "Mis Imágenes" en tu perfil, sube la foto y selecciona "Establecer como perfil".</div>
+        </li>
+    </ul>
+
+    <div class="contact-email">
+        Correo de soporte: <a href="mailto:soporte@tudominio.com">soporte@tudominio.com</a>
+        <div style="font-size:0.9rem; color:#666; margin-top:0.25rem;">Horario de atención: L-V 9:00–18:00</div>
+    </div>
+</div>

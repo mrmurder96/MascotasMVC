@@ -1,0 +1,47 @@
+@model IEnumerable<Integrador.Models.Campania>
+@using System.Linq
+
+@{
+    ViewBag.Title = "Campañas";
+}
+
+<div class="container py-4">
+    <h2 class="text-success mb-4">Campañas</h2>
+
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <p>Ver tus campañas personales: <a class="btn btn-outline-primary" href='@Url.Action("MisCampanas","Campanas")'>Mis campañas</a></p>
+
+        if (Model != null && Model.Any())
+        {
+            <div class="row">
+                @foreach (var camp in Model)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img src="@( !string.IsNullOrEmpty(camp.ImagenUrl) ? camp.ImagenUrl : Url.Content("~/Content/placeholder_campaign.png") )" class="card-img-top" alt="@camp.Titulo" style="height:200px;object-fit:cover;" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@camp.Titulo</h5>
+                                <p class="card-text text-truncate">@camp.Descripcion</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        Desde: @camp.FechaInicio.ToString("dd/MM/yyyy")@(camp.FechaFin.HasValue ? " - " + camp.FechaFin.Value.ToString("dd/MM/yyyy") : "")
+                                    </small>
+                                </p>
+                                <a class="mt-auto btn btn-outline-success" href='@Url.Action("Details","Campanas", new { id = camp.Id })'>Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No hay campañas activas para mostrar.</p>
+        }
+    }
+    else
+    {
+        <p>Debes <a href='@Url.Action("Login","Account")'>iniciar sesión</a> para ver tus campañas.</p>
+    }
+</div>

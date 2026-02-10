@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Integrador.Models.Centro>
+@using System.Web.Helpers
+
+@{
+    ViewBag.Title = "Centros de adopción";
+    var apiKey = ViewBag.GoogleMapsApiKey ?? "";
+    var centersJson = Html.Raw(Json.Encode(Model));
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Centros</h4>
+
+            @if (TempData["CentrosError"] != null)
+            {
+                <div class="alert alert-danger">@TempData["CentrosError"]</div>
+            }
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">No hay centros disponibles.</div>
+            }
+            else
+            {
+                <div class="list-group">
+                    @foreach (var c in Model)
+                    {
+                        <div class="list-group-item">
+                            <h5 class="mb-1">@c.Nombre</h5>
+                            <p class="small mb-1">@c.Direccion</p>
+                            <p class="small text-muted mb-1">Tel: @c.Telefono</p>
+
+                            @using (Html.BeginForm("SeleccionarCentro", "Ciudadano", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@c.Id" />
+                                <button class="btn btn-sm btn-primary" type="submit">Seleccionar este centro</button>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="col-md-8">
+            <h4>Mapa</h4>
+            <div id="map" style="width:100%;height:520px;border:1px solid #ddd;"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        var centers = @centersJson;
+
+        function initMap() {
+            if (!centers || centers.length === 0) return;
+
+            var first = centers[0];
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: parseFloat(first.Lat), lng: parseFloat(first.Lng) },
+                zoom: 12
+            });
+
+            var bounds = new google.maps.LatLngBounds();
+
+            centers.forEach(function (c) {
+                var pos = { lat: parseFloat(c.Lat), lng: parseFloat(c.Lng) };
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: c.Nombre
+                });
+
+                var info = new google.maps.InfoWindow({
+                    content: '<div><strong>' + c.Nombre + '</strong><br/>' + c.Direccion + '<br/>Tel: ' + (c.Telefono || '') + '</div>'
+                });
+
+                marker.addListener('click', function () {
+                    info.open(map, marker);
+                });
+
+                bounds.extend(pos);
+            });
+
+            map.fitBounds(bounds);
+        }
+    </script>
+
+    @* Carga la API de Google Maps con tu API Key configurada en web.config appSettings: GoogleMapsApiKey *@
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=@apiKey&callback=initMap"></script>
+}
+

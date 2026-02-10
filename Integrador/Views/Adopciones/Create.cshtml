@@ -1,0 +1,70 @@
+@using System
+@model Integrador.Models.ViewModels.SolicitudAdopcionViewModel
+
+@{
+    ViewBag.Title = "Solicitud de adopción";
+}
+
+<h2>Solicitud de adopción — @Html.Encode(Model.MascotaNombre)</h2>
+
+@using (Html.BeginForm("Create", "Adopciones", FormMethod.Post, new { @class = "mt-3" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MascotaId)
+    @Html.HiddenFor(m => m.MascotaNombre)
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Nombre)
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Apellidos)
+        @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Telefono)
+        @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Direccion)
+        @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control" })
+    </div>
+
+    <hr />
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.FechaPreferida, "Fecha preferida (opcional)")
+        @Html.TextBoxFor(m => m.FechaPreferida, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Motivo, "¿Por qué quieres adoptar esta mascota?")
+        @Html.TextAreaFor(m => m.Motivo, 4, 80, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Experiencia, "Experiencia previa con mascotas")
+        @Html.TextAreaFor(m => m.Experiencia, 3, 80, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Referencias, "Referencias (opcional)")
+        @Html.TextAreaFor(m => m.Referencias, 2, 80, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.Observaciones, "Observaciones adicionales")
+        @Html.TextAreaFor(m => m.Observaciones, 3, 80, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-success">Enviar solicitud</button>
+    <a href="@Url.Action("Index", "Ciudadano")" class="btn btn-secondary ms-2">Cancelar</a>
+}

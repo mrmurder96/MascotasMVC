@@ -1,0 +1,59 @@
+﻿@model Integrador.Models.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Iniciar Sesión";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center text-success mb-4">Iniciar Sesión</h2>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @Html.ValidationSummary(false)
+            </div>
+        }
+
+        @if (TempData["ForgotInfo"] != null)
+        {
+            <div class="alert alert-info">@TempData["ForgotInfo"]</div>
+        }
+        @if (TempData["ForgotWarning"] != null)
+        {
+            <div class="alert alert-warning">@TempData["ForgotWarning"]</div>
+        }
+        @if (TempData["ResetSuccess"] != null)
+        {
+            <div class="alert alert-success">@TempData["ResetSuccess"]</div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Ingresa tu correo" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Ingresa tu contraseña" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Iniciar Sesión</button>
+
+            <div class="text-center mt-3">
+                <a href="@Url.Action("ForgotPassword","Account")" class="text-muted">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <div class="text-center mt-3">
+                <span>¿No tienes cuenta?</span>
+                <a href="@Url.Action("Registro", "Account")" class="text-success fw-bold">Regístrate aquí</a>
+            </div>
+        }
+    </div>
+</div>

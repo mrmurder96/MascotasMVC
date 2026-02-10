@@ -1,0 +1,26 @@
+
+@{
+    ViewBag.Title = "Mascotas disponibles";
+}
+
+<div class="container py-4">
+    <h2 class="text-success mb-4">Mascotas disponibles para adopción</h2>
+
+    <div class="row">
+        @foreach (var pet in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@(string.IsNullOrEmpty(pet.FotoUrl) ? "/Content/placeholder_pet.png" : pet.FotoUrl)" class="card-img-top" alt="@pet.Nombre" style="height:200px;object-fit:cover;" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@pet.Nombre</h5>
+                        <p class="card-text mb-1"><strong>Tipo:</strong> @pet.Tipo</p>
+                        <p class="card-text mb-1"><strong>Edad:</strong> @pet.Edad años</p>
+                        <p class="card-text mb-2"><strong>Ubicación:</strong> @pet.Ubicacion</p>
+                        <a class="mt-auto btn btn-outline-success" href="@Url.Action("Details","Mascotas", new { id = pet.Id })">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

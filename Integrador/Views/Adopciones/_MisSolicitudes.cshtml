@@ -1,0 +1,37 @@
+@model IEnumerable<Integrador.Models.ViewModels.SolicitudAdopcionViewModel>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Mis solicitudes de adopción</h5>
+    </div>
+    <div class="card-body">
+        @if (Model == null || !Model.Any())
+        {
+            <p>No tienes solicitudes de adopción registradas.</p>
+        }
+        else
+        {
+            <div class="list-group">
+                @foreach (var s in Model)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">@Html.Encode(s.MascotaNombre) (ID: @s.MascotaId)</h6>
+                            <small>@s.FechaSolicitud.ToString("dd/MM/yyyy")</small>
+                        </div>
+                        <p class="mb-1"><strong>Estado:</strong> @Html.Encode(s.Estado)</p>
+                        <p class="mb-1"><strong>Contacto:</strong> @Html.Encode(s.Nombre) @Html.Encode(s.Apellidos) — @Html.Encode(s.Email) — @Html.Encode(s.Telefono)</p>
+                        @if (!string.IsNullOrWhiteSpace(s.Motivo))
+                        {
+                            <p class="mb-1"><strong>Motivo:</strong> @Html.Encode(s.Motivo)</p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(s.Observaciones))
+                        {
+                            <p class="mb-0"><strong>Observaciones:</strong> @Html.Encode(s.Observaciones)</p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

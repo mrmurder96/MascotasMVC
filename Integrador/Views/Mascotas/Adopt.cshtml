@@ -1,0 +1,40 @@
+
+@{
+    ViewBag.Title = "Formulario de adopción";
+}
+
+<div class="container py-4">
+    <div class="card p-4 shadow" style="max-width:720px;margin:auto;">
+        <h3 class="text-success">Formulario de adopción: @Model.Nombre</h3>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">@Html.ValidationSummary()</div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">Tu nombre</label>
+                <input type="text" name="nombreSolicitante" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="text" name="telefono" class="form-control" />
+            </div>
+
+            <div class="d-grid">
+                <button class="btn btn-success" type="submit">Enviar solicitud</button>
+            </div>
+        }
+
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Details","Mascotas", new { id = Model.Id })" class="text-muted">Volver</a>
+        </div>
+    </div>
+</div>
