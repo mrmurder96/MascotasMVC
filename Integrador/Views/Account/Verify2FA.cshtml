@@ -1,42 +1,444 @@
 @{
-    ViewBag.Title = "Verificaci�n en dos pasos";
+    ViewBag.Title = "Verificación - Pura Compañía";
+    Layout = null;
 }
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="card shadow p-4" style="width: 100%; max-width: 480px;">
-        <h3 class="text-center text-success mb-3">Verificaci�n en dos pasos</h3>
-
-        @if (TempData["VerifyInfo"] != null)
-        {
-            <div class="alert alert-info">@TempData["VerifyInfo"]</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        @if (TempData["VerifyWarning"] != null)
-        {
-            <div class="alert alert-warning">@TempData["VerifyWarning"]</div>
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
         }
 
-        @using (Html.BeginForm("Verify2FA", "Account", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
+        .verify-container {
+            width: 100%;
+            max-width: 680px;
+            margin: 40px 20px;
+            position: relative;
+        }
 
-            <div class="mb-3">
-                <label class="form-label">C�digo (recibido por email)</label>
-                <input type="text" name="code" class="form-control" required maxlength="10" />
+        /* Botón Regresar */
+        .btn-back {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            background: transparent;
+            border: none;
+            color: #3D2817;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            opacity: 0.7;
+        }
+
+        /* Panel de Confirmación */
+        .confirmation-message {
+            background: rgba(217, 217, 217, 0.8);
+            backdrop-filter: blur(10px);
+            border: 4px solid rgba(255, 255, 255, 0.9);
+            border-radius: 40px;
+            padding: 40px 50px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .confirmation-message h1 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.95);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .confirmation-message p {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.95);
+        }
+
+        /* Panel de Formulario */
+        .form-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 40px 50px 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .form-header {
+            background: #FA8C99;
+            border-radius: 30px;
+            padding: 10px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            color: rgba(0, 0, 0, 0.95);
+            margin: 0;
+        }
+
+        /* Alertas de Validación */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1565c0;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            color: #e65100;
+        }
+
+        @@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Campo de Código */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: none;
+        }
+
+        .code-input {
+            width: 100%;
+            height: 80px;
+            background: rgba(217, 217, 217, 0.7);
+            border: none;
+            border-radius: 41px;
+            padding: 0 28px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            letter-spacing: 8px;
+            transition: all 0.3s;
+        }
+
+        .code-input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+            letter-spacing: 4px;
+        }
+
+        .code-input:focus {
+            outline: 3px solid #FA8C99;
+            outline-offset: 2px;
+            background: rgba(217, 217, 217, 0.9);
+        }
+
+        /* Botón de Verificar */
+        .btn-submit {
+            width: 221px;
+            height: 71px;
+            background: #B8FF9C;
+            border: 2px solid rgba(0, 0, 0, 0.8);
+            border-radius: 30px;
+            color: rgba(0, 0, 0, 0.9);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .btn-submit:hover {
+            background: #FA8C99;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Acciones Secundarias */
+        .secondary-actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .secondary-actions form {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.95);
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .verify-container {
+                margin: 20px 15px;
+            }
+
+            .btn-back {
+                top: 15px;
+                left: 15px;
+                font-size: 22px;
+            }
+
+            .confirmation-message {
+                padding: 30px 25px;
+                border-radius: 30px;
+            }
+
+            .confirmation-message h1 {
+                font-size: 36px;
+            }
+
+            .confirmation-message p {
+                font-size: 22px;
+            }
+
+            .form-panel {
+                padding: 30px 25px 40px;
+            }
+
+            .form-header {
+                padding: 10px 20px;
+                margin-bottom: 30px;
+            }
+
+            .form-header h2 {
+                font-size: 28px;
+            }
+
+            .code-input {
+                height: 70px;
+                font-size: 28px;
+                letter-spacing: 6px;
+            }
+
+            .btn-submit {
+                width: 200px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .btn-link {
+                font-size: 18px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .btn-back {
+                top: 10px;
+                left: 10px;
+                font-size: 18px;
+            }
+
+            .confirmation-message {
+                padding: 25px 20px;
+                border-radius: 25px;
+                margin-bottom: 20px;
+            }
+
+            .confirmation-message h1 {
+                font-size: 28px;
+            }
+
+            .confirmation-message p {
+                font-size: 18px;
+            }
+
+            .form-panel {
+                padding: 25px 20px 30px;
+            }
+
+            .form-header h2 {
+                font-size: 24px;
+            }
+
+            .code-input {
+                height: 60px;
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+
+            .btn-submit {
+                width: 180px;
+                height: 55px;
+                font-size: 24px;
+            }
+
+            .btn-link {
+                font-size: 16px;
+            }
+        }
+
+        /* Accesibilidad */
+        *:focus-visible {
+            outline: 3px solid #FA8C99;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <a href="@Url.Action("Login", "Account")" class="btn-back" aria-label="Regresar al inicio de sesión">
+            ← Regresar
+        </a>
+
+        <!-- Mensaje de Confirmación -->
+        <div class="confirmation-message" role="status" aria-live="polite">
+            <h1>Código de<br/>verificación<br/>enviado</h1>
+            <p>Se envió exitosamente a tu correo el código para verificar tu identidad</p>
+        </div>
+
+        <!-- Panel de Formulario -->
+        <div class="form-panel" role="main">
+            <div class="form-header">
+                <h2>Ingresa el código</h2>
             </div>
 
-            <div class="d-grid">
-                <button type="submit" class="btn btn-success">Verificar</button>
-            </div>
-        }
+            <!-- Alertas de Información -->
+            @if (TempData["VerifyInfo"] != null)
+            {
+                <div class="alert alert-info" role="alert">
+                    @TempData["VerifyInfo"]
+                </div>
+            }
+            @if (TempData["VerifyWarning"] != null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    @TempData["VerifyWarning"]
+                </div>
+            }
 
-        <div class="text-center mt-3">
+            <!-- Formulario de Verificación -->
             @using (Html.BeginForm("Verify2FA", "Account", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
-                <input type="hidden" name="resend" value="true" />
-                <button type="submit" class="btn btn-link">Reenviar c�digo</button>
+
+                <div class="form-group">
+                    <label class="form-label" for="codeInput">Código de verificación</label>
+                    <input type="text" 
+                           name="code" 
+                           id="codeInput"
+                           class="code-input" 
+                           placeholder="••••••" 
+                           required 
+                           maxlength="10"
+                           autocomplete="off"
+                           aria-label="Código de verificación de 6 dígitos"
+                           aria-describedby="codeHelp" />
+                    <span id="codeHelp" style="display: none;">Ingresa el código de 6 dígitos que recibiste por correo electrónico</span>
+                </div>
+
+                <button type="submit" class="btn-submit" aria-label="Verificar código">
+                    Verificar
+                </button>
             }
-            <a href="@Url.Action("Login","Account")" class="btn btn-link">Cancelar</a>
+
+            <!-- Acciones Secundarias -->
+            <div class="secondary-actions">
+                @using (Html.BeginForm("Verify2FA", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="resend" value="true" />
+                    <button type="submit" class="btn-link" aria-label="Reenviar código de verificación">
+                        Reenviar código
+                    </button>
+                }
+                <span style="color: rgba(0, 0, 0, 0.5); margin: 0 10px;">|</span>
+                <a href="@Url.Action("Login", "Account")" class="btn-link">Cancelar y volver</a>
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+        // Auto-focus en el campo de código al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.focus();
+            }
+
+            // Anunciar mensajes a lectores de pantalla
+            const alerts = document.querySelectorAll('.alert');
+            if (alerts.length > 0) {
+                const announcement = document.createElement('div');
+                announcement.setAttribute('role', 'status');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.textContent = 'Hay mensajes importantes en el formulario.';
+                announcement.style.position = 'absolute';
+                announcement.style.left = '-10000px';
+                document.body.appendChild(announcement);
+            }
+        });
+    </script>
+</body>
+</html>

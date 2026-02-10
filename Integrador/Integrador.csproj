@@ -266,6 +266,9 @@
     <Content Include="Views\Home\Soporte.cshtml" />
     <Content Include="Views\Adopciones\_MisSolicitudes.cshtml" />
     <Content Include="Views\Adopciones\Create.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Verify2FA_NEW.cshtml" />
+    <Content Include="Views\Account\ResetPassword_NEW.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
