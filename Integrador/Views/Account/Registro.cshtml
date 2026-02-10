@@ -1,123 +1,641 @@
 ﻿@model Integrador.Models.ViewModels.RegistroViewModel
 
 @{
-    ViewBag.Title = "Registro";
+    ViewBag.Title = "Registro - Pura Compañía";
+    Layout = null;
 }
 
-<style>
-    body {
-        background: linear-gradient(135deg, #e0f7fa, #ffffff); /* Fondo suave */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Nunito+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .card-registro {
-        max-width: 500px;
-        margin: 3rem auto;
-        padding: 2rem;
-        border-radius: 1rem;
-        background-color: #ffffffcc; /* Fondo semi-transparente */
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
 
-        .card-registro h2 {
+        .registro-container {
+            width: 100%;
+            max-width: 1500px;
+            margin: 40px 20px;
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+
+        /* Botón Regresar */
+        .btn-back {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            background: transparent;
+            border: none;
+            color: #3D2817;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            opacity: 0.7;
+        }
+
+        /* Panel Izquierdo - Imagen de Bienvenida */
+        .welcome-panel {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=891&h=773&fit=crop') center/cover;
+            border-radius: 12px;
+            position: relative;
+            min-height: 773px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Cuadro interno con borde blanco */
+        .welcome-box {
+            position: relative;
+            width: 110%;
+            height: 102%;
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            border-radius: 40px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 50px;
+            z-index: 2;
+        }
+
+        .welcome-content {
             text-align: center;
-            margin-bottom: 1.5rem;
-            color: #28a745;
+            z-index: 3;
+        }
+
+        .welcome-content h1 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.95);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .welcome-content p {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 400;
+            font-size: 32px;
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.95);
+            margin-top: 15px;
+        }
+
+        /* Panel Derecho - Formulario */
+        .form-panel {
+            width: 680px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 40px 50px 50px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-header {
+            background: rgba(255, 150, 150, 0.6);
+            border-radius: 30px;
+            padding: 10px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-family: 'Nunito', sans-serif;
             font-weight: 700;
+            font-size: 32px;
+            color: rgba(0, 0, 0, 0.95);
+            margin: 0;
         }
 
-    .form-control:focus {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    }
-
-    .btn-registro {
-        background-color: #28a745;
-        color: white;
-        font-weight: 600;
-        width: 100%;
-        transition: background-color 0.3s;
-    }
-
-        .btn-registro:hover {
-            background-color: #218838;
+        /* Alertas de Validación */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            animation: slideDown 0.3s ease;
         }
 
-    .text-danger {
-        font-size: 0.875rem;
-    }
+        .alert-danger {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
 
-    a.back-link {
-        display: block;
-        margin-top: 1rem;
-        text-align: center;
-        color: #28a745;
-        font-weight: 600;
-        text-decoration: none;
-    }
+        .text-danger {
+            color: #c62828;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
 
-        a.back-link:hover {
+        @@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Campos de Formulario */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: none; /* Ocultamos labels ya que usamos placeholders */
+        }
+
+        .form-control {
+            width: 100%;
+            height: 56px;
+            background: rgba(217, 217, 217, 0.7);
+            border: none;
+            border-radius: 41px;
+            padding: 0 28px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.9);
+            transition: all 0.3s;
+        }
+
+        .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .form-control:focus {
+            outline: 3px solid #FA8C99;
+            outline-offset: 2px;
+            background: rgba(217, 217, 217, 0.9);
+        }
+
+        /* Campo de archivo especial */
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            height: 56px;
+            background: rgba(217, 217, 217, 0.7);
+            border-radius: 41px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            transition: all 0.3s;
+        }
+
+        .file-input-wrapper:hover {
+            background: rgba(217, 217, 217, 0.9);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        .file-note {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            margin-top: 8px;
+            margin-left: 28px;
+        }
+
+        /* Botón de Registro */
+        .btn-submit {
+            width: 221px;
+            height: 71px;
+            background: #B8FF9C;
+            border: 2px solid rgba(0, 0, 0, 0.8);
+            border-radius: 30px;
+            color: rgba(0, 0, 0, 0.9);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 30px auto 30px;
+            display: block;
+        }
+
+        .btn-submit:hover {
+            background: #FA8C99;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Sección de Login */
+        .login-section {
+            text-align: center;
+        }
+
+        .login-section p {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: rgba(0, 0, 0, 0.95);
+            margin-bottom: 5px;
+        }
+
+        .login-section a {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: rgba(0, 0, 0, 0.95);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .login-section a:hover {
+            opacity: 0.7;
             text-decoration: underline;
         }
-</style>
 
-<div class="card-registro">
-    <h2>Registro</h2>
+        /* Responsive Design */
+        @@media (max-width: 1400px) {
+            .registro-container {
+                max-width: 1200px;
+            }
 
-    @using (Html.BeginForm("Registro", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
+            .form-panel {
+                width: 600px;
+            }
 
-        @* Mostrar errores de propiedad también (usar false) *@
-        @Html.ValidationSummary(false, "", new { @class = "text-danger mb-3" })
+            .welcome-content h1 {
+                font-size: 40px;
+            }
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Nombres)
-            @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tus nombres" } })
-            @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+            .welcome-content p {
+                font-size: 28px;
+            }
+        }
+
+        @@media (max-width: 1024px) {
+            .registro-container {
+                flex-direction: column;
+                max-width: 680px;
+            }
+
+            .welcome-panel {
+                min-height: 450px;
+            }
+
+            .welcome-box {
+                width: 90%;
+                height: 85%;
+                padding-top: 40px;
+            }
+
+            .welcome-content h1 {
+                font-size: 36px;
+            }
+
+            .welcome-content p {
+                font-size: 24px;
+            }
+
+            .form-panel {
+                width: 100%;
+            }
+
+            .btn-back {
+                top: 20px;
+                left: 20px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .welcome-panel {
+                min-height: 400px;
+                padding: 30px;
+            }
+
+            .welcome-content h1 {
+                font-size: 32px;
+            }
+
+            .welcome-content p {
+                font-size: 20px;
+            }
+
+            .form-panel {
+                padding: 40px 30px;
+            }
+
+            .form-control {
+                font-size: 18px;
+                height: 50px;
+            }
+
+            .btn-submit {
+                width: 200px;
+                font-size: 24px;
+                height: 60px;
+            }
+
+            .login-section p,
+            .login-section a {
+                font-size: 20px;
+            }
+
+            .btn-back {
+                top: 15px;
+                left: 15px;
+                font-size: 22px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .welcome-content h1 {
+                font-size: 28px;
+            }
+
+            .welcome-content p {
+                font-size: 18px;
+            }
+
+            .form-panel {
+                padding: 30px 20px;
+            }
+
+            .form-header {
+                padding: 10px 20px;
+                margin-bottom: 30px;
+            }
+
+            .form-header h2 {
+                font-size: 24px;
+            }
+
+            .btn-submit {
+                width: 180px;
+                font-size: 20px;
+            }
+
+            .btn-back {
+                top: 10px;
+                left: 10px;
+                font-size: 18px;
+            }
+        }
+
+        /* Accesibilidad */
+        *:focus-visible {
+            outline: 3px solid #FA8C99;
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar personalizado para el panel del formulario */
+        .form-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .form-panel::-webkit-scrollbar-track {
+            background: rgba(217, 217, 217, 0.3);
+            border-radius: 10px;
+        }
+
+        .form-panel::-webkit-scrollbar-thumb {
+            background: rgba(250, 140, 153, 0.5);
+            border-radius: 10px;
+        }
+
+        .form-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(250, 140, 153, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="registro-container">
+        <a href="@Url.Action("Login", "Account")" class="btn-back" aria-label="Regresar al inicio de sesión">
+            ← Regresar
+        </a>
+
+        <!-- Panel Izquierdo - Mensaje de Bienvenida -->
+        <div class="welcome-panel" role="complementary" aria-label="Información de registro">
+            <div class="welcome-box">
+                <div class="welcome-content">
+                    <h1>¿Eres nuevo?<br/>Regístrate aquí</h1>
+                    <p>Adopta, conecta, ama</p>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Apellidos)
-            @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tus apellidos" } })
-            @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+        <!-- Panel Derecho - Formulario -->
+        <div class="form-panel" role="main">
+            <div class="form-header">
+                <h2>Crea tu cuenta</h2>
+            </div>
+
+            <!-- Mensajes de Validación -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+
+            @using (Html.BeginForm("Registro", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombres, new { @class = "form-label" })
+                        @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre", aria_label = "Nombre" } })
+                        @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Apellidos, new { @class = "form-label" })
+                        @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control", placeholder = "Apellidos", aria_label = "Apellidos" } })
+                        @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Correo electrónico", aria_label = "Correo electrónico", type = "email" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Contraseña", aria_label = "Contraseña" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConfirmPassword, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Confirmar contraseña", aria_label = "Confirmar contraseña" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="file-input-wrapper">
+                        <input type="file" 
+                               name="Fotos" 
+                               accept="image/*" 
+                               multiple 
+                               id="fileInput"
+                               aria-label="Seleccionar fotos de perfil" />
+                        <span class="file-input-label" id="fileLabel">📷 Seleccionar fotos</span>
+                    </div>
+                    <small class="file-note">Máx 2 MB por imagen. Puedes subir varias imágenes</small>
+                    <span class="text-danger" id="fileError" style="display: none; margin-left: 28px;"></span>
+                    @Html.ValidationMessage("Fotos", "", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn-submit" aria-label="Registrarse">
+                    Regístrese
+                </button>
+
+                <div class="login-section">
+                    <p>¿Ya tienes cuenta?</p>
+                    <a href="@Url.Action("Login", "Account")">Inicia sesión</a>
+                </div>
+            }
         </div>
+    </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Email)
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tu correo" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Password)
-            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingresa tu contraseña" } })
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.ConfirmPassword)
-            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Confirma tu contraseña" } })
-            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Fotos (JPG/PNG) — selecciona al menos una</label>
-            <input type="file" name="Fotos" accept=".jpg,.jpeg,.png" multiple class="form-control" />
-            <small class="form-text text-muted">Máx 2 MB por imagen. Puedes subir varias imágenes.</small>
-
-            @* Mostrar mensaje de validación asociado a la clave "Fotos" *@
-            @Html.ValidationMessage("Fotos", "", new { @class = "text-danger" })
-        </div>
-
-        <div class="d-grid mt-3">
-            <input type="submit" value="Registrarse" class="btn btn-registro" />
-        </div>
-    }
-
-    <a href="@Url.Action("Index", "Home")" class="back-link">Volver al inicio</a>
-</div>
-
-@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-}
+
+    <script>
+        // Validación de archivos y mostrar nombre de archivo seleccionado
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const fileLabel = document.getElementById('fileLabel');
+            const fileError = document.getElementById('fileError');
+            const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
+
+            if (fileInput && fileLabel) {
+                fileInput.addEventListener('change', function() {
+                    const files = this.files;
+                    let hasError = false;
+                    let errorMessage = '';
+                    let validFiles = [];
+
+                    // Validar cada archivo
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        
+                        // Validar que sea una imagen
+                        if (!file.type.startsWith('image/')) {
+                            hasError = true;
+                            errorMessage = `El archivo "${file.name}" no es una imagen válida.`;
+                            break;
+                        }
+                        
+                        // Validar tamaño (máximo 2MB)
+                        if (file.size > MAX_FILE_SIZE) {
+                            hasError = true;
+                            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                            errorMessage = `El archivo "${file.name}" (${sizeMB} MB) excede el tamaño máximo de 2 MB.`;
+                            break;
+                        }
+                        
+                        validFiles.push(file);
+                    }
+
+                    if (hasError) {
+                        // Mostrar error y limpiar input
+                        fileError.textContent = errorMessage;
+                        fileError.style.display = 'block';
+                        fileLabel.textContent = '📷 Seleccionar fotos';
+                        this.value = ''; // Limpiar la selección
+                    } else if (validFiles.length > 0) {
+                        // Todo está bien
+                        fileError.style.display = 'none';
+                        fileLabel.textContent = `📷 ${validFiles.length} archivo${validFiles.length > 1 ? 's' : ''} seleccionado${validFiles.length > 1 ? 's' : ''}`;
+                    } else {
+                        fileError.style.display = 'none';
+                        fileLabel.textContent = '📷 Seleccionar fotos';
+                    }
+                });
+            }
+
+            // Anunciar errores de validación a lectores de pantalla
+            const errors = document.querySelectorAll('.text-danger');
+            if (errors.length > 0) {
+                const announcement = document.createElement('div');
+                announcement.setAttribute('role', 'status');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.textContent = 'Se encontraron errores en el formulario. Por favor revíselos.';
+                announcement.style.position = 'absolute';
+                announcement.style.left = '-10000px';
+                document.body.appendChild(announcement);
+            }
+        });
+    </script>
+</body>
+</html>
