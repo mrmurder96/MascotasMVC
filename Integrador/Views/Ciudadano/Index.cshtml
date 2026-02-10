@@ -1,241 +1,686 @@
 ﻿@{
-    ViewBag.Title = "Perfil usuario♥";
+    ViewBag.Title = "Pura Compañía - Adopta una mascota";
+    Layout = null;
 }
 
-<style>
-    body {
-        background: linear-gradient(135deg, #f0f4f8, #d9f0e7);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .dashboard-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 1rem;
-    }
-
-    .welcome-card {
-        background-color: #ffffffcc;
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-        .welcome-card h2 {
-            color: #28a745;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .welcome-card p {
-            font-size: 1.2rem;
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFB899;
+            padding: 0.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .logo img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .btn-login {
+            background-color: white;
+            color: #000;
+            padding: 0.5rem 1.8rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 2px solid #4CAF50;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.02);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1920') center/cover;
+            height: 1079px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 536px;
+            left: 172px;
+        }
+
+        .hero h1 {
+            width: 499px;
+            height: 44px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero p {
+            width: 917px;
+            height: 119px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 68px;
+            left: 0;
+        }
+
+        .hero-buttons {
+            position: absolute;
+            top: 189px;
+            left: -1px;
+            display: flex;
+            gap: 49px;
+        }
+
+        .btn-primary {
+            background: #FFFFFF;
+            color: #000;
+            width: 231px;
+            height: 90px;
+            border-radius: 30px;
+            padding: 20px 34px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #FAA88C;
+            color: #000;
+            width: 231px;
+            height: 90px;
+            border-radius: 30px;
+            padding: 20px 34px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: #F99977;
+        }
+
+        /* Como Funciona Section */
+        .como-funciona {
+            background-color: #f9f9f9;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .como-funciona h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             color: #333;
         }
 
-    .options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .card-option {
-        background-color: #ffffffcc;
-        border-radius: 1rem;
-        padding: 1.5rem;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        text-align: center;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 160px;
-    }
-
-        .card-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        .como-funciona .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 3rem;
         }
 
-        .card-option h3 {
-            color: #28a745;
-            font-weight: 600;
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            padding: 1.5rem;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #E8D4FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .step:nth-child(2) .step-icon {
+            background-color: #FFD4E5;
+        }
+
+        .step:nth-child(3) .step-icon {
+            background-color: #D4E5FF;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .step-number {
+            font-weight: 700;
+        }
+
+        .step p {
+            color: #666;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Mascotas Destacadas Section */
+        .mascotas-destacadas {
+            background-color: #E8E8E8;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .mascotas-destacadas h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .mascotas-destacadas .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+
+        .mascotas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .mascota-card {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .mascota-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .mascota-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .like-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: white;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .mascota-info {
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .mascota-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 0.5rem;
         }
 
-        .card-option p {
-            color: #555;
+        .mascota-header h3 {
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        .mascota-tag {
+            background-color: #FFD4E5;
+            color: #C25B8A;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .mascota-raza {
+            color: #666;
             font-size: 0.95rem;
+            margin-bottom: 0.3rem;
         }
 
-    /* Mini juego */
-    #game-container {
-        display: none;
-        background-color: #ffffffcc;
-        border-radius: 1rem;
-        padding: 2rem;
-        margin-top: 2rem;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-
-        #game-container input {
-            width: 80px;
-            padding: 0.5rem;
-            margin-right: 0.5rem;
-            border-radius: 0.3rem;
-            border: 1px solid #ccc;
+        .mascota-edad {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
         }
 
-        #game-container button {
-            background-color: #28a745;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.3rem;
-            cursor: pointer;
+        .mascota-descripcion {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .mascota-ubicacion {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-ver-mas {
+            background-color: #B8FF9C;
+            color: #333;
+            padding: 0.7rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            text-align: center;
             transition: background-color 0.3s;
         }
 
-            #game-container button:hover {
-                background-color: #218838;
+        .btn-ver-mas:hover {
+            background-color: #A5E88A;
+        }
+
+        .btn-ver-todas {
+            background-color: #FF9B7A;
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-ver-todas:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: #FF8A60;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background-color: #B8FF9C;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .cta-section p {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 2rem 1.5rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #555;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
             }
 
-    #game-message {
-        margin-top: 1rem;
-        font-weight: 600;
-        color: #333;
-    }
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
 
-    /* Estilos para mensajes flash */
-    .alert {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin-top: 1rem;
-        font-weight: 500;
-    }
+            .hero {
+                height: 400px;
+            }
 
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
+            .hero h1 {
+                font-size: 2rem;
+            }
 
-    .alert-warning {
-        background-color: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
-    }
-</style>
+            .hero p {
+                font-size: 1rem;
+            }
 
-<div class="dashboard-container">
-    <div class="welcome-card">
-        <h2>Perfil Usuario ♥</h2>
-        <p>Bienvenido @Session["Nombre"]</p>
-    </div>
+            .hero-content {
+                padding-left: 1rem;
+            }
 
-    <div class="options-grid">
-        <a href="@Url.Action("Perfil", "Ciudadano")" class="card-option" title="Mi Información">
-            <h3>Mi Información</h3>
-            <p>Visualiza y actualiza tus datos personales y foto de perfil.</p>
-        </a>
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://via.placeholder.com/40/FFB899/333?text=PC" alt="Pura Compañía">
+            <span>Pura Compañía</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="@Url.Action("Index", "Mascotas")">Mascotas</a></li>
+            <li><a href="@Url.Action("Centros", "Ciudadano")">Refugios</a></li>
+            <li><a href="@Url.Action("Soporte", "Home")">Contacto</a></li>
+            @if (Session["Nombre"] != null)
+            {
+                <li><a href="@Url.Action("Perfil", "Ciudadano")" class="btn-login">Mi Perfil</a></li>
+            }
+            else
+            {
+                <li><a href="@Url.Action("Login", "Account")" class="btn-login">Iniciar sesión</a></li>
+            }
+        </ul>
+    </nav>
 
-        <a href="@Url.Action("Notificaciones", "Ciudadano")" class="card-option" title="Notificaciones">
-            <h3>Notificaciones</h3>
-            <p>Revisa las notificaciones y recordatorios importantes.</p>
-        </a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Encuentra a tu compañero ideal</h1>
+            <p>Miles de mascotas esperan encontrar un hogar lleno de amor. Adopta, no compres. Cambia una vida hoy.</p>
+            <div class="hero-buttons">
+                <a href="@Url.Action("Index", "Mascotas")" class="btn-primary">Comenzar</a>
+                <a href="#como-funciona" class="btn-secondary">Saber más</a>
+            </div>
+        </div>
+    </section>
 
-        <div class="card-option" onclick="showGame()" role="button" title="Mini Juego" tabindex="0" onkeypress="if(event.key==='Enter') showGame();">
-            <h3>Mini Juego</h3>
-            <p>¡Juega a adivinar el número y diviértete!</p>
+    <!-- Como Funciona Section -->
+    <section class="como-funciona" id="como-funciona">
+        <h2>¿Cómo funciona?</h2>
+        <p class="subtitle">Adoptar una mascota nunca fue tan fácil. Sigue estos simples pasos</p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">🔍</div>
+                <h3><span class="step-number">1.</span> Busca</h3>
+                <p>Explora perfiles de mascotas disponibles en diferentes refugios</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">❤️</div>
+                <h3><span class="step-number">2.</span> Conecta</h3>
+                <p>Encuentra la mascota perfecta que encaje con tu estilo de vida</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">🏠</div>
+                <h3><span class="step-number">3.</span> Conecta</h3>
+                <p>Completa el proceso de adopción y dale un hogar a tu nuevo amigo</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mascotas Destacadas Section -->
+    <section class="mascotas-destacadas">
+        <h2>Mascotas Destacadas</h2>
+        <p class="subtitle">Conoce a algunas de las adorables mascotas que están buscando un hogar</p>
+        
+        <div class="mascotas-grid">
+            <div class="mascota-card">
+                <img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=400" alt="Max" class="mascota-image">
+                <div class="like-btn">♡</div>
+                <div class="mascota-info">
+                    <div class="mascota-header">
+                        <h3>Max</h3>
+                        <span class="mascota-tag">Perro</span>
+                    </div>
+                    <div class="mascota-raza">Golden Retriever</div>
+                    <div class="mascota-edad">2 años</div>
+                    <p class="mascota-descripcion">Amigable y juguetón, perfecto para familias</p>
+                    <div class="mascota-ubicacion">📍 Madrid</div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas">Ver más</a>
+                </div>
+            </div>
+
+            <div class="mascota-card">
+                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400" alt="Luna" class="mascota-image">
+                <div class="like-btn">♡</div>
+                <div class="mascota-info">
+                    <div class="mascota-header">
+                        <h3>Luna</h3>
+                        <span class="mascota-tag" style="background-color: #E8D4FF; color: #8A5BC2;">Gato</span>
+                    </div>
+                    <div class="mascota-raza">Mestiza</div>
+                    <div class="mascota-edad">1 año</div>
+                    <p class="mascota-descripcion">Tranquila y cariñosa, ideal para apartamentos</p>
+                    <div class="mascota-ubicacion">📍 Barcelona</div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas">Ver más</a>
+                </div>
+            </div>
+
+            <div class="mascota-card">
+                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400" alt="Rocky" class="mascota-image">
+                <div class="like-btn">♡</div>
+                <div class="mascota-info">
+                    <div class="mascota-header">
+                        <h3>Rocky</h3>
+                        <span class="mascota-tag" style="background-color: #D4E5FF; color: #4A7BC2;">Perro</span>
+                    </div>
+                    <div class="mascota-raza">Border Collie</div>
+                    <div class="mascota-edad">6 meses</div>
+                    <p class="mascota-descripcion">Enérgico y muy inteligente, busca familia activa</p>
+                    <div class="mascota-ubicacion">📍 Valencia</div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas">Ver más</a>
+                </div>
+            </div>
         </div>
 
-        <a href="@Url.Action("Imagenes", "Account")" class="card-option" title="Mis Imágenes">
-            <h3>Mis Imágenes</h3>
-            <p>Gestiona tus fotos: ver, eliminar y elegir foto de perfil.</p>
-        </a>
+        <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-todas">Ver Todas las Mascotas</a>
+    </section>
 
-        <a href="@Url.Action("Centros", "Ciudadano")" class="card-option" title="Centros de adopción">
-            <h3>Centros de adopción</h3>
-            <p>Ver centros en el mapa y seleccionar uno como tu centro preferido.</p>
-        </a>
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>¿Listo para cambiar una vida?</h2>
+        <p>Únete a nuestra comunidad de adoptantes y dale una segunda oportunidad a una mascota</p>
+    </section>
 
-        <a href="@Url.Action("Index", "Mascotas")" class="card-option" title="Mascotas disponibles">
-            <h3>Mascotas disponibles</h3>
-            <p>Explora las mascotas que puedes adoptar — ver detalles y solicitar adopción.</p>
-        </a>
-
-        <a href="@Url.Action("Index", "Campanas")" class="card-option" title="Campañas">
-            <h3>Campañas</h3>
-            <p>Participa en nuestras campañas activas.</p>
-        </a>
-
-        <a href="@Url.Action("Logout", "Account")" class="card-option" title="Cerrar sesión">
-            <h3>Cerrar sesión</h3>
-            <p>Salir de tu cuenta de forma segura.</p>
-        </a>
-
-        <a href="@Url.Action("Soporte", "Home")" class="card-option" title="Soporte">
-            <h3>Soporte</h3>
-            <p>Contacta con el soporte para asistencia rápida.</p>
-        </a>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section footer-about">
+                <h3>Pura Compañía</h3>
+                <p>Conectando mascotas con familias amorosas desde 2024</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="@Url.Action("Index", "Mascotas")">Cómo Adoptar</a></li>
+                    <li><a href="@Url.Action("Soporte", "Home")">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Recursos</h3>
+                <ul>
+                    <li><a href="#">Cuidado de Mascotas</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PetAdopt. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     @* Mensajes flash *@
     @if (TempData["AdopcionSuccess"] != null) {
-        <div class="alert alert-success mt-3">@TempData["AdopcionSuccess"]</div>
+        <script>
+            alert('@TempData["AdopcionSuccess"]');
+        </script>
     }
     @if (TempData["AdopcionWarning"] != null) {
-        <div class="alert alert-warning mt-3">@TempData["AdopcionWarning"]</div>
+        <script>
+            alert('@TempData["AdopcionWarning"]');
+        </script>
     }
-
-    @* Mostrar las solicitudes del usuario (partial action) *@
-    @Html.Action("MySolicitudes", "Adopciones")
-
-    <!-- Mini juego -->
-    <div id="game-container">
-        <h3>Juego: Adivina el Número</h3>
-        <p>Ingresa un número entre 1 y 20:</p>
-        <input type="number" id="guess" min="1" max="20" />
-        <button onclick="checkGuess()">Probar</button>
-        <div id="game-message"></div>
-        <button style="margin-top:1rem;" onclick="restartGame()">Reiniciar Juego</button>
-    </div>
-</div>
-
-<script>
-    let randomNumber = Math.floor(Math.random() * 20) + 1;
-
-    function showGame() {
-        document.getElementById('game-container').style.display = 'block';
-        window.scrollTo({ top: document.getElementById('game-container').offsetTop - 20, behavior: 'smooth' });
-    }
-
-    function checkGuess() {
-        const guess = parseInt(document.getElementById('guess').value);
-        const message = document.getElementById('game-message');
-
-        if (isNaN(guess) || guess < 1 || guess > 20) {
-            message.textContent = "Ingresa un número válido entre 1 y 20.";
-            return;
-        }
-
-        if (guess === randomNumber) {
-            message.textContent = "🎉 ¡Felicidades! Adivinaste el número.";
-        } else if (guess < randomNumber) {
-            message.textContent = "⬆️ Muy bajo. Intenta un número mayor.";
-        } else {
-            message.textContent = "⬇️ Muy alto. Intenta un número menor.";
-        }
-    }
-
-    function restartGame() {
-        randomNumber = Math.floor(Math.random() * 20) + 1;
-        document.getElementById('game-message').textContent = '';
-        document.getElementById('guess').value = '';
-    }
-</script>
+</body>
+</html>
