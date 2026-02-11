@@ -11,7 +11,7 @@ namespace Integrador.Controllers
 {
     public class CiudadanoController : Controller
     {
-        private readonly AdopcionMascotasEntities db = new AdopcionMascotasEntities();
+        private readonly adopEntities db = new adopEntities();
 
         public ActionResult Index()
         {

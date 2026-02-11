@@ -16,7 +16,7 @@ namespace Integrador.Controllers
 {
     public class AccountController : Controller
     {
-        private AdopcionMascotasEntities db = new AdopcionMascotasEntities();
+        private adopEntities db = new adopEntities();
 
         public ActionResult Login()
         {
@@ -159,7 +159,7 @@ namespace Integrador.Controllers
             // Guardar imágenes en tabla UsuarioImagenes
             try
             {
-                var efConnString = ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"].ConnectionString;
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
                 var builder = new EntityConnectionStringBuilder(efConnString);
                 var providerConnStr = builder.ProviderConnectionString;
 

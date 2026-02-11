@@ -2,20 +2,1271 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-4 fw-bold text-success">
-        Pura Compañía ♥
-    </h1>
-    <p class="lead mt-3">
-        Adopta amor, adopta vida.
-        Tu mejor amigo puede estar esperando por ti 🐾
-    </p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <a href="#adopcion" class="btn btn-success btn-lg mt-4">
-        Ver animales en adopción
-    </a>
-</div>
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-<hr class="my-5" />
+        /* Accesibilidad - Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 8px 0;
+            font-weight: bold;
+        }
 
-<!-- aquí va TODO tu contenido de adopción -->
+            .skip-link:focus {
+                top: 0;
+            }
+
+        /* Screen reader only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Live region for announcements */
+        .sr-announcements {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FAA88C;
+            width: 100%;
+            height: 82px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-left: 77px;
+            color: #000;
+        }
+
+            .logo img {
+                width: 94px;
+                height: 75px;
+                object-fit: contain;
+            }
+
+            .logo span {
+                font-family: 'Nunito Sans', sans-serif;
+                font-weight: 700;
+                font-size: 24px;
+                font-style: italic;
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin-right: 40px;
+            margin-left: auto;
+        }
+
+            .nav-links a {
+                text-decoration: none;
+                color: #000;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 900;
+                font-size: 24px;
+                transition: opacity 0.3s;
+            }
+
+                .nav-links a:hover {
+                    opacity: 0.7;
+                }
+
+        .btn-login {
+            background-color: #BBFA8CB0;
+            height: 53px;
+            max-width: 230px;
+            color: #000;
+            padding: 5px 34px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            border: 2px solid #000000F7;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-right: 20px;
+            display: inline-block;
+        }
+
+            .btn-login:hover {
+                background-color: #FA8C99;
+                transform: scale(1.02);
+            }
+
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1920') center/cover;
+            height: 1079px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 536px;
+            left: 172px;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 1.1;
+            color: #FFFFFF;
+            margin: 0 0 24px 0;
+            padding: 0;
+        }
+
+        .hero p {
+            width: 917px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 1.2;
+            color: #FFFFFF;
+            margin: 0 0 44px 0;
+            padding: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 49px;
+        }
+
+        .btn-primary {
+            background: #FFFFFF;
+            color: #000;
+            width: 233px;
+            height: 90px;
+            border-radius: 30px;
+            padding: 20px 34px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            line-height: 100%;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                background-color: #FA8C99;
+            }
+
+        .btn-secondary {
+            background: #FAA88C;
+            color: #000;
+            width: 240px;
+            height: 90px;
+            border-radius: 30px;
+            padding: 20px 34px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            line-height: 100%;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            border: none;
+            white-space: nowrap;
+        }
+
+            .btn-secondary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                background-color: #FA8C99;
+            }
+
+
+        /* Como Funciona Section */
+        .como-funciona {
+            background-color: #FFFFFF;
+            padding: 117px 0 150px;
+            text-align: center;
+        }
+
+            .como-funciona h2 {
+                font-family: 'Nunito', sans-serif;
+                font-size: 36px;
+                font-weight: 700;
+                margin-bottom: 25px;
+                color: #000;
+            }
+
+            .como-funciona .subtitle {
+                font-family: 'Nunito', sans-serif;
+                font-size: 36px;
+                font-weight: 200;
+                color: #000;
+                margin-bottom: 154px;
+            }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            max-width: 1677px;
+            margin: 0 auto;
+            padding: 0 121px;
+        }
+
+        .step {
+            flex: 1;
+            max-width: 574px;
+            text-align: center;
+        }
+
+        .step-icon {
+            width: 104px;
+            height: 106px;
+            background-color: #E8D4FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 48px;
+        }
+
+        .step:nth-child(2) .step-icon {
+            background-color: #FFD4E5;
+        }
+
+        .step:nth-child(3) .step-icon {
+            background-color: #D4E5FF;
+        }
+
+        .step h3 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .step p {
+            font-family: 'Nunito', sans-serif;
+            color: #000;
+            font-size: 32px;
+            font-weight: 200;
+            line-height: 1.4;
+        }
+
+
+        /* Mascotas Destacadas Section */
+        .mascotas-destacadas {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 68px 0 145px;
+            text-align: center;
+        }
+
+            .mascotas-destacadas h2 {
+                font-family: 'Nunito', sans-serif;
+                font-size: 32px;
+                font-weight: 700;
+                margin-bottom: 20px;
+                color: #000;
+            }
+
+            .mascotas-destacadas .subtitle {
+                font-family: 'Nunito', sans-serif;
+                font-size: 32px;
+                font-weight: 600;
+                color: #000;
+                margin-bottom: 128px;
+            }
+
+        .mascotas-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1689px;
+            margin: 0 auto 120px;
+            padding: 0 121px;
+        }
+
+        .mascota-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: visible;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            width: 484px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 35px;
+        }
+
+            .mascota-card:hover {
+                /* Hover removido de la card completa */
+            }
+
+        .mascota-image {
+            width: 100%;
+            height: 563px;
+            object-fit: cover;
+        }
+
+        .like-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 24px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+            .like-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            }
+
+            .like-btn:focus {
+                outline: 3px solid #FA8C99;
+                outline-offset: 2px;
+            }
+
+            .like-btn.liked {
+                color: #ff0000;
+                animation: likeAnimation 0.5s ease;
+            }
+
+        @@keyframes likeAnimation {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .mascota-info {
+            padding: 30px;
+            text-align: left;
+            position: relative;
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .mascota-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+            .mascota-header h3 {
+                font-family: 'Nunito', sans-serif;
+                font-size: 28px;
+                font-weight: 700;
+                color: #000;
+            }
+
+        .mascota-tag {
+            background-color: #FFD4E5;
+            color: #C25B8A;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+            .mascota-tag.gato {
+                background-color: #E8D4FF;
+                color: #8A5BC2;
+            }
+
+            .mascota-tag.perro-azul {
+                background-color: #D4E5FF;
+                color: #4A7BC2;
+            }
+
+        .mascota-raza {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .mascota-edad {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .mascota-descripcion {
+            color: #666;
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .mascota-ubicacion {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-ver-mas {
+            background-color: #B8FF9C;
+            color: #000;
+            padding: 12px 34px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: background-color 0.3s;
+            width: 300px;
+            height: auto;
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+            .btn-ver-mas:hover {
+                background-color: #FA8C99;
+                transform: translateX(-50%) scale(1.05);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+
+        .btn-ver-todas {
+            background-color: #FAA88C;
+            color: #000;
+            padding: 20px 60px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0px 4px 4px 5px rgba(0,0,0,0.25);
+        }
+
+            .btn-ver-todas:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+                background-color: #FA8C99;
+            }
+
+
+        /* CTA Section */
+        .cta-section {
+            background-color: rgba(187, 250, 140, 0.8);
+            padding: 88px 0;
+            text-align: center;
+        }
+
+            .cta-section h2 {
+                font-family: 'Inter', sans-serif;
+                font-size: 24px;
+                font-weight: 800;
+                margin-bottom: 67px;
+                color: rgba(0, 0, 0, 0.95);
+            }
+
+            .cta-section p {
+                font-family: 'Inter', sans-serif;
+                font-size: 32px;
+                font-weight: 900;
+                color: rgba(0, 0, 0, 0.95);
+                max-width: 900px;
+                margin: 0 auto;
+                line-height: 1.4;
+            }
+
+        /* Footer */
+        .footer {
+            background: #000000;
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 80px;
+            margin-bottom: 60px;
+            padding: 0 121px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 25px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+            .footer-section ul li {
+                margin-bottom: 15px;
+            }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+            .footer-section a:hover {
+                color: white;
+            }
+
+        .footer-about {
+            max-width: 400px;
+        }
+
+            .footer-about p {
+                font-size: 16px;
+                line-height: 1.6;
+                color: #ccc;
+            }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #555;
+            color: #999;
+            font-size: 14px;
+            margin: 0 121px;
+        }
+
+        /* Responsive */
+        @@media (max-width: 1440px) {
+            .navbar,
+            .steps,
+            .mascotas-grid,
+            .footer-content {
+                padding: 0 60px;
+            }
+
+            .hero-content {
+                left: 60px;
+            }
+
+            .nav-links {
+                margin-right: 40px;
+            }
+        }
+
+        @@media (max-width: 1200px) {
+            .nav-links {
+                margin-right: 30px;
+                gap: 30px;
+            }
+
+                .nav-links a {
+                    font-size: 20px;
+                }
+
+            .btn-login {
+                font-size: 20px;
+                padding: 15px 28px;
+            }
+
+            .steps {
+                padding: 0 60px;
+            }
+
+            .step h3,
+            .step p {
+                font-size: 28px;
+            }
+
+            .mascotas-grid {
+                padding: 0 60px;
+            }
+        }
+
+        @@media (max-width: 992px) {
+            .navbar {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 20px 40px;
+            }
+
+            .logo {
+                margin-left: 0;
+            }
+
+            .nav-links {
+                margin-left: auto;
+                margin-right: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 20px;
+                gap: 20px;
+            }
+
+                .nav-links a {
+                    font-size: 18px;
+                }
+
+            .btn-login {
+                margin-right: 0;
+                margin-top: 20px;
+            }
+
+            .hero {
+                height: 700px;
+            }
+
+            .hero-content {
+                left: 40px;
+                top: 300px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 26px;
+                width: calc(100% - 80px);
+                max-width: 800px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                font-size: 28px;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 80px;
+                padding: 0 40px;
+            }
+
+            .step {
+                max-width: 100%;
+            }
+
+            .mascotas-grid {
+                flex-direction: column;
+                align-items: center;
+                padding: 0 40px;
+                gap: 60px;
+            }
+
+            .mascota-card {
+                width: 100%;
+                max-width: 484px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+                padding: 0 40px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+            }
+
+            .logo {
+                margin-left: 0;
+            }
+
+                .logo img {
+                    width: 60px;
+                    height: 48px;
+                }
+
+                .logo span {
+                    font-size: 20px;
+                }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+
+                .nav-links a {
+                    font-size: 18px;
+                }
+
+            .btn-login {
+                margin-right: 0;
+                margin-top: 15px;
+                font-size: 18px;
+                padding: 12px 24px;
+            }
+
+            .hero {
+                height: 600px;
+            }
+
+            .hero-content {
+                left: 30px;
+                top: 200px;
+                right: 30px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .hero p {
+                font-size: 20px;
+                width: calc(100% - 60px);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 200px;
+                height: 70px;
+                font-size: 24px;
+            }
+
+            .como-funciona {
+                padding: 60px 0 80px;
+            }
+
+                .como-funciona h2 {
+                    font-size: 28px;
+                }
+
+                .como-funciona .subtitle {
+                    font-size: 22px;
+                    margin-bottom: 80px;
+                    padding: 0 20px;
+                }
+
+            .steps {
+                flex-direction: column;
+                padding: 0 30px;
+                gap: 60px;
+            }
+
+            .step-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 36px;
+            }
+
+            .step h3 {
+                font-size: 24px;
+            }
+
+            .step p {
+                font-size: 20px;
+            }
+
+            .mascotas-destacadas {
+                padding: 50px 0 80px;
+            }
+
+                .mascotas-destacadas h2 {
+                    font-size: 28px;
+                }
+
+                .mascotas-destacadas .subtitle {
+                    font-size: 22px;
+                    margin-bottom: 60px;
+                    padding: 0 20px;
+                }
+
+            .mascotas-grid {
+                flex-direction: column;
+                align-items: center;
+                padding: 0 30px;
+                margin-bottom: 80px;
+                gap: 70px;
+            }
+
+            .mascota-card {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .mascota-image {
+                height: 400px;
+            }
+
+            .btn-ver-mas {
+                width: 300px;
+                font-size: 20px;
+            }
+
+            .btn-ver-todas {
+                font-size: 24px;
+                padding: 15px 40px;
+            }
+
+            .cta-section {
+                padding: 60px 20px;
+            }
+
+                .cta-section h2 {
+                    font-size: 20px;
+                    margin-bottom: 40px;
+                }
+
+                .cta-section p {
+                    font-size: 24px;
+                    padding: 0 20px;
+                }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 30px;
+                gap: 40px;
+            }
+
+            .footer {
+                padding: 60px 0 30px;
+            }
+
+            .footer-bottom {
+                margin: 0 30px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .hero {
+                height: 500px;
+            }
+
+            .hero-content {
+                top: 150px;
+            }
+
+            .hero h1 {
+                font-size: 20px;
+            }
+
+            .hero p {
+                font-size: 16px;
+                line-height: 1.4;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 160px;
+                height: 60px;
+                font-size: 20px;
+                padding: 15px 20px;
+            }
+
+            .como-funciona h2 {
+                font-size: 24px;
+            }
+
+            .como-funciona .subtitle {
+                font-size: 18px;
+            }
+
+            .step h3 {
+                font-size: 20px;
+            }
+
+            .step p {
+                font-size: 18px;
+            }
+
+            .mascotas-destacadas h2 {
+                font-size: 24px;
+            }
+
+            .mascotas-destacadas .subtitle {
+                font-size: 18px;
+            }
+
+            .mascota-header h3 {
+                font-size: 22px;
+            }
+
+            .btn-ver-mas {
+                width: 250px;
+                font-size: 18px;
+            }
+
+            .btn-ver-todas {
+                font-size: 20px;
+                padding: 12px 30px;
+            }
+
+            .cta-section h2 {
+                font-size: 18px;
+            }
+
+            .cta-section p {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- Región de anuncios para lectores de pantalla -->
+    <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="announcements"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <div class="logo">
+            <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía - Ir a página principal">
+            <span aria-label="Pura Compañía - Plataforma de adopción de mascotas">Pura Compañía</span>
+        </div>
+        <ul class="nav-links" role="menubar">
+            <li role="none"><a href="@Url.Action("Index", "Mascotas")" role="menuitem">Mascotas</a></li>
+            <li role="none"><a href="@Url.Action("Centros", "Ciudadano")" role="menuitem">Refugios</a></li>
+            <li role="none"><a href="@Url.Action("Soporte", "Home")" role="menuitem">Contacto</a></li>
+        </ul>
+        @if (Session["Nombre"] != null)
+        {
+            <a href="@Url.Action("Perfil", "Ciudadano")" class="btn-login" aria-label="Ir a mi perfil de usuario">Mi Perfil</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn-login" aria-label="Iniciar sesión en tu cuenta">Iniciar sesión</a>
+        }
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" role="banner" aria-label="Sección principal de bienvenida">
+        <div class="hero-content">
+            <h1 id="main-heading">Encuentra a tu compañero ideal</h1>
+            <p>Miles de mascotas esperan encontrar un hogar lleno de amor. Adopta, no compres. Cambia una vida hoy.</p>
+            <div class="hero-buttons">
+                <a href="@Url.Action("Index", "Mascotas")" class="btn-primary" aria-label="Comenzar a buscar mascotas disponibles para adopción">Comenzar</a>
+                <a href="#como-funciona" class="btn-secondary" aria-label="Conocer más sobre el proceso de adopción">Saber más</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona Section -->
+    <main id="main-content">
+        <section class="como-funciona" id="como-funciona" aria-labelledby="como-funciona-heading">
+            <h2 id="como-funciona-heading">¿Cómo funciona?</h2>
+            <p class="subtitle">Adoptar una mascota nunca fue tan fácil. Sigue estos simples pasos</p>
+            <div class="steps" role="list" aria-label="Pasos para adoptar una mascota">
+                <div class="step" role="listitem">
+                    <div class="step-icon" aria-hidden="true">🔍</div>
+                    <h3>1. Busca</h3>
+                    <p>Explora perfiles de mascotas disponibles en diferentes refugios</p>
+                </div>
+                <div class="step" role="listitem">
+                    <div class="step-icon" aria-hidden="true">❤️</div>
+                    <h3>2. Conecta</h3>
+                    <p>Encuentra la mascota perfecta que encaje con tu estilo de vida</p>
+                </div>
+                <div class="step" role="listitem">
+                    <div class="step-icon" aria-hidden="true">🏠</div>
+                    <h3>3. Adopta</h3>
+                    <p>Completa el proceso de adopción y dale un hogar a tu nuevo amigo</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mascotas Destacadas Section -->
+        <section class="mascotas-destacadas" aria-labelledby="mascotas-heading">
+            <h2 id="mascotas-heading">Mascotas Destacadas</h2>
+            <p class="subtitle">Conoce a algunas de las adorables mascotas que están buscando un hogar</p>
+
+            <div class="mascotas-grid" role="list" aria-label="Lista de mascotas destacadas disponibles para adopción">
+                <article class="mascota-card" role="listitem" aria-labelledby="mascota-max">
+                    <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=484&h=563&fit=crop" alt="Fotografía de Max, un perro Golden Retriever color dorado" class="mascota-image">
+                    <button class="like-btn" aria-label="Agregar Max a favoritos" data-mascota="Max" onclick="toggleLike(this)">
+                        <span aria-hidden="true">♡</span>
+                    </button>
+                    <div class="mascota-info">
+                        <div class="mascota-header">
+                            <h3 id="mascota-max">Max</h3>
+                            <span class="mascota-tag" aria-label="Tipo: Perro">Perro</span>
+                        </div>
+                        <div class="mascota-raza" aria-label="Raza: Golden Retriever">Golden Retriever</div>
+                        <div class="mascota-edad" aria-label="Edad: 2 años">2 años</div>
+                        <p class="mascota-descripcion">Amigable y juguetón, perfecto para familias</p>
+                        <div class="mascota-ubicacion" aria-label="Ubicación: Madrid"><span aria-hidden="true">📍</span> Madrid</div>
+                    </div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Max">Ver más</a>
+                </article>
+
+                <article class="mascota-card" role="listitem" aria-labelledby="mascota-luna">
+                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=484&h=563&fit=crop" alt="Fotografía de Luna, una gata mestiza de pelo corto" class="mascota-image">
+                    <button class="like-btn" aria-label="Agregar Luna a favoritos" data-mascota="Luna" onclick="toggleLike(this)">
+                        <span aria-hidden="true">♡</span>
+                    </button>
+                    <div class="mascota-info">
+                        <div class="mascota-header">
+                            <h3 id="mascota-luna">Luna</h3>
+                            <span class="mascota-tag gato" aria-label="Tipo: Gato">Gato</span>
+                        </div>
+                        <div class="mascota-raza" aria-label="Raza: Mestiza">Mestiza</div>
+                        <div class="mascota-edad" aria-label="Edad: 1 año">1 año</div>
+                        <p class="mascota-descripcion">Tranquila y cariñosa, ideal para apartamentos</p>
+                        <div class="mascota-ubicacion" aria-label="Ubicación: Barcelona"><span aria-hidden="true">📍</span> Barcelona</div>
+                    </div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Luna">Ver más</a>
+                </article>
+
+                <article class="mascota-card" role="listitem" aria-labelledby="mascota-rocky">
+                    <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=484&h=563&fit=crop" alt="Fotografía de Rocky, un perro Border Collie cachorro" class="mascota-image">
+                    <button class="like-btn" aria-label="Agregar Rocky a favoritos" data-mascota="Rocky" onclick="toggleLike(this)">
+                        <span aria-hidden="true">♡</span>
+                    </button>
+                    <div class="mascota-info">
+                        <div class="mascota-header">
+                            <h3 id="mascota-rocky">Rocky</h3>
+                            <span class="mascota-tag perro-azul" aria-label="Tipo: Perro">Perro</span>
+                        </div>
+                        <div class="mascota-raza" aria-label="Raza: Border Collie">Border Collie</div>
+                        <div class="mascota-edad" aria-label="Edad: 6 meses">6 meses</div>
+                        <p class="mascota-descripcion">Enérgico y muy inteligente, busca familia activa</p>
+                        <div class="mascota-ubicacion" aria-label="Ubicación: Valencia"><span aria-hidden="true">📍</span> Valencia</div>
+                    </div>
+                    <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Rocky">Ver más</a>
+                </article>
+            </div>
+
+            <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-todas" aria-label="Ver todas las mascotas disponibles para adopción">Ver Todas las Mascotas</a>
+        </section>
+    </main>
+
+    <!-- CTA Section -->
+    <section class="cta-section" aria-labelledby="cta-heading" role="complementary">
+        <h2 id="cta-heading">¿Listo para cambiar una vida?</h2>
+        <p>Únete a nuestra comunidad de adoptantes y dale una segunda oportunidad a una mascota</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo" aria-label="Pie de página">
+        <div class="footer-content">
+            <div class="footer-section footer-about">
+                <h3>Pura Compañía</h3>
+                <p>Conectando mascotas con familias amorosas desde 2024</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="@Url.Action("Index", "Mascotas")">Cómo Adoptar</a></li>
+                    <li><a href="@Url.Action("Soporte", "Home")">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Recursos</h3>
+                <ul>
+                    <li><a href="#">Cuidado de Mascotas</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PetAdopt. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    @* Mensajes flash *@
+    @if (TempData["AdopcionSuccess"] != null)
+    {
+        <script>
+            alert('@TempData["AdopcionSuccess"]');
+        </script>
+    }
+    @if (TempData["AdopcionWarning"] != null)
+    {
+        <script>
+            alert('@TempData["AdopcionWarning"]');
+        </script>
+    }
+
+    <script>
+        // Función para anunciar mensajes a lectores de pantalla
+        function announce(message) {
+            const announcements = document.getElementById('announcements');
+            announcements.textContent = message;
+            setTimeout(() => {
+                announcements.textContent = '';
+            }, 1000);
+        }
+
+        // Función para manejar el botón de like/favoritos
+        function toggleLike(button) {
+            const mascotaName = button.getAttribute('data-mascota');
+            const isLiked = button.classList.contains('liked');
+
+            if (isLiked) {
+                // Remover de favoritos
+                button.classList.remove('liked');
+                button.querySelector('span').textContent = '♡';
+                button.setAttribute('aria-label', 'Agregar ' + mascotaName + ' a favoritos');
+                announce(mascotaName + ' ha sido removido de favoritos');
+
+                // Remover del localStorage
+                let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                favorites = favorites.filter(name => name !== mascotaName);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+            } else {
+                // Agregar a favoritos
+                button.classList.add('liked');
+                button.querySelector('span').textContent = '♥';
+                button.setAttribute('aria-label', 'Remover ' + mascotaName + ' de favoritos');
+                announce(mascotaName + ' ha sido agregado a favoritos');
+
+                // Guardar en localStorage
+                let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                if (!favorites.includes(mascotaName)) {
+                    favorites.push(mascotaName);
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                }
+            }
+        }
+
+        // Cargar favoritos guardados al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const likeButtons = document.querySelectorAll('.like-btn');
+
+            likeButtons.forEach(button => {
+                const mascotaName = button.getAttribute('data-mascota');
+                if (favorites.includes(mascotaName)) {
+                    button.classList.add('liked');
+                    button.querySelector('span').textContent = '♥';
+                    button.setAttribute('aria-label', 'Remover ' + mascotaName + ' de favoritos');
+                }
+            });
+
+            // Mejorar navegación por teclado
+            const focusableElements = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])';
+            const focusable = document.querySelectorAll(focusableElements);
+
+            // Agregar indicadores visuales de focus
+            focusable.forEach(element => {
+                element.addEventListener('focus', function() {
+                    this.style.outline = '3px solid #FA8C99';
+                    this.style.outlineOffset = '2px';
+                });
+                element.addEventListener('blur', function() {
+                    this.style.outline = '';
+                    this.style.outlineOffset = '';
+                });
+            });
+        });
+
+        // Mejorar accesibilidad de la navegación por teclado en cards
+        document.addEventListener('keydown', function(e) {
+            // Activar botones con Enter o Espacio
+            if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('like-btn')) {
+                e.preventDefault();
+                e.target.click();
+            }
+        });
+    </script>
+</body>
+</html>

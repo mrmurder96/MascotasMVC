@@ -13,10 +13,10 @@ namespace Integrador.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class AdopcionMascotasEntities : DbContext
+    public partial class adopEntities : DbContext
     {
-        public AdopcionMascotasEntities()
-            : base("name=AdopcionMascotasEntities")
+        public adopEntities()
+            : base("name=adopEntities")
         {
         }
     
@@ -25,6 +25,12 @@ namespace Integrador.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Adopciones> Adopciones { get; set; }
+        public virtual DbSet<Campanias> Campanias { get; set; }
+        public virtual DbSet<Centros> Centros { get; set; }
+        public virtual DbSet<Mascotas> Mascotas { get; set; }
+        public virtual DbSet<Notificaciones> Notificaciones { get; set; }
+        public virtual DbSet<UsuarioImagenes> UsuarioImagenes { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
     }
 }

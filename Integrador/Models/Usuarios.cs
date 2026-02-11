@@ -14,6 +14,13 @@ namespace Integrador.Models
     
     public partial class Usuarios
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Usuarios()
+        {
+            this.Notificaciones = new HashSet<Notificaciones>();
+            this.UsuarioImagenes = new HashSet<UsuarioImagenes>();
+        }
+    
         public int Id { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
@@ -31,5 +38,10 @@ namespace Integrador.Models
         public string TokenRecuperacion { get; set; }
         public Nullable<System.DateTime> TokenExpiracion { get; set; }
         public bool EstaActivo { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notificaciones> Notificaciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UsuarioImagenes> UsuarioImagenes { get; set; }
     }
 }

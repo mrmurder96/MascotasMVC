@@ -4,8 +4,17 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3c5aee87fe214afabb46883666a96cac" Name="Diagram1">
-        <EntityTypeShape EntityType="AdopcionMascotasModel.Usuarios" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="7396e35c77634093b03749edcfb63240" Name="Diagram1">
+        <EntityTypeShape EntityType="adopModel.Adopciones" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.Campanias" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.Centros" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.Mascotas" Width="1.5" PointX="5.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.Notificaciones" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.UsuarioImagenes" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="adopModel.Usuarios" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <AssociationConnector Association="adopModel.FK_Adopciones_Mascotas" ManuallyRouted="false" />
+        <AssociationConnector Association="adopModel.FK_Notificaciones_Usuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="adopModel.FK_UsuarioImagenes_Usuarios" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
