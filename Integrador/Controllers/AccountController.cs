@@ -74,9 +74,11 @@ namespace Integrador.Controllers
             Session["Nombre"] = usuario.Nombres;
             Session["Rol"] = usuario.Rol;
 
+            // Redirigir según el rol
             if (usuario.Rol == "Administrador")
                 return RedirectToAction("Index", "Admin", new { area = "Admin" });
-
+            
+            // Para ciudadanos o cualquier otro rol, ir al área de Ciudadano
             return RedirectToAction("Index", "Ciudadano");
         }
 

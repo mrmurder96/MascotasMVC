@@ -4,11 +4,14 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using Integrador.Filters;
 using Integrador.Models;
 using Integrador.Models.ViewModels;
 
 namespace Integrador.Controllers
 {
+    [ClienteAuthorize]
+    [CargarPermisos]
     public class CiudadanoController : Controller
     {
         private readonly adopEntities db = new adopEntities();

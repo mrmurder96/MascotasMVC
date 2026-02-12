@@ -1,4 +1,5 @@
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,17 @@ namespace Integrador.Controllers
     {
         public ActionResult Index()
         {
+            // Si el usuario ya está autenticado, redirigirlo a su dashboard correspondiente
+            if (Session["UsuarioId"] != null && Session["Rol"] != null)
+            {
+                var rol = Session["Rol"].ToString();
+                if (rol == "Administrador")
+                    return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                else if (rol == "Ciudadano")
+                    return RedirectToAction("Index", "Ciudadano");
+            }
+
+            // Si no está autenticado, mostrar la página de inicio pública
             return View();
         }
 

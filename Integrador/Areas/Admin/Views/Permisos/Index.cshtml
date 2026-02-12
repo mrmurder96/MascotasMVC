@@ -1,0 +1,538 @@
+﻿@model List<Integrador.Models.Permisos>
+@{
+    ViewBag.Title = "Gestion de Permisos CRUD";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var permisosAdmin = ViewBag.PermisosAdmin as List<Integrador.Models.PermisoConCrudViewModel>;
+    var permisosCiudadano = ViewBag.PermisosCiudadano as List<Integrador.Models.PermisoConCrudViewModel>;
+}
+
+<style>
+    .permisos-container {
+        background-color: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .permisos-header {
+        margin-bottom: 30px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 15px;
+    }
+
+    .permisos-header h2 {
+        color: #2c3e50;
+        margin: 0 0 10px 0;
+    }
+
+    .roles-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .role-tab {
+        padding: 12px 24px;
+        cursor: pointer;
+        background-color: #ecf0f1;
+        border: none;
+        border-radius: 8px 8px 0 0;
+        font-weight: 600;
+        color: #7f8c8d;
+        transition: all 0.3s;
+    }
+
+    .role-tab.active {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .permisos-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .permisos-table thead th {
+        background-color: #f8f9fa;
+        padding: 15px;
+        text-align: left;
+        font-weight: 700;
+        color: #2c3e50;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .permisos-table tbody tr {
+        background-color: white;
+        border: 2px solid #ecf0f1;
+        transition: all 0.3s;
+    }
+
+    .permisos-table tbody tr:hover {
+        border-color: #3498db;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .permisos-table tbody tr.disabled {
+        opacity: 0.5;
+        background-color: #f8f9fa;
+    }
+
+    .permisos-table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .permiso-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .permiso-icon {
+        font-size: 32px;
+        min-width: 40px;
+    }
+
+    .permiso-details h4 {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+        font-size: 16px;
+    }
+
+    .permiso-route {
+        font-size: 12px;
+        color: #7f8c8d;
+        font-family: monospace;
+    }
+
+    .crud-checkboxes {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .crud-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .crud-checkbox label {
+        cursor: pointer;
+        user-select: none;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .crud-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .crud-checkbox input[type="checkbox"]:disabled {
+        cursor: not-allowed;
+    }
+
+    .crud-crear { color: #2ecc71; }
+    .crud-leer { color: #3498db; }
+    .crud-actualizar { color: #f39c12; }
+    .crud-eliminar { color: #e74c3c; }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #2ecc71;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+    }
+
+    .toggle-switch input:disabled + .toggle-slider {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .alert {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 12px;
+        text-transform: uppercase;
+    }
+
+    .badge-crud {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .badge-view {
+        background-color: #e3f2fd;
+        color: #1565c0;
+    }
+</style>
+
+<div class="permisos-container">
+    <div class="permisos-header">
+        <h2>?? Gestión de Permisos CRUD</h2>
+        <p>Configure los permisos de acceso y operaciones CRUD para cada rol del sistema</p>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Información:</strong> El Administrador tiene acceso completo a todo el sistema. 
+        Configure los permisos y operaciones CRUD para el rol Ciudadano según las necesidades.
+    </div>
+
+    <div class="alert alert-warning">
+        <strong>⚠️ CRUD:</strong> 
+        <strong class="crud-crear">Crear</strong> = Agregar nuevos registros | 
+        <strong class="crud-leer">Leer</strong> = Ver/Listar registros | 
+        <strong class="crud-actualizar">Actualizar</strong> = Modificar registros | 
+        <strong class="crud-eliminar">Eliminar</strong> = Borrar registros
+    </div>
+
+    <div class="roles-tabs">
+        <button class="role-tab active" onclick="cambiarRol('Admin')" id="tab-admin">
+            ????? Administrador
+        </button>
+        <button class="role-tab" onclick="cambiarRol('Ciudadano')" id="tab-ciudadano">
+            ?? Ciudadano
+        </button>
+    </div>
+
+    <div id="permisos-admin" style="display: block;">
+        <h3 style="margin-bottom: 20px;">Permisos del Administrador</h3>
+        <table class="permisos-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Modulo</th>
+                    <th style="width: 15%;">Acceso</th>
+                    <th style="width: 10%;">Tipo</th>
+                    <th style="width: 45%;">Operaciones CRUD</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (permisosAdmin != null)
+                {
+                    foreach (var permisoVM in permisosAdmin.OrderBy(p => p.Permiso.Orden))
+                    {
+                        <tr>
+                            <td>
+                                <div class="permiso-info">
+                                    <div class="permiso-icon">@permisoVM.Permiso.Icono</div>
+                                    <div class="permiso-details">
+                                        <h4>@permisoVM.Permiso.Nombre</h4>
+                                        <div class="permiso-route">@permisoVM.Permiso.ControllerName/@permisoVM.Permiso.ActionName</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked disabled>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </td>
+                            <td>
+                                @if (permisoVM.Permiso.TieneCrud)
+                                {
+                                    <span class="badge badge-crud">CRUD</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-view">Vista</span>
+                                }
+                            </td>
+                            <td>
+                                @if (permisoVM.Permiso.TieneCrud)
+                                {
+                                    <div class="crud-checkboxes">
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" checked disabled>
+                                            <label class="crud-crear">? Crear</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" checked disabled>
+                                            <label class="crud-leer">? Leer</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" checked disabled>
+                                            <label class="crud-actualizar">? Actualizar</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" checked disabled>
+                                            <label class="crud-eliminar">? Eliminar</label>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span style="color: #95a5a6;">— No aplica —</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="permisos-ciudadano" style="display: none;">
+        <h3 style="margin-bottom: 20px;">Permisos del Ciudadano (Editable)</h3>
+        <table class="permisos-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Modulo</th>
+                    <th style="width: 15%;">Acceso</th>
+                    <th style="width: 10%;">Tipo</th>
+                    <th style="width: 45%;">Operaciones CRUD</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (permisosCiudadano != null)
+                {
+                    foreach (var permisoVM in permisosCiudadano.OrderBy(p => p.Permiso.Orden))
+                    {
+                        var rowClass = permisoVM.TieneAcceso ? "" : "disabled";
+                        <tr class="@rowClass" id="row-ciudadano-@permisoVM.Permiso.Id">
+                            <td>
+                                <div class="permiso-info">
+                                    <div class="permiso-icon">@permisoVM.Permiso.Icono</div>
+                                    <div class="permiso-details">
+                                        <h4>@permisoVM.Permiso.Nombre</h4>
+                                        <div class="permiso-route">@permisoVM.Permiso.ControllerName/@permisoVM.Permiso.ActionName</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" 
+                                           @(permisoVM.TieneAcceso ? "checked" : "")
+                                           onchange="toggleAcceso(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName')"
+                                           data-permiso-id="@permisoVM.Permiso.Id">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </td>
+                            <td>
+                                @if (permisoVM.Permiso.TieneCrud)
+                                {
+                                    <span class="badge badge-crud">CRUD</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-view">Vista</span>
+                                }
+                            </td>
+                            <td>
+                                @if (permisoVM.Permiso.TieneCrud)
+                                {
+                                    <div class="crud-checkboxes" id="crud-@permisoVM.Permiso.Id">
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" 
+                                                   @(permisoVM.PermisosCrud.PuedeCrear ? "checked" : "")
+                                                   @(!permisoVM.TieneAcceso ? "disabled" : "")
+                                                   onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Crear')">
+                                            <label class="crud-crear">Crear</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" 
+                                                   @(permisoVM.PermisosCrud.PuedeLeer ? "checked" : "")
+                                                   @(!permisoVM.TieneAcceso ? "disabled" : "")
+                                                   onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Leer')">
+                                            <label class="crud-leer">Leer</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" 
+                                                   @(permisoVM.PermisosCrud.PuedeActualizar ? "checked" : "")
+                                                   @(!permisoVM.TieneAcceso ? "disabled" : "")
+                                                   onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Actualizar')">
+                                            <label class="crud-actualizar">Actualizar</label>
+                                        </div>
+                                        <div class="crud-checkbox">
+                                            <input type="checkbox" 
+                                                   @(permisoVM.PermisosCrud.PuedeEliminar ? "checked" : "")
+                                                   @(!permisoVM.TieneAcceso ? "disabled" : "")
+                                                   onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Eliminar')">
+                                            <label class="crud-eliminar">Eliminar</label>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span style="color: #95a5a6;">— No aplica —</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    function cambiarRol(rol) {
+        // Remover active de todos los tabs
+        document.querySelectorAll('.role-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+            
+        // Agregar active al tab correcto de forma segura
+        const tabId = 'tab-' + rol.toLowerCase();
+        const tab = document.getElementById(tabId);
+        if (tab) {
+            tab.classList.add('active');
+        }
+
+        // Mostrar/ocultar contenidos de forma segura
+        const adminDiv = document.getElementById('permisos-admin');
+        const ciudadanoDiv = document.getElementById('permisos-ciudadano');
+            
+        if (adminDiv && ciudadanoDiv) {
+            if (rol === 'Admin' || rol === 'Administrador') {
+                adminDiv.style.display = 'block';
+                ciudadanoDiv.style.display = 'none';
+            } else {
+                adminDiv.style.display = 'none';
+                ciudadanoDiv.style.display = 'block';
+            }
+        }
+    }
+
+        function toggleAcceso(checkbox, permisoId, controllerName) {
+            const tieneAcceso = checkbox.checked;
+            const row = document.getElementById('row-ciudadano-' + permisoId);
+            const crudContainer = document.getElementById('crud-' + permisoId);
+
+            // Actualizar estado visual de la fila
+            if (row) {
+                if (tieneAcceso) {
+                    row.classList.remove('disabled');
+                } else {
+                    row.classList.add('disabled');
+                }
+            }
+
+            // Habilitar/deshabilitar checkboxes CRUD
+            if (crudContainer) {
+                const crudCheckboxes = crudContainer.querySelectorAll('input[type="checkbox"]');
+                crudCheckboxes.forEach(cb => {
+                    cb.disabled = !tieneAcceso;
+                });
+            }
+
+            fetch('@Url.Action("ActualizarPermiso", "Permisos", new { area = "Admin" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    rol: 'Ciudadano',
+                    permisoId: permisoId,
+                    controllerName: controllerName,
+                    tieneAcceso: tieneAcceso
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Error: ' + data.message);
+                    checkbox.checked = !tieneAcceso;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar el acceso');
+                checkbox.checked = !tieneAcceso;
+            });
+        }
+
+        function actualizarPermisoCrud(checkbox, permisoId, controllerName, operacion) {
+            const tienePermiso = checkbox.checked;
+
+            fetch('@Url.Action("ActualizarPermisoCrud", "Permisos", new { area = "Admin" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    rol: 'Ciudadano',
+                    permisoId: permisoId,
+                    controllerName: controllerName,
+                    operacion: operacion,
+                    tienePermiso: tienePermiso
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Error: ' + data.message);
+                    checkbox.checked = !tienePermiso;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar el permiso CRUD');
+                checkbox.checked = !tienePermiso;
+            });
+        }
+    </script>
+}
+

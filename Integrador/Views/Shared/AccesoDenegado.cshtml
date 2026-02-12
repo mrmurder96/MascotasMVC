@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Acceso Denegado";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div style="background: white; padding: 50px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; max-width: 600px; margin: 50px auto;">
+    <div style="font-size: 80px; margin-bottom: 20px;">🚫</div>
+    <h2 style="color: #e74c3c; margin-bottom: 20px;">Acceso Denegado</h2>
+    
+    @if (ViewData["Mensaje"] != null)
+    {
+        <p style="font-size: 18px; color: #7f8c8d; margin-bottom: 30px;">
+            @ViewData["Mensaje"]
+        </p>
+    }
+    else
+    {
+        <p style="font-size: 18px; color: #7f8c8d; margin-bottom: 30px;">
+            No tienes permisos suficientes para realizar esta acción.
+        </p>
+    }
+    
+    <div style="margin-top: 40px;">
+        <p style="color: #95a5a6; margin-bottom: 20px;">
+            Si crees que esto es un error, contacta con el administrador del sistema.
+        </p>
+        
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <a href="javascript:history.back()" style="padding: 12px 30px; background: #95a5a6; color: white; text-decoration: none; border-radius: 5px;">
+                ← Volver
+            </a>
+            <a href="@Url.Action("Index", Session["Rol"]?.ToString() == "Administrador" ? "Admin" : "Ciudadano", Session["Rol"]?.ToString() == "Administrador" ? new { area = "Admin" } : null)" 
+               style="padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px;">
+                🏠 Ir al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+

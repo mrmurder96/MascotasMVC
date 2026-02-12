@@ -1,176 +1,300 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Title - Pura Compañía</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Accesibilidad - Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Screen reader only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Live region for announcements */
+        .sr-announcements {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FAA88C;
+            width: 100%;
+            height: 82px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-left: 77px;
+            color: #000;
+        }
+
+        .logo img {
+            width: 94px;
+            height: 75px;
+            object-fit: contain;
+        }
+
+        .logo span {
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            font-style: italic;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logo a:hover {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin-right: 40px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .btn-login {
+            background-color: #BBFA8CB0;
+            height: 53px;
+            max-width: 230px;
+            color: #000;
+            padding: 5px 34px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            border: 2px solid #000000F7;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-right: 20px;
+            display: inline-block;
+        }
+
+        .btn-login:hover {
+            background-color: #FA8C99;
+            transform: scale(1.02);
+        }
+
+        /* Responsive */
+        @@media (max-width: 1440px) {
+            .navbar {
+                padding: 0 60px;
+            }
+
+            .nav-links {
+                margin-right: 40px;
+            }
+        }
+
+        @@media (max-width: 1200px) {
+            .nav-links {
+                margin-right: 30px;
+                gap: 30px;
+            }
+
+            .nav-links a {
+                font-size: 20px;
+            }
+
+            .btn-login {
+                font-size: 20px;
+                padding: 15px 28px;
+            }
+        }
+
+        @@media (max-width: 992px) {
+            .navbar {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 20px 40px;
+            }
+
+            .logo {
+                margin-left: 0;
+            }
+
+            .nav-links {
+                margin-left: auto;
+                margin-right: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 20px;
+                gap: 20px;
+            }
+
+            .nav-links a {
+                font-size: 18px;
+            }
+
+            .btn-login {
+                margin-right: 0;
+                margin-top: 20px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+            }
+
+            .logo {
+                margin-left: 0;
+            }
+
+            .logo img {
+                width: 60px;
+                height: 48px;
+            }
+
+            .logo span {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+
+            .nav-links a {
+                font-size: 18px;
+            }
+
+            .btn-login {
+                margin-right: 0;
+                margin-top: 15px;
+                font-size: 18px;
+                padding: 12px 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @if (Session["UsuarioId"] != null)
+<!-- Skip Link para accesibilidad -->
+<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+<!-- Región de anuncios para lectores de pantalla -->
+<div aria-live="polite" aria-atomic="true" class="sr-announcements" id="announcements"></div>
+    
+<!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <div class="logo">
+            @if (Session["Nombre"] != null)
             {
-                @Html.ActionLink("Pura Compañia ♥", "Index", "Ciudadano", new { area = "" }, new { @class = "navbar-brand" })
+                <a href="@Url.Action("Index", "Ciudadano")">
+                    <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía - Ir a página principal">
+                    <span aria-label="Pura Compañía - Plataforma de adopción de mascotas">Pura Compañía</span>
+                </a>
             }
             else
             {
-                @Html.ActionLink("Pura Compañia ♥", "Inicio", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía - Ir a página principal">
+                    <span aria-label="Pura Compañía - Plataforma de adopción de mascotas">Pura Compañía</span>
+                </a>
             }
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Centros", "Ciudadano")">Centros</a>
-                    </li>
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
-                    @if (Session["UsuarioId"] != null)
-                    {
-                        @* Enlace para administradores *@
-                        if (Session["Rol"] != null && Session["Rol"].ToString() == "Administrador")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "Admin", new { area = "Admin" })">Admin</a>
-                            </li>
-                        }
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Ciudadano")">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Perfil", "Ciudadano")">Mi Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Logout", "Account")">Cerrar sesión</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="btn btn-success me-2" href="@Url.Action("Login", "Account")">Iniciar Sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-light" href="@Url.Action("Registro", "Account")">Registrarse</a>
-                        </li>
-                    }
-                </ul>
-            </div>
         </div>
+        <ul class="nav-links" role="menubar">
+            <li role="none"><a href="@Url.Action("Index", "Mascotas")" role="menuitem">Mascotas</a></li>
+            @if (Session["Nombre"] != null)
+            {
+                <li role="none"><a href="@Url.Action("Centros", "Ciudadano")" role="menuitem">Refugios</a></li>
+            }
+            <li role="none"><a href="@Url.Action("Soporte", "Home")" role="menuitem">Contacto</a></li>
+        </ul>
+        @if (Session["Nombre"] != null)
+        {
+            <a href="@Url.Action("Perfil", "Ciudadano")" class="btn-login" aria-label="Ir a mi perfil de usuario">Mi Perfil</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn-login" aria-label="Iniciar sesión en tu cuenta">Iniciar sesión</a>
+        }
     </nav>
 
     @RenderBody()
-
-    @* Mostrar contenido público (adopción, animales) sólo si NO hay sesión iniciada *@
-    @if (Session["UsuarioId"] == null)
-    {
-        <hr class="my-5" />
-
-        <!-- POR QUÉ ADOPTAR -->
-        <div class="row text-center">
-            <div class="col-md-4">
-                <h4 class="text-success">🐶 Salvas una vida</h4>
-                <p>
-                    Miles de animales esperan una segunda oportunidad.
-                    Adoptar cambia su destino.
-                </p>
-            </div>
-            <div class="col-md-4">
-                <h4 class="text-success">🏠 Ganas un compañero</h4>
-                <p>
-                    Las mascotas adoptadas crean vínculos fuertes y sinceros.
-                </p>
-            </div>
-
-            <div class="col-md-4">
-                <h4 class="text-success">❤️ Amor verdadero</h4>
-                <p>
-                    No compres, adopta y construye una historia llena de amor.
-                </p>
-            </div>
-        </div>
-
-        <hr class="my-5" id="adopcion" />
-
-        <!-- ANIMALES EN ADOPCIÓN -->
-        <h2 class="text-center text-success mb-4">
-            Animales disponibles para adopción
-        </h2>
-        <div class="row">
-            <!-- Animal 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="https://place-puppy.com/300x200" class="card-img-top" alt="Mascota">
-                    <div class="card-body">
-                        <h5 class="card-title">Luna</h5>
-                        <p class="card-text">
-                            🐶 Perro <br />
-                            📅 2 años <br />
-                            💉 Vacunada <br />
-                            😊 Juguetona
-                        </p>
-                        <button class="btn btn-outline-success w-100" disabled>
-                            Inicia sesión para adoptar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Animal 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="https://placekitten.com/300/200" class="card-img-top" alt="Mascota">
-                    <div class="card-body">
-                        <h5 class="card-title">Milo</h5>
-                        <p class="card-text">
-                            🐱 Gato <br />
-                            📅 1 año <br />
-                            💉 Vacunado <br />
-                            😺 Tranquilo
-                        </p>
-                        <button class="btn btn-outline-success w-100" disabled>
-                            Inicia sesión para adoptar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Animal 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <img src="https://place-dog.net/300/200" class="card-img-top" alt="Mascota">
-                    <div class="card-body">
-                        <h5 class="card-title">Max</h5>
-                        <p class="card-text">
-                            🐕 Perro <br />
-                            📅 3 años <br />
-                            💉 Vacunado <br />
-                            🛡 Protector
-                        </p>
-                        <button class="btn btn-outline-success w-100" disabled>
-                            Inicia sesión para adoptar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr class="my-5" />
-
-        <!-- MENSAJE FINAL -->
-        <div class="text-center mb-5">
-            <h3 class="text-success">¿Te gustaría adoptar?</h3>
-            <p>
-                Regístrate o inicia sesión para poder adoptar y ver nuestras mascotas disponibles. ♥
-            </p>
-        </div>
-    }
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

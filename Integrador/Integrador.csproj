@@ -130,6 +130,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Admin\Controllers\PermisosController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminAreaRegistration.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
@@ -137,10 +138,14 @@
     <Compile Include="Controllers\Adopcion.cs" />
     <Compile Include="Controllers\CampanasController.cs" />
     <Compile Include="Controllers\CiudadanoController.cs" />
+    <Compile Include="Controllers\ClienteAuthorizeAttribute.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Mascota.cs" />
     <Compile Include="Controllers\MascotasController.cs" />
+    <Compile Include="Controllers\RoleAuthorizeAttribute.cs" />
+    <Compile Include="Filters\CargarPermisosAttribute.cs" />
+    <Compile Include="Filters\ValidarPermisoCrudAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -177,6 +182,7 @@
     <Compile Include="Models\Notificaciones.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Permisos.cs" />
     <Compile Include="Models\SolicitudAdopcionViewModel.cs" />
     <Compile Include="Models\UsuarioImagen.cs" />
     <Compile Include="Models\UsuarioImagenes.cs">
@@ -239,6 +245,7 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Admin\Views\Web.config" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -267,7 +274,6 @@
     <Content Include="Views\Account\Registro.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Ciudadano\Index.cshtml" />
     <Content Include="Views\Ciudadano\Perfil.cshtml" />
     <Content Include="Views\Ciudadano\Notificaciones.cshtml" />
     <Content Include="Views\Account\Imagenes.cshtml" />
@@ -283,6 +289,13 @@
     <Content Include="Views\Home\Soporte.cshtml" />
     <Content Include="Views\Adopciones\_MisSolicitudes.cshtml" />
     <Content Include="Views\Adopciones\Create.cshtml" />
+    <Content Include="Views\Account\AccesoDenegado.cshtml" />
+    <Content Include="Views\Shared\_LayoutMaster.cshtml" />
+    <Content Include="Views\Permisos\Index.cshtml" />
+    <Content Include="Views\Ciudadano\PerfilMaster.cshtml" />
+    <Content Include="Views\Ciudadano\NotificacionesMaster.cshtml" />
+    <Content Include="Views\Ciudadano\Index.cshtml" />
+    <Content Include="Views\Shared\AccesoDenegado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

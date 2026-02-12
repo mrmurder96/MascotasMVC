@@ -1,0 +1,149 @@
+﻿@model Integrador.Models.ViewModels.PerfilViewModel
+
+@{
+    ViewBag.Title = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .perfil-container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .perfil-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .perfil-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #3498db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ecf0f1;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .btn-primary {
+        background: #3498db;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+
+    .alert {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
+
+<div class="perfil-container">
+    <div class="perfil-header">
+        <div class="perfil-avatar">
+            @if (Model.Nombres != null)
+            {
+                @Model.Nombres.Substring(0, 1).ToUpper()
+            }
+        </div>
+        <div>
+            <h2 style="margin: 0;">@Model.Nombres @Model.Apellidos</h2>
+            <p style="color: #7f8c8d; margin: 5px 0 0 0;">@Model.Email</p>
+        </div>
+    </div>
+
+    @if (TempData["PerfilSuccess"] != null)
+    {
+        <div class="alert alert-success">✓ @TempData["PerfilSuccess"]</div>
+    }
+
+    @using (Html.BeginForm("Perfil", "Ciudadano", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nombres)
+            @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control", placeholder = "Nombres" })
+            @Html.ValidationMessageFor(m => m.Nombres, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Apellidos)
+            @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", placeholder = "Apellidos" })
+            @Html.ValidationMessageFor(m => m.Apellidos, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", type = "email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Telefono)
+            @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono" })
+            @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Direccion)
+            @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", placeholder = "Dirección" })
+            @Html.ValidationMessageFor(m => m.Direccion, "", new { @class = "text-danger" })
+        </div>
+
+        <button type="submit" class="btn-primary">💾 Guardar Cambios</button>
+    }
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
