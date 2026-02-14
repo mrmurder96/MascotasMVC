@@ -1,0 +1,25 @@
+@model Integrador.Models.Notificaciones
+@{
+    ViewBag.Title = "Detalles Notificación";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <h2><i class="fas fa-bell"></i> Detalles de la Notificación</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>ID</dt><dd>@Model.Id</dd>
+                <dt>Usuario</dt><dd>@Model.Usuarios.Nombres @Model.Usuarios.Apellidos</dd>
+                <dt>Título</dt><dd>@Model.Titulo</dd>
+                <dt>Mensaje</dt><dd>@Model.Mensaje</dd>
+                <dt>Fecha</dt><dd>@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+                <dt>Estado</dt><dd>@(Model.Leido ? "Leído" : "No leído")</dd>
+            </dl>
+
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
+            <a href="@Url.Action("Index")" class="btn btn-default">Volver</a>
+        </div>
+    </div>
+</div>

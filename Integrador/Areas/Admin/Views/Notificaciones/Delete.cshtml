@@ -1,0 +1,31 @@
+@model Integrador.Models.Notificaciones
+@{
+    ViewBag.Title = "Eliminar Notificación";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <h2 class="text-danger"><i class="fas fa-trash"></i> Eliminar Notificación</h2>
+
+    <div class="alert alert-danger">
+        <h4><i class="fas fa-exclamation-triangle"></i> ¿Está seguro de eliminar esta notificación?</h4>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>Usuario</dt><dd>@Model.Usuarios.Nombres @Model.Usuarios.Apellidos</dd>
+                <dt>Título</dt><dd>@Model.Titulo</dd>
+                <dt>Mensaje</dt><dd>@Model.Mensaje</dd>
+                <dt>Fecha</dt><dd>@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Confirmar</button>
+                <a href="@Url.Action("Index")" class="btn btn-default">Cancelar</a>
+            }
+        </div>
+    </div>
+</div>

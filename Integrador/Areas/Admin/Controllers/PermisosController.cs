@@ -15,8 +15,8 @@ namespace Integrador.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            // Obtener todos los permisos con información CRUD
-            var permisosDisponibles = ObtenerPermisosDisponibles();
+            // Obtener todos los permisos desde la base de datos
+            var permisosDisponibles = ObtenerPermisosDesdeDB();
             
             // Crear ViewModels para Admin y Ciudadano
             var permisosAdminVM = CrearPermisosViewModel("Administrador", permisosDisponibles);
@@ -34,8 +34,32 @@ namespace Integrador.Areas.Admin.Controllers
         {
             try
             {
-                var key = $"Permiso_{rol}_{permisoId}_Acceso";
-                Session[key] = tieneAcceso;
+                // Buscar o crear el RolPermiso en la base de datos
+                var rolPermiso = db.RolPermisos.FirstOrDefault(rp => rp.Rol == rol && rp.PermisoId == permisoId);
+                
+                if (rolPermiso != null)
+                {
+                    rolPermiso.TieneAcceso = tieneAcceso;
+                    db.Entry(rolPermiso).State = System.Data.Entity.EntityState.Modified;
+                }
+                else
+                {
+                    // Crear nuevo permiso
+                    rolPermiso = new RolPermisos
+                    {
+                        Rol = rol,
+                        PermisoId = permisoId,
+                        TieneAcceso = tieneAcceso,
+                        PuedeCrear = false,
+                        PuedeLeer = tieneAcceso,
+                        PuedeActualizar = false,
+                        PuedeEliminar = false,
+                        FechaAsignacion = DateTime.Now
+                    };
+                    db.RolPermisos.Add(rolPermiso);
+                }
+                
+                db.SaveChanges();
 
                 return Json(new { success = true, message = "Permiso actualizado correctamente" });
             }
@@ -50,9 +74,45 @@ namespace Integrador.Areas.Admin.Controllers
         {
             try
             {
-                // Guardar en sesión (en producción sería en BD)
-                var key = $"PermisoCrud_{rol}_{controllerName}_{operacion}";
-                Session[key] = tienePermiso;
+                // Buscar o crear el RolPermiso en la base de datos
+                var rolPermiso = db.RolPermisos.FirstOrDefault(rp => rp.Rol == rol && rp.PermisoId == permisoId);
+                
+                if (rolPermiso == null)
+                {
+                    // Crear nuevo permiso
+                    rolPermiso = new RolPermisos
+                    {
+                        Rol = rol,
+                        PermisoId = permisoId,
+                        TieneAcceso = true,
+                        PuedeCrear = false,
+                        PuedeLeer = true,
+                        PuedeActualizar = false,
+                        PuedeEliminar = false,
+                        FechaAsignacion = DateTime.Now
+                    };
+                    db.RolPermisos.Add(rolPermiso);
+                }
+
+                // Actualizar el permiso específico según la operación
+                switch (operacion)
+                {
+                    case "Crear":
+                        rolPermiso.PuedeCrear = tienePermiso;
+                        break;
+                    case "Leer":
+                        rolPermiso.PuedeLeer = tienePermiso;
+                        break;
+                    case "Actualizar":
+                        rolPermiso.PuedeActualizar = tienePermiso;
+                        break;
+                    case "Eliminar":
+                        rolPermiso.PuedeEliminar = tienePermiso;
+                        break;
+                }
+
+                db.Entry(rolPermiso).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
 
                 return Json(new { success = true, message = $"Permiso de {operacion} actualizado correctamente" });
             }
@@ -66,21 +126,29 @@ namespace Integrador.Areas.Admin.Controllers
         {
             var result = new List<PermisoConCrudViewModel>();
 
+            // Obtener los permisos del rol para verificar el área
+            var permisosRol = ObtenerPermisosPorRol(rol);
+
             foreach (var permiso in permisos)
             {
+                // Asignar el área según el controlador y los permisos del rol
+                permiso.Area = AsignarArea(permiso.ControllerName, permisosRol);
+
+                var rolPermiso = db.RolPermisos.FirstOrDefault(rp => rp.Rol == rol && rp.PermisoId == permiso.Id);
+
                 var vm = new PermisoConCrudViewModel
                 {
                     Permiso = permiso,
-                    TieneAcceso = TieneAccesoPermiso(rol, permiso.Id),
+                    TieneAcceso = rolPermiso?.TieneAcceso ?? false,
                     PermisoCrud = new PermisoCrud
                     {
                         PermisoId = permiso.Id,
                         Rol = rol,
                         ControllerName = permiso.ControllerName,
-                        PuedeCrear = ObtenerPermisoCrud(rol, permiso.ControllerName, "Crear"),
-                        PuedeLeer = ObtenerPermisoCrud(rol, permiso.ControllerName, "Leer"),
-                        PuedeActualizar = ObtenerPermisoCrud(rol, permiso.ControllerName, "Actualizar"),
-                        PuedeEliminar = ObtenerPermisoCrud(rol, permiso.ControllerName, "Eliminar")
+                        PuedeCrear = rolPermiso?.PuedeCrear ?? false,
+                        PuedeLeer = rolPermiso?.PuedeLeer ?? false,
+                        PuedeActualizar = rolPermiso?.PuedeActualizar ?? false,
+                        PuedeEliminar = rolPermiso?.PuedeEliminar ?? false
                     }
                 };
 
@@ -90,73 +158,59 @@ namespace Integrador.Areas.Admin.Controllers
             return result;
         }
 
-        private bool TieneAccesoPermiso(string rol, int permisoId)
+        private string AsignarArea(string controllerName, List<Permisos> permisosUsuario)
         {
-            if (rol == "Administrador")
-                return true;
+            // Controladores que NUNCA van al área Admin (siempre área raíz)
+            var controladoresRaizExclusivos = new[] { "Ciudadano", "Account", "Home" };
+            if (controladoresRaizExclusivos.Contains(controllerName))
+                return null;
 
-            var key = $"Permiso_{rol}_{permisoId}_Acceso";
-            var valor = Session[key];
-
-            if (valor != null && valor is bool)
-                return (bool)valor;
-
-            // Por defecto, ciudadanos tienen acceso a: Centros, Perfil, Notificaciones
-            if (rol == "Ciudadano")
+            // Buscar el permiso específico del usuario para este controlador
+            var permisoUsuario = permisosUsuario.FirstOrDefault(p => p.ControllerName == controllerName);
+            
+            if (permisoUsuario != null)
             {
-                return permisoId == 6 || permisoId == 7 || permisoId == 8;
+                // Permisos 1-12: Área Admin (para administradores)
+                // Permisos 13+: Área Raíz (para ciudadanos)
+                return permisoUsuario.Id <= 12 ? "Admin" : null;
             }
-
-            return false;
+            
+            // Si no tiene permiso para este controlador, área null (raíz)
+            return null;
         }
 
-        private bool ObtenerPermisoCrud(string rol, string controllerName, string operacion)
+        private List<Permisos> ObtenerPermisosDesdeDB()
         {
-            if (rol == "Administrador")
-                return true; // Admin puede hacer todo
-
-            var key = $"PermisoCrud_{rol}_{controllerName}_{operacion}";
-            var valor = Session[key];
-
-            if (valor != null && valor is bool)
-                return (bool)valor;
-
-            // Por defecto, solo permitir Leer
-            return operacion == "Leer";
-        }
-
-        private List<Permisos> ObtenerPermisosDisponibles()
-        {
-            return new List<Permisos>
-            {
-                new Permisos { Id = 1, Nombre = "Dashboard", ControllerName = "Admin", ActionName = "Index", Icono = "??", Orden = 1, EstaActivo = true, TieneCrud = false },
-                new Permisos { Id = 2, Nombre = "Usuarios", ControllerName = "Usuarios", ActionName = "Index", Icono = "??", Orden = 2, EstaActivo = true, TieneCrud = true },
-                new Permisos { Id = 3, Nombre = "Mascotas", ControllerName = "Mascotas", ActionName = "Index", Icono = "??", Orden = 3, EstaActivo = true, TieneCrud = true },
-                new Permisos { Id = 4, Nombre = "Campañas", ControllerName = "Campanas", ActionName = "Index", Icono = "??", Orden = 4, EstaActivo = true, TieneCrud = true },
-                new Permisos { Id = 5, Nombre = "Adopciones", ControllerName = "Adopciones", ActionName = "Index", Icono = "??", Orden = 5, EstaActivo = true, TieneCrud = true },
-                new Permisos { Id = 6, Nombre = "Centros", ControllerName = "Centros", ActionName = "Index", Icono = "??", Orden = 6, EstaActivo = true, TieneCrud = false },
-                new Permisos { Id = 7, Nombre = "Perfil", ControllerName = "Ciudadano", ActionName = "Perfil", Icono = "??", Orden = 7, EstaActivo = true, TieneCrud = false },
-                new Permisos { Id = 8, Nombre = "Notificaciones", ControllerName = "Ciudadano", ActionName = "Notificaciones", Icono = "??", Orden = 8, EstaActivo = true, TieneCrud = false },
-                new Permisos { Id = 9, Nombre = "Permisos", ControllerName = "Permisos", ActionName = "Index", Icono = "??", Orden = 9, EstaActivo = true, TieneCrud = false }
-            };
+            return db.Permisos
+                .Where(p => p.EstaActivo)
+                .OrderBy(p => p.Orden)
+                .ToList();
         }
 
         private List<Permisos> ObtenerPermisosPorRol(string rol)
         {
-            var todosPermisos = ObtenerPermisosDisponibles();
+            if (string.IsNullOrEmpty(rol))
+                return new List<Permisos>();
 
-            if (rol == "Administrador")
+            // Obtener los IDs de permisos asignados a este rol
+            var permisosIds = db.RolPermisos
+                .Where(rp => rp.Rol == rol && rp.TieneAcceso)
+                .Select(rp => rp.PermisoId)
+                .ToList();
+
+            // Obtener los permisos completos
+            var permisos = db.Permisos
+                .Where(p => p.EstaActivo && permisosIds.Contains(p.Id))
+                .OrderBy(p => p.Orden)
+                .ToList();
+
+            // Asignar el área a cada permiso según los permisos del usuario
+            foreach (var permiso in permisos)
             {
-                return todosPermisos;
-            }
-            else if (rol == "Ciudadano")
-            {
-                // Por defecto, ciudadanos solo ven estos
-                var permisosCiudadano = new List<int> { 6, 7, 8 };
-                return todosPermisos.Where(p => permisosCiudadano.Contains(p.Id)).ToList();
+                permiso.Area = AsignarArea(permiso.ControllerName, permisos);
             }
 
-            return new List<Permisos>();
+            return permisos;
         }
 
         protected override void Dispose(bool disposing)

@@ -8,9 +8,11 @@ using System.Linq;
 using System.Web.Mvc;
 using Integrador.Models.ViewModels;
 using Integrador.Models;
+using Integrador.Filters;
 
 namespace Integrador.Controllers
 {
+    [CargarPermisos]
     public class AdopcionesController : Controller
     {
         private string GetProviderConnectionString()

@@ -70,9 +70,14 @@ namespace Integrador.Controllers
             usuario.IntentosFallidos = 0;
             db.SaveChanges();
 
+            // IMPORTANTE: Limpiar caché de permisos antiguos
+            Session.Clear();
+
             Session["UsuarioId"] = usuario.Id;
             Session["Nombre"] = usuario.Nombres;
             Session["Rol"] = usuario.Rol;
+            // NO establecer Session["PermisosUsuario"] aquí
+            // Se cargará automáticamente en el primer request por CargarPermisosAttribute
 
             // Redirigir según el rol
             if (usuario.Rol == "Administrador")

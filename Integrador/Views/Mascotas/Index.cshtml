@@ -1,9 +1,12 @@
 
 
+@model List<Integrador.Models.Mascota>
+
 @using System.Linq
 
 @{
     ViewBag.Title = "Mascotas disponibles";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container py-4" role="main">
@@ -14,7 +17,7 @@
         </p>
     </header>
 
-    @if (Model != null && Model.Any())
+    @if (Model != null && Model.Count > 0)
     {
         <div class="row" role="list" aria-label="Lista de mascotas disponibles">
             @foreach (var pet in Model)

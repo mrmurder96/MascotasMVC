@@ -1,0 +1,54 @@
+@model Integrador.Models.Campanias
+@{
+    ViewBag.Title = "Editar Campaña";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <h2><i class="fas fa-edit"></i> Editar Campaña</h2>
+
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Titulo)
+                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descripcion)
+                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4 })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaInicio)
+                    @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaFin)
+                    @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImagenUrl)
+                    @Html.EditorFor(model => model.ImagenUrl, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Activa)
+                        Activa
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Actualizar</button>
+                <a href="@Url.Action("Index")" class="btn btn-default">Cancelar</a>
+            }
+        </div>
+    </div>
+</div>

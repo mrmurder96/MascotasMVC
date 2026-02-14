@@ -1,0 +1,75 @@
+@model Integrador.Models.Usuarios
+@{
+    ViewBag.Title = "Eliminar Usuario";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-danger"><i class="fas fa-user-times"></i> Eliminar Usuario</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-danger">
+        <h4><i class="fas fa-exclamation-triangle"></i> ¿Está seguro de que desea eliminar este usuario?</h4>
+        <p>Esta acción no se puede deshacer.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => model.Id)</dt>
+                <dd>@Html.DisplayFor(model => model.Id)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Nombres)</dt>
+                <dd>@Html.DisplayFor(model => model.Nombres) @Html.DisplayFor(model => model.Apellidos)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+                <dd>@Html.DisplayFor(model => model.Email)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Cedula)</dt>
+                <dd>@Html.DisplayFor(model => model.Cedula)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Rol)</dt>
+                <dd>
+                    @if (Model.Rol == "Administrador")
+                    {
+                        <span class="label label-danger">@Model.Rol</span>
+                    }
+                    else
+                    {
+                        <span class="label label-primary">@Model.Rol</span>
+                    }
+                </dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
+                <dd>@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Confirmar Eliminación
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-default">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .dl-horizontal dt {
+        width: 200px;
+    }
+    
+    .dl-horizontal dd {
+        margin-left: 220px;
+    }
+</style>

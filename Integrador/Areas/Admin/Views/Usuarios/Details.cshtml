@@ -1,0 +1,107 @@
+@model Integrador.Models.Usuarios
+@{
+    ViewBag.Title = "Detalles del Usuario";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="fas fa-user"></i> Detalles del Usuario</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => model.Id)</dt>
+                <dd>@Html.DisplayFor(model => model.Id)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Nombres)</dt>
+                <dd>@Html.DisplayFor(model => model.Nombres) @Html.DisplayFor(model => model.Apellidos)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+                <dd>@Html.DisplayFor(model => model.Email)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Cedula)</dt>
+                <dd>@Html.DisplayFor(model => model.Cedula)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Telefono)</dt>
+                <dd>@Html.DisplayFor(model => model.Telefono)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Direccion)</dt>
+                <dd>@Html.DisplayFor(model => model.Direccion)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FechaNacimiento)</dt>
+                <dd>@(Model.FechaNacimiento.HasValue ? Model.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Rol)</dt>
+                <dd>
+                    @if (Model.Rol == "Administrador")
+                    {
+                        <span class="label label-danger">@Model.Rol</span>
+                    }
+                    else
+                    {
+                        <span class="label label-primary">@Model.Rol</span>
+                    }
+                </dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
+                <dd>@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FechaUltimoCambioPassword)</dt>
+                <dd>@(Model.FechaUltimoCambioPassword.HasValue ? Model.FechaUltimoCambioPassword.Value.ToString("dd/MM/yyyy HH:mm") : "-")</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.IntentosFallidos)</dt>
+                <dd>@Model.IntentosFallidos</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.EstaActivo)</dt>
+                <dd>
+                    @if (Model.EstaActivo)
+                    {
+                        <span class="label label-success">Sí</span>
+                    }
+                    else
+                    {
+                        <span class="label label-default">No</span>
+                    }
+                </dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Bloqueado)</dt>
+                <dd>
+                    @if (Model.Bloqueado)
+                    {
+                        <span class="label label-danger">Sí</span>
+                    }
+                    else
+                    {
+                        <span class="label label-success">No</span>
+                    }
+                </dd>
+            </dl>
+
+            <div class="form-group">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="@Url.Action("ResetPassword", new { id = Model.Id })" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Cambiar Contraseña
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-default">
+                    <i class="fas fa-arrow-left"></i> Volver al Listado
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dl-horizontal dt {
+        width: 200px;
+    }
+    
+    .dl-horizontal dd {
+        margin-left: 220px;
+    }
+</style>

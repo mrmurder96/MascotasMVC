@@ -6,9 +6,11 @@ using System.Data.Entity.Core.EntityClient;
 using System.Linq;
 using System.Web.Mvc;
 using Integrador.Models;
+using Integrador.Filters;
 
 namespace Integrador.Controllers
 {
+    [CargarPermisos]
     public class MascotasController : Controller
     {
         private string GetProviderConnectionString()

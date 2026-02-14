@@ -5,6 +5,11 @@ using Integrador.Models;
 
 namespace Integrador.Filters
 {
+    /// <summary>
+    /// Filtro que carga los permisos del usuario desde la base de datos y los asigna al ViewBag.
+    /// Implementa caché en sesión para optimizar el rendimiento.
+    /// Asigna área Admin basándose en los permisos del usuario, no solo en el rol.
+    /// </summary>
     public class CargarPermisosAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -13,7 +18,21 @@ namespace Integrador.Filters
             if (session != null && session["Rol"] != null)
             {
                 var rol = session["Rol"].ToString();
-                var permisos = ObtenerPermisosPorRol(rol);
+                
+                // SIEMPRE recargar permisos (temporal para debug)
+                // Comentar esta línea después de resolver el problema
+                session["PermisosUsuario"] = null;
+                
+                // Intentar obtener permisos de la sesión (caché)
+                var permisos = session["PermisosUsuario"] as List<Permisos>;
+                
+                // Si no están en sesión, obtenerlos de la BD y cachearlos
+                if (permisos == null)
+                {
+                    permisos = ObtenerPermisosPorRol(rol);
+                    session["PermisosUsuario"] = permisos; // Cachear en sesión
+                }
+                
                 filterContext.Controller.ViewBag.Permisos = permisos;
             }
             
@@ -22,42 +41,59 @@ namespace Integrador.Filters
 
         private List<Permisos> ObtenerPermisosPorRol(string rol)
         {
-            var todosPermisos = new List<Permisos>
+            using (var db = new adopEntities())
             {
-                // Permisos de Administrador
-                new Permisos { Id = 1, Nombre = "Dashboard", ControllerName = "Admin", ActionName = "Index", Icono = "fa-chart-line", Orden = 1, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 2, Nombre = "Permisos", ControllerName = "Permisos", ActionName = "Index", Icono = "fa-lock", Orden = 2, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 3, Nombre = "Mascotas Admin", ControllerName = "Mascotas", ActionName = "Index", Icono = "fa-paw", Orden = 3, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 4, Nombre = "Solicitudes", ControllerName = "Solicitudes", ActionName = "Index", Icono = "fa-file-alt", Orden = 4, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 5, Nombre = "Seguimientos", ControllerName = "Seguimientos", ActionName = "Index", Icono = "fa-clipboard-list", Orden = 5, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 6, Nombre = "Mascotas Perdidas", ControllerName = "MascotasPerdidas", ActionName = "Index", Icono = "fa-search", Orden = 6, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 7, Nombre = "Categorías", ControllerName = "Categorias", ActionName = "Index", Icono = "fa-folder", Orden = 7, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 8, Nombre = "Refugios", ControllerName = "Refugios", ActionName = "Index", Icono = "fa-home", Orden = 8, EstaActivo = true, Area = "Admin" },
-                new Permisos { Id = 9, Nombre = "Reportes", ControllerName = "Reportes", ActionName = "Index", Icono = "fa-chart-bar", Orden = 9, EstaActivo = true, Area = "Admin" },
-                
-                // Permisos de Ciudadano
-                new Permisos { Id = 10, Nombre = "Inicio", ControllerName = "Ciudadano", ActionName = "Index", Icono = "fa-home", Orden = 10, EstaActivo = true, Area = null },
-                new Permisos { Id = 11, Nombre = "Mascotas", ControllerName = "Mascotas", ActionName = "Index", Icono = "fa-paw", Orden = 11, EstaActivo = true, Area = null },
-                new Permisos { Id = 12, Nombre = "Mis Adopciones", ControllerName = "Ciudadano", ActionName = "MisAdopciones", Icono = "fa-heart", Orden = 12, EstaActivo = true, Area = null },
-                new Permisos { Id = 13, Nombre = "Perfil", ControllerName = "Ciudadano", ActionName = "Perfil", Icono = "fa-user", Orden = 13, EstaActivo = true, Area = null },
-                new Permisos { Id = 14, Nombre = "Notificaciones", ControllerName = "Ciudadano", ActionName = "Notificaciones", Icono = "fa-bell", Orden = 14, EstaActivo = true, Area = null }
-            };
+                if (string.IsNullOrEmpty(rol))
+                    return new List<Permisos>();
 
-            if (rol == "Administrador")
-            {
-                // Admin: permisos 1-9
-                var permisosAdmin = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-                return todosPermisos.Where(p => permisosAdmin.Contains(p.Id)).OrderBy(p => p.Orden).ToList();
-            }
-            else if (rol == "Ciudadano")
-            {
-                // Ciudadano: permisos 10-14 (SIN Centros)
-                var permisosCiudadano = new List<int> { 10, 11, 12, 13, 14 };
-                return todosPermisos.Where(p => permisosCiudadano.Contains(p.Id)).OrderBy(p => p.Orden).ToList();
-            }
+                // Obtener los IDs de permisos asignados a este rol desde la base de datos
+                var permisosIds = db.RolPermisos
+                    .Where(rp => rp.Rol == rol && rp.TieneAcceso)
+                    .Select(rp => rp.PermisoId)
+                    .ToList();
 
-            return new List<Permisos>();
+                // Obtener los permisos completos
+                var permisos = db.Permisos
+                    .Where(p => p.EstaActivo && permisosIds.Contains(p.Id))
+                    .OrderBy(p => p.Orden)
+                    .ToList();
+
+                // Asignar el área a cada permiso según los permisos del usuario
+                foreach (var permiso in permisos)
+                {
+                    permiso.Area = AsignarArea(permiso.ControllerName, permisos);
+                }
+
+                return permisos;
+            }
+        }
+
+        /// <summary>
+        /// Asigna el área (Admin o null) basándose en el ID del permiso.
+        /// Permisos 1-12 = Admin area
+        /// Permisos 13+ = Raíz (ciudadanos)
+        /// </summary>
+        private string AsignarArea(string controllerName, List<Permisos> permisosUsuario)
+        {
+            // Controladores que NUNCA van al área Admin (siempre área raíz)
+            var controladoresRaizExclusivos = new[] { "Ciudadano", "Account", "Home" };
+            if (controladoresRaizExclusivos.Contains(controllerName))
+                return null;
+
+            // Buscar el permiso específico del usuario para este controlador
+            var permisoUsuario = permisosUsuario.FirstOrDefault(p => p.ControllerName == controllerName);
+            
+            if (permisoUsuario != null)
+            {
+                // Permisos 1-12: Área Admin (para administradores)
+                // Permisos 13+: Área Raíz (para ciudadanos)
+                return permisoUsuario.Id <= 12 ? "Admin" : null;
+            }
+            
+            // Si no tiene permiso para este controlador, área null (raíz)
+            return null;
         }
     }
 }
+
 

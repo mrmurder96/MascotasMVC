@@ -43,6 +43,12 @@ namespace Integrador.Models
         }
 
         /// <summary>
+        /// Alias plural para compatibilidad con vistas existentes
+        /// </summary>
+        [NotMapped]
+        public Usuarios Usuarios => Usuario;
+
+        /// <summary>
         /// Alias para la propiedad de navegación Mascota
         /// </summary>
         [NotMapped]

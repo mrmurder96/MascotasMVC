@@ -6,9 +6,11 @@ using System.Data.Entity.Core.EntityClient;
 using System.Linq;
 using System.Web.Mvc;
 using Integrador.Models;
+using Integrador.Filters;
 
 namespace Integrador.Controllers
 {
+    [CargarPermisos]
     public class CampanasController : Controller
     {
         private string GetProviderConnectionString()

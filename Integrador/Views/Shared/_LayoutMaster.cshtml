@@ -180,6 +180,18 @@
                     var rol = Session["Rol"]?.ToString();
                     var permisos = ViewBag.Permisos as List<Permisos>;
                     
+                    // Agregar enlaces hardcodeados para ciudadanos (área raíz)
+                    if (rol == "Ciudadano")
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Ciudadano")" class="menu-item">
+                                <i class="fas fa-home"></i>
+                                <span>Inicio</span>
+                            </a>
+                        </li>
+                    }
+                    
+                    // Cargar permisos dinámicos de la BD
                     if (permisos != null && permisos.Count > 0)
                     {
                         foreach (var permiso in permisos)
@@ -227,6 +239,29 @@
                                 }
                             </li>
                         }
+                    }
+                    
+                    // Agregar enlaces adicionales hardcodeados para ciudadanos
+                    if (rol == "Ciudadano")
+                    {
+                        <li>
+                            <a href="@Url.Action("Perfil", "Ciudadano")" class="menu-item">
+                                <i class="fas fa-user"></i>
+                                <span>Mi Perfil</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Notificaciones", "Ciudadano")" class="menu-item">
+                                <i class="fas fa-bell"></i>
+                                <span>Notificaciones</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("MisAdopciones", "Ciudadano")" class="menu-item">
+                                <i class="fas fa-heart"></i>
+                                <span>Mis Adopciones</span>
+                            </a>
+                        </li>
                     }
                     else
                     {
@@ -353,7 +388,7 @@
                             <div style="font-size: 12px; color: #7f8c8d;">@Session["Rol"]</div>
                         </div>
                     </div>
-                    <a href="@Url.Action("Logout", "Account")" class="logout-btn">Cerrar Sesión</a>
+                    <a href="@Url.Action("Logout", "Account", new { area = "" })" class="logout-btn">Cerrar Sesión</a>
                 </div>
             </nav>
 
