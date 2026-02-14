@@ -1,0 +1,185 @@
+@model Integrador.Models.Mascotas
+@{
+    ViewBag.Title = "Detalles de Mascota";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Información de la Mascota</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    <div class="row">
+                        <!-- Imagen de la mascota -->
+                        <div class="col-md-4">
+                            <div class="mascota-imagen-detail">
+                                @if (!string.IsNullOrEmpty(Model.Imagen))
+                                {
+                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Imagen)" 
+                                         alt="Foto de @Model.Nombre, @Model.Tipo @Model.Raza" 
+                                         class="img-responsive img-thumbnail" 
+                                         aria-describedby="mascotaImagenDesc" />
+                                    <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/Content/images/no-image.png")" 
+                                         alt="Sin imagen disponible" 
+                                         class="img-responsive img-thumbnail" />
+                                }
+                                <div class="estado-badge" role="status" aria-label="Estado actual de la mascota: @Model.Estado">
+                                    @if (Model.Estado == "Disponible")
+                                    {
+                                        <span class="label label-success label-lg">@Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Adoptado")
+                                    {
+                                        <span class="label label-info label-lg">@Model.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-warning label-lg">@Model.Estado</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de la mascota -->
+                        <div class="col-md-8">
+                            <h2 class="mascota-nombre">@Model.Nombre</h2>
+                            <p class="mascota-tipo" aria-label="Tipo y raza">
+                                <strong>@Model.IconoTipo @Model.Tipo</strong> - @Model.Raza
+                            </p>
+
+                            <hr />
+
+                            <dl class="dl-horizontal" role="list">
+                                <dt>ID</dt>
+                                <dd>@Model.Id</dd>
+
+                                <dt>Edad</dt>
+                                <dd>@Model.Edad años</dd>
+
+                                <dt>Sexo</dt>
+                                <dd>@Model.Sexo</dd>
+
+                                <dt>Tamaño</dt>
+                                <dd>@Model.Tamano</dd>
+
+                                <dt>Categoría</dt>
+                                <dd>
+                                    @if (Model.CategoriaId.HasValue && Model.Categoria != null)
+                                    {
+                                        @Model.Categoria.Nombre
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin categoría</span>
+                                    }
+                                </dd>
+
+                                <dt>Refugio</dt>
+                                <dd>
+                                    @if (Model.RefugioId.HasValue && Model.Refugio != null)
+                                    {
+                                        @Model.Refugio.Nombre
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin refugio asignado</span>
+                                    }
+                                </dd>
+
+                                <dt>Estado</dt>
+                                <dd>
+                                    <strong class="@(Model.Estado == "Disponible" ? "text-success" : Model.Estado == "Adoptado" ? "text-info" : "text-warning")">
+                                        @Model.Estado
+                                    </strong>
+                                </dd>
+
+                                <dt>Fecha de Registro</dt>
+                                <dd>@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
+                            </dl>
+
+                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            {
+                                <div class="mascota-descripcion" role="region" aria-label="Descripción de la mascota">
+                                    <h4>Descripción</h4>
+                                    <p>@Model.Descripcion</p>
+                                </div>
+                            }
+
+                            <hr />
+
+                            <!-- Acciones -->
+                            <div class="btn-toolbar" role="toolbar" aria-label="Acciones de la mascota">
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Edit", new { id = Model.Id })" 
+                                       class="btn btn-warning btn-lg"
+                                       aria-label="Editar información de @Model.Nombre">
+                                        <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> Editar
+                                    </a>
+                                    
+                                    @if (Model.Estado == "Disponible")
+                                    {
+                                        <a href="@Url.Action("CambiarEstado", new { id = Model.Id, nuevoEstado = "En Proceso" })" 
+                                           class="btn btn-primary btn-lg"
+                                           aria-label="Cambiar estado a En Proceso">
+                                            <i class="glyphicon glyphicon-pause" aria-hidden="true"></i> Marcar En Proceso
+                                        </a>
+                                    }
+                                    else if (Model.Estado == "En Proceso")
+                                    {
+                                        <a href="@Url.Action("CambiarEstado", new { id = Model.Id, nuevoEstado = "Disponible" })" 
+                                           class="btn btn-success btn-lg"
+                                           aria-label="Cambiar estado a Disponible">
+                                            <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Marcar Disponible
+                                        </a>
+                                    }
+                                    
+                                    <a href="@Url.Action("Delete", new { id = Model.Id })" 
+                                       class="btn btn-danger btn-lg"
+                                       onclick="return confirm('¿Está seguro de eliminar a @Model.Nombre?')"
+                                       aria-label="Eliminar mascota @Model.Nombre">
+                                        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Eliminar
+                                    </a>
+                                </div>
+                                
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Index")" 
+                                       class="btn btn-default btn-lg"
+                                       aria-label="Volver al listado de mascotas">
+                                        <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Volver al Listado
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #333; }
+    .card-body { padding: 30px; }
+    .mascota-imagen-detail { position: relative; text-align: center; margin-bottom: 20px; }
+    .mascota-imagen-detail img { width: 100%; border-radius: 8px; }
+    .estado-badge { margin-top: 10px; }
+    .label-lg { font-size: 14px; padding: 8px 12px; }
+    .mascota-nombre { color: #2c3e50; margin-bottom: 10px; }
+    .mascota-tipo { font-size: 18px; color: #7f8c8d; }
+    .mascota-descripcion { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #3498db; }
+    .mascota-descripcion h4 { margin-top: 0; color: #2c3e50; }
+    .dl-horizontal dt { width: 150px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 170px; }
+    .btn-toolbar { margin-top: 20px; }
+</style>

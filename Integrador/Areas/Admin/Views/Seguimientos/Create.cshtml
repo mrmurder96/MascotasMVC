@@ -1,0 +1,88 @@
+@model Integrador.Models.Seguimiento
+@{
+    ViewBag.Title = "Nuevo Seguimiento";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-plus"></i> Registrar Nuevo Seguimiento Post-Adopción</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    @using (Html.BeginForm("Create", "Seguimientos", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Adopción *</label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("AdopcionId", ViewBag.Adopciones as SelectList, "Seleccione una adopción...", new { @class = "form-control" })
+                                <small class="text-muted">Solo se muestran adopciones finalizadas</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FechaSeguimiento, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.FechaSeguimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                                @Html.ValidationMessageFor(m => m.FechaSeguimiento, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EstadoMascota, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(m => m.EstadoMascota, new SelectList(new[] { "Excelente", "Bueno", "Regular", "Malo" }), "Seleccione estado...", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EstadoMascota, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Observaciones, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control", rows = 5, placeholder = "Detalles del seguimiento, comportamiento de la mascota, adaptación, salud, etc." })
+                                @Html.ValidationMessageFor(m => m.Observaciones, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Próximo Seguimiento</label>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.ProximoSeguimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                                <small class="text-muted">Opcional</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Seguimiento
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                                    <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #333; }
+    .card-body { padding: 30px; }
+</style>

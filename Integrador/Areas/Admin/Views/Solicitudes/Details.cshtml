@@ -1,0 +1,225 @@
+@model Integrador.Models.Adopciones
+@{
+    ViewBag.Title = "Detalles de Solicitud";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-file" aria-hidden="true"></i> Detalles de la Solicitud de Adopción #@Model.Id</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    <!-- Estado de la solicitud -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="estado-solicitud-card @Model.Estado.ToLower()" role="status" aria-label="Estado de la solicitud: @Model.Estado">
+                                <h2>
+                                    Estado: 
+                                    @if (Model.Estado == "Pendiente")
+                                    {
+                                        <span class="label label-warning label-xl">? @Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Aprobada")
+                                    {
+                                        <span class="label label-success label-xl">? @Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Rechazada")
+                                    {
+                                        <span class="label label-danger label-xl">? @Model.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-info label-xl">? @Model.Estado</span>
+                                    }
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <!-- Información del Ciudadano -->
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-user" aria-hidden="true"></i> Información del Solicitante</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @if (Model.Usuario != null)
+                                    {
+                                        <dl class="dl-horizontal">
+                                            <dt>Nombre</dt>
+                                            <dd><strong>@Model.Usuario.Nombre</strong></dd>
+
+                                            <dt>Email</dt>
+                                            <dd><a href="mailto:@Model.Usuario.Email">@Model.Usuario.Email</a></dd>
+
+                                            <dt>Teléfono</dt>
+                                            <dd>@(Model.Usuario.Telefono ?? "No especificado")</dd>
+
+                                            <dt>Edad</dt>
+                                            <dd>
+                                                @Model.Usuario.Edad años
+                                                @if (Model.Usuario.EsMayorDeEdad)
+                                                {
+                                                    <span class="label label-success">Mayor de edad ?</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-danger">Menor de edad</span>
+                                                }
+                                            </dd>
+
+                                            <dt>Dirección</dt>
+                                            <dd>@(Model.Usuario.Direccion ?? "No especificada")</dd>
+
+                                            <dt>Usuario desde</dt>
+                                            <dd>@Model.Usuario.FechaRegistro.ToString("dd/MM/yyyy")</dd>
+                                        </dl>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de la Mascota -->
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-heart" aria-hidden="true"></i> Información de la Mascota</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @if (Model.Mascota != null)
+                                    {
+                                        <div class="text-center mb-3">
+                                            @if (!string.IsNullOrEmpty(Model.Mascota.Imagen))
+                                            {
+                                                <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 
+                                                     alt="Foto de @Model.Mascota.Nombre" 
+                                                     class="img-thumbnail" 
+                                                     style="max-width: 200px;" />
+                                            }
+                                        </div>
+                                        <dl class="dl-horizontal">
+                                            <dt>Nombre</dt>
+                                            <dd><strong>@Model.Mascota.Nombre</strong></dd>
+
+                                            <dt>Tipo/Raza</dt>
+                                            <dd>@Model.Mascota.Tipo - @Model.Mascota.Raza</dd>
+
+                                            <dt>Edad</dt>
+                                            <dd>@Model.Mascota.Edad años</dd>
+
+                                            <dt>Sexo</dt>
+                                            <dd>@Model.Mascota.Sexo</dd>
+
+                                            <dt>Tamaño</dt>
+                                            <dd>@Model.Mascota.Tamano</dd>
+
+                                            <dt>Estado Actual</dt>
+                                            <dd>
+                                                @if (Model.Mascota.Estado == "Disponible")
+                                                {
+                                                    <span class="label label-success">@Model.Mascota.Estado</span>
+                                                }
+                                                else if (Model.Mascota.Estado == "Adoptado")
+                                                {
+                                                    <span class="label label-info">@Model.Mascota.Estado</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-warning">@Model.Mascota.Estado</span>
+                                                }
+                                            </dd>
+                                        </dl>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de la Solicitud -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><i aria-hidden="true">??</i> Detalles de la Solicitud</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <dl class="dl-horizontal">
+                                        <dt>ID Solicitud</dt>
+                                        <dd><strong>#@Model.Id</strong></dd>
+
+                                        <dt>Fecha de Solicitud</dt>
+                                        <dd>@Model.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                                        <dt>Motivo de Adopción</dt>
+                                        <dd>
+                                            <div class="well">
+                                                @(Model.Motivo ?? "No especificado")
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Acciones según estado -->
+                    <div class="text-center" role="toolbar" aria-label="Acciones de la solicitud">
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <a href="@Url.Action("Aprobar", new { id = Model.Id })" 
+                               class="btn btn-success btn-lg"
+                               aria-label="Aprobar solicitud de adopción">
+                                <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Aprobar Solicitud
+                            </a>
+                            <a href="@Url.Action("Rechazar", new { id = Model.Id })" 
+                               class="btn btn-danger btn-lg"
+                               aria-label="Rechazar solicitud de adopción">
+                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Rechazar Solicitud
+                            </a>
+                        }
+                        else if (Model.Estado == "Aprobada")
+                        {
+                            <a href="@Url.Action("Finalizar", new { id = Model.Id })" 
+                               class="btn btn-primary btn-lg"
+                               aria-label="Finalizar proceso de adopción">
+                                <i class="glyphicon glyphicon-check" aria-hidden="true"></i> Finalizar Adopción
+                            </a>
+                        }
+
+                        <a href="@Url.Action("Index")" 
+                           class="btn btn-default btn-lg"
+                           aria-label="Volver al listado de solicitudes">
+                            <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Volver al Listado
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #333; }
+    .card-body { padding: 30px; }
+    .estado-solicitud-card { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px; margin-bottom: 30px; }
+    .estado-solicitud-card h2 { margin: 0; }
+    .label-xl { font-size: 18px; padding: 10px 20px; }
+    .panel { border: 1px solid #ddd; border-radius: 8px; }
+    .panel-heading { background-color: #f8f9fa; padding: 10px 15px; border-bottom: 1px solid #ddd; }
+    .panel-heading h4 { margin: 0; }
+    .panel-body { padding: 15px; }
+    .dl-horizontal dt { width: 150px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 170px; }
+    .mt-4 { margin-top: 20px; }
+    .mb-3 { margin-bottom: 15px; }
+</style>

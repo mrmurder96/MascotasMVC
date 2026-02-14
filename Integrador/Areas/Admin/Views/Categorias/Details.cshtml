@@ -1,0 +1,93 @@
+@model Integrador.Models.Categoria
+@{
+    ViewBag.Title = "Detalles de Categoría";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-info-sign"></i> Detalles de la Categoría</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(m => m.Id)</dt>
+                        <dd>@Html.DisplayFor(m => m.Id)</dd>
+
+                        <dt>@Html.DisplayNameFor(m => m.Nombre)</dt>
+                        <dd><strong class="text-primary">@Html.DisplayFor(m => m.Nombre)</strong></dd>
+
+                        <dt>@Html.DisplayNameFor(m => m.Descripcion)</dt>
+                        <dd>@(Model.Descripcion ?? "Sin descripción")</dd>
+
+                        <dt>Estado</dt>
+                        <dd>
+                            @if (Model.EsActivo)
+                            {
+                                <span class="label label-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="label label-default">Inactivo</span>
+                            }
+                        </dd>
+
+                        <dt>Mascotas Asociadas</dt>
+                        <dd>
+                            <span class="badge badge-info">@Model.CantidadMascotas mascotas</span>
+                        </dd>
+
+                        <dt>@Html.DisplayNameFor(m => m.FechaCreacion)</dt>
+                        <dd>@Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</dd>
+                    </dl>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">
+                            <i class="glyphicon glyphicon-edit"></i> Editar
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger"
+                           onclick="return confirm('¿Está seguro de eliminar esta categoría?')">
+                            <i class="glyphicon glyphicon-trash"></i> Eliminar
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-default">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+    .card-header h3 {
+        margin: 0;
+        color: #333;
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .dl-horizontal dt {
+        width: 180px;
+        font-weight: 600;
+    }
+    .dl-horizontal dd {
+        margin-left: 200px;
+    }
+</style>

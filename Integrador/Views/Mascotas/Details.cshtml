@@ -11,19 +11,19 @@
         <div class="col-md-7">
             <h2 class="text-success">@Model.Nombre</h2>
             <p><strong>Tipo:</strong> @Model.Tipo</p>
-            <p><strong>Edad:</strong> @Model.Edad a駉s</p>
-            <p><strong>Ubicaci髇 actual:</strong> @Model.Ubicacion</p>
+            <p><strong>Edad:</strong> @Model.Edad a贸os</p>
+            <p><strong>Ubicaci贸n actual:</strong> @Model.Ubicacion</p>
             <p><strong>Estado:</strong> @Model.Estado</p>
             <hr />
             <p>@Model.Descripcion</p>
 
             @if (Model.Estado == "Disponible")
             {
-                <a class="btn btn-success" href="@Url.Action("Adopt","Mascotas", new { id = Model.Id })">Iniciar proceso de adopci髇</a>
+                <a class="btn btn-success" href="@Url.Action("Adopt","Mascotas", new { id = Model.Id })">Iniciar proceso de adopci贸n</a>
             }
             else
             {
-                <button class="btn btn-outline-secondary" disabled>No disponible para adopci髇</button>
+                <button class="btn btn-outline-secondary" disabled>No disponible para adopci贸n</button>
             }
 
             <a class="btn btn-link ms-2" href="@Url.Action("Index","Mascotas")">Volver a lista</a>

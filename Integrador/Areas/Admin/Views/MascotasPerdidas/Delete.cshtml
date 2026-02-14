@@ -1,0 +1,108 @@
+@model Integrador.Models.MascotaPerdida
+@{
+    ViewBag.Title = "Eliminar Reporte";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente reporte:
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            @if (!string.IsNullOrEmpty(Model.Imagen))
+                            {
+                                <img src="@Url.Content("~/Content/uploads/perdidas/" + Model.Imagen)" 
+                                     alt="Foto" 
+                                     class="img-thumbnail" 
+                                     style="max-width: 100%;" />
+                            }
+                        </div>
+
+                        <div class="col-md-8">
+                            <dl class="dl-horizontal">
+                                <dt>Tipo</dt>
+                                <dd>
+                                    @if (Model.TipoReporte == "Perdida")
+                                    {
+                                        <span class="label label-danger">PERDIDA</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-success">ENCONTRADA</span>
+                                    }
+                                </dd>
+
+                                <dt>Nombre</dt>
+                                <dd><strong>@Model.Nombre</strong></dd>
+
+                                <dt>Tipo/Raza</dt>
+                                <dd>@Model.Tipo - @Model.Raza</dd>
+
+                                <dt>Fecha</dt>
+                                <dd>@Model.FechaReporte.ToString("dd/MM/yyyy")</dd>
+
+                                <dt>Ubicación</dt>
+                                <dd>@Model.Ubicacion</dd>
+
+                                <dt>Contacto</dt>
+                                <dd>@Model.NombreContacto - @Model.Telefono</dd>
+
+                                <dt>Estado</dt>
+                                <dd>
+                                    @if (Model.Estado == "Reunido")
+                                    {
+                                        <span class="label label-info">@Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Activo")
+                                    {
+                                        <span class="label label-warning">@Model.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-default">@Model.Estado</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @using (Html.BeginForm("Delete", "MascotasPerdidas", new { area = "Admin" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Reporte
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header.bg-danger { background-color: #d9534f; color: white; }
+    .card-header h3 { margin: 0; }
+    .card-body { padding: 30px; }
+    .dl-horizontal dt { width: 120px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 140px; }
+</style>

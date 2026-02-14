@@ -14,6 +14,12 @@ namespace Integrador.Models
     
     public partial class Adopciones
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Adopciones()
+        {
+            this.Seguimientos = new HashSet<Seguimientos>();
+        }
+    
         public int Id { get; set; }
         public int MascotaId { get; set; }
         public Nullable<int> UsuarioId { get; set; }
@@ -24,5 +30,7 @@ namespace Integrador.Models
         public string Estado { get; set; }
     
         public virtual Mascotas Mascotas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Seguimientos> Seguimientos { get; set; }
     }
 }

@@ -1,0 +1,69 @@
+@* Modal de confirmación de eliminación reutilizable *@
+@model dynamic
+
+@{
+    var itemName = ViewBag.ItemName ?? "este elemento";
+    var itemType = ViewBag.ItemType ?? "elemento";
+    var deleteAction = ViewBag.DeleteAction ?? "Delete";
+    var deleteController = ViewBag.DeleteController ?? ViewContext.RouteData.Values["controller"].ToString();
+    var itemId = ViewBag.ItemId;
+    var warningMessage = ViewBag.WarningMessage;
+}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-describedby="deleteModalDescription">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="deleteModalLabel">
+                    <i class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i>
+                    Confirmar Eliminación
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalDescription">
+                    <strong>¿Está seguro de que desea eliminar @itemType?</strong>
+                </p>
+                <p class="text-muted">
+                    Esta acción no se puede deshacer.
+                </p>
+                @if (warningMessage != null)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Advertencia:</strong> @warningMessage
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm(deleteAction, deleteController, new { area = "Admin" }, FormMethod.Post, new { id = "deleteForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteItemId" />
+                    
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Cancelar eliminación">
+                        <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger" aria-label="Confirmar eliminación de @itemType">
+                        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Sí, Eliminar
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-header.bg-danger {
+        background-color: #d9534f;
+        color: white;
+    }
+    .modal-header.bg-danger .close {
+        color: white;
+        opacity: 0.8;
+    }
+    .modal-header.bg-danger .close:hover {
+        opacity: 1;
+    }
+</style>

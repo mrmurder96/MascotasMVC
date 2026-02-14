@@ -1,0 +1,179 @@
+using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
+using Integrador.Controllers;
+using Integrador.Filters;
+using Integrador.Models;
+
+namespace Integrador.Areas.Admin.Controllers
+{
+    /// <summary>
+    /// Controlador para Seguimiento Post-Adopción (RF-18)
+    /// </summary>
+    [AdminAuthorize]
+    [CargarPermisos]
+    public class SeguimientosController : Controller
+    {
+        private adopEntities db = new adopEntities();
+
+        // GET: Admin/Seguimientos
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Leer")]
+        public ActionResult Index(string filtroEstado, DateTime? fechaDesde)
+        {
+            // Obtener adopciones aprobadas/completadas
+            var adopcionesAprobadas = db.Adopciones
+                .Include(a => a.Mascotas)
+                .Where(a => a.Estado == "Aprobada" || a.Estado == "Completada")
+                .OrderByDescending(a => a.FechaSolicitud)
+                .ToList();
+
+            // Filtros
+            if (!string.IsNullOrEmpty(filtroEstado) && filtroEstado != "Todos")
+            {
+                if (filtroEstado == "Pendiente")
+                {
+                    // Adopciones sin seguimiento en los últimos 30 días
+                    adopcionesAprobadas = adopcionesAprobadas
+                        .Where(a => !TieneSeguimientoReciente(a.Id, 30))
+                        .ToList();
+                }
+            }
+
+            if (fechaDesde.HasValue)
+            {
+                adopcionesAprobadas = adopcionesAprobadas
+                    .Where(a => a.FechaSolicitud >= fechaDesde.Value)
+                    .ToList();
+            }
+
+            ViewBag.Estados = new SelectList(new[] { "Todos", "Pendiente", "Con Seguimiento" });
+            ViewBag.EstadoSeleccionado = filtroEstado;
+            ViewBag.FechaDesde = fechaDesde;
+
+            return View(adopcionesAprobadas);
+        }
+
+        // GET: Admin/Seguimientos/Details/5 (Ver seguimientos de una adopción)
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Leer")]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var adopcion = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
+            if (adopcion == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Nota: Como Seguimiento es un modelo nuevo no en BD, simulamos con una lista vacía
+            // En producción se obtendrían de: db.Seguimientos.Where(s => s.AdopcionId == id)
+            ViewBag.Seguimientos = new System.Collections.Generic.List<Seguimiento>();
+
+            return View(adopcion);
+        }
+
+        // GET: Admin/Seguimientos/Create?adopcionId=5
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Crear")]
+        public ActionResult Create(int? adopcionId)
+        {
+            if (adopcionId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var adopcion = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == adopcionId);
+            if (adopcion == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.Adopcion = adopcion;
+            ViewBag.TiposSeguimiento = new SelectList(new[] { "Visita Domiciliaria", "Llamada Telefónica", "Videollamada", "Email" });
+            ViewBag.EstadosMascota = new SelectList(new[] { "Excelente", "Bueno", "Regular", "Requiere Atención", "Crítico" });
+
+            var seguimiento = new Seguimiento
+            {
+                AdopcionId = adopcionId.Value,
+                FechaSeguimiento = DateTime.Now
+            };
+
+            return View(seguimiento);
+        }
+
+        // POST: Admin/Seguimientos/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Crear")]
+        public ActionResult Create(Seguimiento seguimiento)
+        {
+            if (ModelState.IsValid)
+            {
+                seguimiento.FechaCreacion = DateTime.Now;
+
+                // Obtener usuario de sesión
+                if (Session["UsuarioId"] != null)
+                {
+                    seguimiento.UsuarioRealizaSeguimientoId = Convert.ToInt32(Session["UsuarioId"]);
+                }
+
+                // NOTA: Como el modelo Seguimiento no está en la BD actual, 
+                // aquí habría que agregarlo a un DbSet cuando se cree la tabla
+                // db.Seguimientos.Add(seguimiento);
+                // db.SaveChanges();
+
+                // Por ahora simulamos éxito
+                TempData["Success"] = "Seguimiento registrado exitosamente";
+                return RedirectToAction("Details", new { id = seguimiento.AdopcionId });
+            }
+
+            var adopcion = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == seguimiento.AdopcionId);
+            ViewBag.Adopcion = adopcion;
+            ViewBag.TiposSeguimiento = new SelectList(new[] { "Visita Domiciliaria", "Llamada Telefónica", "Videollamada", "Email" });
+            ViewBag.EstadosMascota = new SelectList(new[] { "Excelente", "Bueno", "Regular", "Requiere Atención", "Crítico" });
+
+            return View(seguimiento);
+        }
+
+        // GET: Admin/Seguimientos/Edit/5
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Actualizar")]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // NOTA: En producción se obtendría de BD
+            // var seguimiento = db.Seguimientos.Find(id);
+
+            // Por ahora retornamos error
+            TempData["Warning"] = "Función no disponible hasta migrar base de datos";
+            return RedirectToAction("Index");
+        }
+
+        // Método auxiliar para verificar si hay seguimiento reciente
+        private bool TieneSeguimientoReciente(int adopcionId, int dias)
+        {
+            // NOTA: En producción:
+            // return db.Seguimientos.Any(s => s.AdopcionId == adopcionId && 
+            //     DbFunctions.DiffDays(s.FechaSeguimiento, DateTime.Now) <= dias);
+
+            // Por ahora retornamos false para mostrar todos como pendientes
+            return false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

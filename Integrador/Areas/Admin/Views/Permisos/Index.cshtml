@@ -230,18 +230,18 @@
 </style>
 
 <div class="permisos-container">
-    <div class="permisos-header">
-        <h2>?? Gestión de Permisos CRUD</h2>
-        <p>Configure los permisos de acceso y operaciones CRUD para cada rol del sistema</p>
-    </div>
+<div class="permisos-header">
+    <h2><i class="fas fa-lock"></i> Gestión de Permisos CRUD</h2>
+    <p>Configure los permisos de acceso y operaciones CRUD para cada rol del sistema</p>
+</div>
 
     <div class="alert alert-info">
-        <strong>ℹ️ Información:</strong> El Administrador tiene acceso completo a todo el sistema. 
+        <strong><i class="fas fa-info-circle"></i> Información:</strong> El Administrador tiene acceso completo a todo el sistema. 
         Configure los permisos y operaciones CRUD para el rol Ciudadano según las necesidades.
     </div>
 
     <div class="alert alert-warning">
-        <strong>⚠️ CRUD:</strong> 
+        <strong><i class="fas fa-exclamation-triangle"></i> CRUD:</strong> 
         <strong class="crud-crear">Crear</strong> = Agregar nuevos registros | 
         <strong class="crud-leer">Leer</strong> = Ver/Listar registros | 
         <strong class="crud-actualizar">Actualizar</strong> = Modificar registros | 
@@ -250,10 +250,10 @@
 
     <div class="roles-tabs">
         <button class="role-tab active" onclick="cambiarRol('Admin')" id="tab-admin">
-            ????? Administrador
+            <i class="fas fa-user-shield"></i> Administrador
         </button>
         <button class="role-tab" onclick="cambiarRol('Ciudadano')" id="tab-ciudadano">
-            ?? Ciudadano
+            <i class="fas fa-user"></i> Ciudadano
         </button>
     </div>
 
@@ -276,7 +276,16 @@
                         <tr>
                             <td>
                                 <div class="permiso-info">
-                                    <div class="permiso-icon">@permisoVM.Permiso.Icono</div>
+                                    <div class="permiso-icon">
+                                        @if (!string.IsNullOrEmpty(permisoVM.Permiso.Icono) && permisoVM.Permiso.Icono.StartsWith("fa-"))
+                                        {
+                                            <i class="fas @permisoVM.Permiso.Icono"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-file"></i>
+                                        }
+                                    </div>
                                     <div class="permiso-details">
                                         <h4>@permisoVM.Permiso.Nombre</h4>
                                         <div class="permiso-route">@permisoVM.Permiso.ControllerName/@permisoVM.Permiso.ActionName</div>
@@ -305,19 +314,19 @@
                                     <div class="crud-checkboxes">
                                         <div class="crud-checkbox">
                                             <input type="checkbox" checked disabled>
-                                            <label class="crud-crear">? Crear</label>
+                                            <label class="crud-crear">✅ Crear</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" checked disabled>
-                                            <label class="crud-leer">? Leer</label>
+                                            <label class="crud-leer">👁️ Leer</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" checked disabled>
-                                            <label class="crud-actualizar">? Actualizar</label>
+                                            <label class="crud-actualizar">✏️ Actualizar</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" checked disabled>
-                                            <label class="crud-eliminar">? Eliminar</label>
+                                            <label class="crud-eliminar">🗑️ Eliminar</label>
                                         </div>
                                     </div>
                                 }
@@ -353,7 +362,16 @@
                         <tr class="@rowClass" id="row-ciudadano-@permisoVM.Permiso.Id">
                             <td>
                                 <div class="permiso-info">
-                                    <div class="permiso-icon">@permisoVM.Permiso.Icono</div>
+                                    <div class="permiso-icon">
+                                        @if (!string.IsNullOrEmpty(permisoVM.Permiso.Icono) && permisoVM.Permiso.Icono.StartsWith("fa-"))
+                                        {
+                                            <i class="fas @permisoVM.Permiso.Icono"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-file"></i>
+                                        }
+                                    </div>
                                     <div class="permiso-details">
                                         <h4>@permisoVM.Permiso.Nombre</h4>
                                         <div class="permiso-route">@permisoVM.Permiso.ControllerName/@permisoVM.Permiso.ActionName</div>
@@ -385,28 +403,28 @@
                                     <div class="crud-checkboxes" id="crud-@permisoVM.Permiso.Id">
                                         <div class="crud-checkbox">
                                             <input type="checkbox" 
-                                                   @(permisoVM.PermisosCrud.PuedeCrear ? "checked" : "")
+                                                   @(permisoVM.PermisoCrud.PuedeCrear ? "checked" : "")
                                                    @(!permisoVM.TieneAcceso ? "disabled" : "")
                                                    onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Crear')">
                                             <label class="crud-crear">Crear</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" 
-                                                   @(permisoVM.PermisosCrud.PuedeLeer ? "checked" : "")
+                                                   @(permisoVM.PermisoCrud.PuedeLeer ? "checked" : "")
                                                    @(!permisoVM.TieneAcceso ? "disabled" : "")
                                                    onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Leer')">
                                             <label class="crud-leer">Leer</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" 
-                                                   @(permisoVM.PermisosCrud.PuedeActualizar ? "checked" : "")
+                                                   @(permisoVM.PermisoCrud.PuedeActualizar ? "checked" : "")
                                                    @(!permisoVM.TieneAcceso ? "disabled" : "")
                                                    onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Actualizar')">
                                             <label class="crud-actualizar">Actualizar</label>
                                         </div>
                                         <div class="crud-checkbox">
                                             <input type="checkbox" 
-                                                   @(permisoVM.PermisosCrud.PuedeEliminar ? "checked" : "")
+                                                   @(permisoVM.PermisoCrud.PuedeEliminar ? "checked" : "")
                                                    @(!permisoVM.TieneAcceso ? "disabled" : "")
                                                    onchange="actualizarPermisoCrud(this, @permisoVM.Permiso.Id, '@permisoVM.Permiso.ControllerName', 'Eliminar')">
                                             <label class="crud-eliminar">Eliminar</label>

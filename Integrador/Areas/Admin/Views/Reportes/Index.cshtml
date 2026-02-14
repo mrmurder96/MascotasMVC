@@ -1,0 +1,198 @@
+@{
+    ViewBag.Title = "Reportes y Estadísticas";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="glyphicon glyphicon-stats"></i> Reportes y Estadísticas del Sistema</h2>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Estadísticas -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card stat-mascotas">
+                <div class="stat-icon"><i class="glyphicon glyphicon-heart"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.TotalMascotas</h3>
+                    <p>Mascotas Registradas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-adopciones">
+                <div class="stat-icon"><i class="glyphicon glyphicon-home"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.TotalAdopciones</h3>
+                    <p>Adopciones Exitosas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-pendientes">
+                <div class="stat-icon"><i class="glyphicon glyphicon-time"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.SolicitudesPendientes</h3>
+                    <p>Solicitudes Pendientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-usuarios">
+                <div class="stat-icon"><i class="glyphicon glyphicon-user"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.TotalUsuarios</h3>
+                    <p>Usuarios Activos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Rápidos a Reportes -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Reportes Disponibles</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Reporte de Adopciones</h4>
+                                <p>Listado completo de adopciones realizadas con filtros por fecha y estado</p>
+                                <a href="@Url.Action("Adopciones")" class="btn btn-primary">Ver Reporte</a>
+                                <a href="@Url.Action("ExportarAdopciones")" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Reporte de Mascotas</h4>
+                                <p>Estadísticas de mascotas disponibles, adoptadas y en proceso</p>
+                                <a href="@Url.Action("Mascotas")" class="btn btn-primary">Ver Reporte</a>
+                                <a href="@Url.Action("ExportarMascotas")" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Reporte de Solicitudes</h4>
+                                <p>Análisis de solicitudes por estado (pendientes, aprobadas, rechazadas)</p>
+                                <a href="@Url.Action("Solicitudes")" class="btn btn-primary">Ver Reporte</a>
+                                <a href="@Url.Action("ExportarSolicitudes")" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Reporte de Usuarios</h4>
+                                <p>Listado de usuarios registrados y estadísticas de adopción por usuario</p>
+                                <a href="@Url.Action("Usuarios")" class="btn btn-primary">Ver Reporte</a>
+                                <a href="@Url.Action("ExportarUsuarios")" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Auditoría de Seguridad</h4>
+                                <p>Registro de intentos fallidos de login y usuarios bloqueados</p>
+                                <a href="@Url.Action("Auditoria")" class="btn btn-primary">Ver Reporte</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i>??</i> Estadísticas Generales</h4>
+                                <p>Dashboard con gráficos y métricas clave del sistema</p>
+                                <a href="@Url.Action("Estadisticas")" class="btn btn-primary">Ver Estadísticas</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .stat-icon {
+        font-size: 40px;
+        margin-right: 15px;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .stat-mascotas { border-left: 4px solid #3498db; }
+    .stat-mascotas .stat-icon { background: #ebf5fb; color: #3498db; }
+    .stat-adopciones { border-left: 4px solid #27ae60; }
+    .stat-adopciones .stat-icon { background: #e8f8f5; color: #27ae60; }
+    .stat-pendientes { border-left: 4px solid #f39c12; }
+    .stat-pendientes .stat-icon { background: #fef5e7; color: #f39c12; }
+    .stat-usuarios { border-left: 4px solid #9b59b6; }
+    .stat-usuarios .stat-icon { background: #f4ecf7; color: #9b59b6; }
+    .stat-info h3 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .stat-info p {
+        margin: 0;
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+    .card-header h3 {
+        margin: 0;
+        color: #333;
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .reporte-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+    }
+    .reporte-item h4 {
+        margin-top: 0;
+        color: #2c3e50;
+    }
+    .reporte-item p {
+        color: #7f8c8d;
+        margin-bottom: 15px;
+    }
+</style>

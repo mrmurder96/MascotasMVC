@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Notificaciones";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container mt-4">
@@ -44,14 +45,14 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "")>Marcar como leída</button>
+                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "")>Marcar como leÃ³da</button>
                                 }
 
                                 @using (Html.BeginForm("EliminarNotificacion", "Ciudadano", FormMethod.Post, new { @style = "display:inline; margin-left:8px;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('¿Eliminar notificación?');">Eliminar</button>
+                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Ã³Eliminar notificaciÃ³n?');">Eliminar</button>
                                 }
                             </div>
                         </div>

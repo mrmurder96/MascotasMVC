@@ -15,6 +15,16 @@
         <AssociationConnector Association="adopModel.FK_Adopciones_Mascotas" ManuallyRouted="false" />
         <AssociationConnector Association="adopModel.FK_Notificaciones_Usuarios" ManuallyRouted="false" />
         <AssociationConnector Association="adopModel.FK_UsuarioImagenes_Usuarios" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="adopModel.Categorias" Width="1.5" PointX="3.5" PointY="8.125" />
+        <EntityTypeShape EntityType="adopModel.MascotasPerdidas" Width="1.5" PointX="6.375" PointY="9.75" />
+        <EntityTypeShape EntityType="adopModel.Permisos" Width="1.5" PointX="8.375" PointY="5" />
+        <EntityTypeShape EntityType="adopModel.Refugios" Width="1.5" PointX="3.5" PointY="11.375" />
+        <EntityTypeShape EntityType="adopModel.RolPermisos" Width="1.5" PointX="10.625" PointY="5.125" />
+        <EntityTypeShape EntityType="adopModel.Seguimientos" Width="1.5" PointX="10.25" PointY="1.125" />
+        <AssociationConnector Association="adopModel.FK_Seguimientos_Adopciones" />
+        <AssociationConnector Association="adopModel.FK_Mascotas_Categorias" />
+        <AssociationConnector Association="adopModel.FK_Mascotas_Refugios" />
+        <AssociationConnector Association="adopModel.FK_RolPermisos_Permisos" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

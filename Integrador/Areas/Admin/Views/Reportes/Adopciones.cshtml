@@ -1,0 +1,148 @@
+@{
+    ViewBag.Title = "Reporte de Adopciones";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2><i class="glyphicon glyphicon-stats"></i> Reporte de Adopciones</h2>
+    </div>
+</div>
+
+    @Html.Partial("_AlertMessages")
+
+    <!-- Filtros -->
+    <div class="card mb-3">
+        <div class="card-body">
+            @using (Html.BeginForm("Adopciones", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label>Desde:</label>
+                    <input type="date" name="fechaInicio" class="form-control" value="@Request.QueryString["fechaInicio"]" />
+                </div>
+                <div class="form-group">
+                    <label>Hasta:</label>
+                    <input type="date" name="fechaFin" class="form-control" value="@Request.QueryString["fechaFin"]" />
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aprobada">Aprobada</option>
+                        <option value="Rechazada">Rechazada</option>
+                        <option value="Finalizada">Finalizada</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-search"></i> Filtrar
+                </button>
+                <a href="@Url.Action("ExportarAdopciones", new { fechaInicio = Request.QueryString["fechaInicio"], fechaFin = Request.QueryString["fechaFin"], estado = Request.QueryString["estado"] })" 
+                   class="btn btn-success">
+                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-box bg-info">
+                <h3>@ViewBag.TotalAdopciones</h3>
+                <p>Total Adopciones</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box bg-warning">
+                <h3>@ViewBag.Pendientes</h3>
+                <p>Pendientes</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box bg-success">
+                <h3>@ViewBag.Aprobadas</h3>
+                <p>Aprobadas</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box bg-primary">
+                <h3>@ViewBag.Finalizadas</h3>
+                <p>Finalizadas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de datos -->
+    <div class="card mt-4">
+        <div class="card-body">
+            @if (ViewBag.Adopciones != null && ((IEnumerable<dynamic>)ViewBag.Adopciones).Any())
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Mascota</th>
+                            <th>Estado</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var adopcion in ViewBag.Adopciones)
+                        {
+                            <tr>
+                                <td><strong>#@adopcion.Id</strong></td>
+                                <td>@((DateTime)adopcion.FechaAdopcion).ToString("dd/MM/yyyy")</td>
+                                <td>@adopcion.Usuario?.Nombre</td>
+                                <td>@adopcion.Mascota?.Nombre</td>
+                                <td>
+                                    @if (adopcion.Estado == "Pendiente")
+                                    {
+                                        <span class="label label-warning">@adopcion.Estado</span>
+                                    }
+                                    else if (adopcion.Estado == "Aprobada")
+                                    {
+                                        <span class="label label-success">@adopcion.Estado</span>
+                                    }
+                                    else if (adopcion.Estado == "Rechazada")
+                                    {
+                                        <span class="label label-danger">@adopcion.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-info">@adopcion.Estado</span>
+                                    }
+                                </td>
+                                <td>@(adopcion.Motivo?.Length > 50 ? adopcion.Motivo.Substring(0, 50) + "..." : adopcion.Motivo)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay datos para mostrar con los filtros aplicados</h4>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    .stat-box { background: #3498db; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+    .stat-box h3 { font-size: 36px; margin: 0; }
+    .stat-box p { margin: 5px 0 0 0; font-size: 14px; }
+    .stat-box.bg-info { background: #5bc0de; }
+    .stat-box.bg-warning { background: #f0ad4e; }
+    .stat-box.bg-success { background: #5cb85c; }
+    .stat-box.bg-primary { background: #337ab7; }
+    .mb-3 { margin-bottom: 15px; }
+    .mb-4 { margin-bottom: 20px; }
+    .mt-4 { margin-top: 20px; }
+</style>

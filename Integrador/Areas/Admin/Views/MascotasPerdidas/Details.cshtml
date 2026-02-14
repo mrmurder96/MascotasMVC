@@ -1,0 +1,133 @@
+@model Integrador.Models.MascotasPerdidas
+@{
+    ViewBag.Title = "Detalles del Reporte";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-info-sign"></i> Detalles del Reporte</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            @if (!string.IsNullOrEmpty(Model.Imagen))
+                            {
+                                <img src="@Url.Content("~/Content/uploads/perdidas/" + Model.Imagen)" 
+                                     alt="Foto de la mascota" 
+                                     class="img-thumbnail" 
+                                     style="max-width: 100%;" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/no-image.png")" 
+                                     alt="Sin imagen" 
+                                     class="img-thumbnail" />
+                            }
+                            <div class="mt-3">
+                                @if (Model.TipoReporte == "Perdida")
+                                {
+                                    <span class="label label-danger label-xl">?? MASCOTA PERDIDA</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-success label-xl">?? MASCOTA ENCONTRADA</span>
+                                }
+                                <br /><br />
+                                @if (Model.Estado == "Reunido")
+                                {
+                                    <span class="label label-info label-lg">? REUNIDO</span>
+                                }
+                                else if (Model.Estado == "Activo")
+                                {
+                                    <span class="label label-warning label-lg">? ACTIVO</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-default label-lg">CERRADO</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <h2>@Model.Nombre</h2>
+                            <p class="lead">@Model.Tipo - @Model.Raza</p>
+
+                            <hr />
+
+                            <dl class="dl-horizontal">
+                                <dt>ID Reporte</dt>
+                                <dd><strong>#@Model.Id</strong></dd>
+
+                                <dt>Tipo de Reporte</dt>
+                                <dd><strong>@Model.TipoReporte</strong></dd>
+
+                                <dt>Fecha del Reporte</dt>
+                                <dd>@Model.FechaReporte.ToString("dd/MM/yyyy")</dd>
+
+                                <dt>Ubicación</dt>
+                                <dd><i class="glyphicon glyphicon-map-marker"></i> @Model.Ubicacion</dd>
+
+                                <dt>Estado</dt>
+                                <dd>@Model.Estado</dd>
+
+                                <dt>Descripción</dt>
+                                <dd>
+                                    <div class="well">
+                                        @Model.Descripcion
+                                    </div>
+                                </dd>
+                            </dl>
+
+                            <h4>Información de Contacto</h4>
+                            <hr />
+
+                            <dl class="dl-horizontal">
+                                <dt>Nombre</dt>
+                                <dd>@Model.NombreContacto</dd>
+
+                                <dt>Teléfono</dt>
+                                <dd><i class="glyphicon glyphicon-phone"></i> <a href="tel:@Model.Telefono">@Model.Telefono</a></dd>
+
+                                <dt>Email</dt>
+                                <dd><i class="glyphicon glyphicon-envelope"></i> <a href="mailto:@Model.Email">@Model.Email</a></dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="text-center">
+                        <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning btn-lg">
+                            <i class="glyphicon glyphicon-edit"></i> Editar
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger btn-lg"
+                           onclick="return confirm('¿Eliminar reporte?')">
+                            <i class="glyphicon glyphicon-trash"></i> Eliminar
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #333; }
+    .card-body { padding: 30px; }
+    .dl-horizontal dt { width: 150px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 170px; }
+    .mt-3 { margin-top: 15px; }
+    .label-xl { font-size: 16px; padding: 10px 15px; }
+    .label-lg { font-size: 14px; padding: 8px 12px; }
+</style>

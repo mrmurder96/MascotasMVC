@@ -2,12 +2,12 @@
 
 <div class="card mt-4">
     <div class="card-header">
-        <h5 class="mb-0">Mis solicitudes de adopción</h5>
+        <h5 class="mb-0">Mis solicitudes de adopciÃ³n</h5>
     </div>
     <div class="card-body">
         @if (Model == null || !Model.Any())
         {
-            <p>No tienes solicitudes de adopción registradas.</p>
+            <p>No tienes solicitudes de adopciÃ³n registradas.</p>
         }
         else
         {
@@ -20,7 +20,7 @@
                             <small>@s.FechaSolicitud.ToString("dd/MM/yyyy")</small>
                         </div>
                         <p class="mb-1"><strong>Estado:</strong> @Html.Encode(s.Estado)</p>
-                        <p class="mb-1"><strong>Contacto:</strong> @Html.Encode(s.Nombre) @Html.Encode(s.Apellidos) — @Html.Encode(s.Email) — @Html.Encode(s.Telefono)</p>
+                        <p class="mb-1"><strong>Contacto:</strong> @Html.Encode(s.Nombre) @Html.Encode(s.Apellidos) Ã³ @Html.Encode(s.Email) Ã³ @Html.Encode(s.Telefono)</p>
                         @if (!string.IsNullOrWhiteSpace(s.Motivo))
                         {
                             <p class="mb-1"><strong>Motivo:</strong> @Html.Encode(s.Motivo)</p>

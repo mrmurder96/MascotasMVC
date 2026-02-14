@@ -1,6 +1,6 @@
-﻿@:✉️model IEnumerable<Integrador.Models.ViewModels.Notificacion>
+@model IEnumerable<Integrador.Models.ViewModels.Notificacion>
 
-@:✉️{
+@{
     ViewBag.Title = "Notificaciones";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
@@ -109,50 +109,50 @@
 <div class="notificaciones-container">
     <div class="notif-header">
         <h2>🔔 Notificaciones</h2>
-        @:✉️if (Model != null && Model.Any(n => !n.Leida))
+        @if (Model != null && Model.Any(n => !n.Leida))
         {
             <span style="background: #e74c3c; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px;">
-                @:✉️Model.Count(n => !n.Leida) sin leer
+                @Model.Count(n => !n.Leida) sin leer
             </span>
         }
     </div>
 
-    @:✉️if (TempData["NotificacionesError"] != null)
+    @if (TempData["NotificacionesError"] != null)
     {
-        <div class="alert alert-danger">⚠️ @:✉️TempData["NotificacionesError"]</div>
+        <div class="alert alert-danger">⚠️ @TempData["NotificacionesError"]</div>
     }
 
-    @:✉️if (Model == null || !Model.Any())
+    @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">`nℹ️ No tienes notificaciones.
+        <div class="alert alert-info">ℹ️ No tienes notificaciones.
         </div>
     }
     else
     {
         foreach (var notif in Model.OrderByDescending(n => n.FechaCreacion))
         {
-            <div class="notif-item @:✉️(!notif.Leida ? "unread" : "")">
+            <div class="notif-item @(!notif.Leida ? "unread" : "")">
                 <div class="notif-icon">
-                    @:✉️if (!notif.Leida)
+                    @if (!notif.Leida)
                     {
-                        @:✉️:🔵
+                        @:🔵
                     }
                     else
                     {
-                        @:✉️:🔵
+                        @:⚪
                     }
                 </div>
                 <div class="notif-content">
-                    <h4 class="notif-title">@:✉️notif.Titulo</h4>
-                    <p class="notif-message">@:✉️notif.Mensaje</p>
+                    <h4 class="notif-title">@notif.Titulo</h4>
+                    <p class="notif-message">@notif.Mensaje</p>
                     <div class="notif-date">
-                        ?? @:✉️notif.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                        📅 @notif.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                     </div>
                 </div>
-                @:✉️if (!notif.Leida)
+                @if (!notif.Leida)
                 {
                     <div class="notif-actions">
-                        <button class="btn-mark-read" onclick="marcarLeida(@:✉️notif.Id)">
+                        <button class="btn-mark-read" onclick="marcarLeida(@notif.Id)">
                             Marcar como leída
                         </button>
                     </div>
@@ -162,7 +162,7 @@
     }
 </div>
 
-@:✉️section scripts {
+@section scripts {
     <script>
         function marcarLeida(notifId) {
             if (!confirm('¿Marcar esta notificación como leída?')) return;

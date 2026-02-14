@@ -28,8 +28,12 @@ namespace Integrador.Models
         public string Descripcion { get; set; }
         public string FotoUrl { get; set; }
         public string Estado { get; set; }
+        public Nullable<int> CategoriaId { get; set; }
+        public Nullable<int> RefugioId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Adopciones> Adopciones { get; set; }
+        public virtual Categorias Categorias { get; set; }
+        public virtual Refugios Refugios { get; set; }
     }
 }

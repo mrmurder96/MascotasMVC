@@ -1,0 +1,120 @@
+@model IEnumerable<Integrador.Models.Categoria>
+@{
+    ViewBag.Title = "Gestión de Categorías";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="glyphicon glyphicon-folder-open"></i> Categorías de Mascotas</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Create")" class="btn btn-success">
+                <i class="glyphicon glyphicon-plus"></i> Nueva Categoría
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Mascotas</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td><strong>@item.Nombre</strong></td>
+                                <td>@(item.Descripcion ?? "-")</td>
+                                <td>
+                                    @if (item.EsActivo)
+                                    {
+                                        <span class="label label-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-default">Inactivo</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge">@item.CantidadMascotas mascotas</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", new { id = item.Id })" 
+                                           class="btn btn-info btn-sm" title="Ver detalles">
+                                            <i class="glyphicon glyphicon-eye-open"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" 
+                                           class="btn btn-warning btn-sm" title="Editar">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" 
+                                           class="btn btn-danger btn-sm" title="Eliminar"
+                                           onclick="return confirm('¿Está seguro de eliminar esta categoría?')">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay categorías registradas</h4>
+                    <p>Haga clic en "Nueva Categoría" para agregar la primera.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+</style>

@@ -1,0 +1,98 @@
+@model Integrador.Models.Adopciones
+@{
+    ViewBag.Title = "Finalizar Adopción";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    <h3><i class="glyphicon glyphicon-check"></i> Finalizar Proceso de Adopción</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    <div class="alert alert-success">
+                        <strong>Solicitud #@Model.Id</strong> - Adopción de <strong>@Model.Mascota?.Nombre</strong> por <strong>@Model.Usuario?.Nombre</strong>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4>Confirmación de Finalización</h4>
+                        </div>
+                        <div class="panel-body">
+                            <p><strong>Al finalizar esta adopción:</strong></p>
+                            <ul>
+                                <li>? La solicitud quedará marcada como <span class="label label-info">Finalizada</span></li>
+                                <li>? El estado de la mascota cambiará a <span class="label label-info">Adoptado</span></li>
+                                <li>? Se cerrará el proceso de adopción exitosamente</li>
+                                <li>? Se enviará notificación de finalización al adoptante</li>
+                            </ul>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <h5>Información del Adoptante</h5>
+                                    <dl>
+                                        <dt>Nombre</dt>
+                                        <dd>@Model.Usuario?.Nombre</dd>
+                                        <dt>Email</dt>
+                                        <dd>@Model.Usuario?.Email</dd>
+                                        <dt>Teléfono</dt>
+                                        <dd>@Model.Usuario?.Telefono</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Información de la Mascota</h5>
+                                    @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
+                                    {
+                                        <div class="text-center mb-3">
+                                            <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 
+                                                 alt="@Model.Mascota.Nombre" 
+                                                 class="img-thumbnail" 
+                                                 style="max-width: 150px;" />
+                                        </div>
+                                    }
+                                    <dl>
+                                        <dt>Nombre</dt>
+                                        <dd>@Model.Mascota?.Nombre</dd>
+                                        <dt>Tipo/Raza</dt>
+                                        <dd>@Model.Mascota?.Tipo - @Model.Mascota?.Raza</dd>
+                                        <dt>Edad</dt>
+                                        <dd>@Model.Mascota?.Edad años</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm("Finalizar", "Solicitudes", new { area = "Admin" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="glyphicon glyphicon-check"></i> Finalizar Adopción
+                            </button>
+                            <a href="@Url.Action("Details", new { id = Model.Id })" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header.bg-primary { background-color: #337ab7; color: white; }
+    .card-header h3 { margin: 0; }
+    .card-body { padding: 30px; }
+    .mt-3 { margin-top: 15px; }
+    .mb-3 { margin-bottom: 15px; }
+</style>

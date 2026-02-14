@@ -1,0 +1,91 @@
+@model Integrador.Models.Categoria
+@{
+    ViewBag.Title = "Eliminar Categoría";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>¡Atención!</strong> Está a punto de eliminar la siguiente categoría:
+                    </div>
+
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(m => m.Nombre)</dt>
+                        <dd><strong>@Html.DisplayFor(m => m.Nombre)</strong></dd>
+
+                        <dt>@Html.DisplayNameFor(m => m.Descripcion)</dt>
+                        <dd>@(Model.Descripcion ?? "Sin descripción")</dd>
+
+                        <dt>Mascotas Asociadas</dt>
+                        <dd>
+                            <span class="badge">@Model.CantidadMascotas mascotas</span>
+                        </dd>
+                    </dl>
+
+                    @if (Model.CantidadMascotas > 0)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>?? Advertencia:</strong> Esta categoría tiene <strong>@Model.CantidadMascotas mascotas</strong> asociadas.
+                            Al eliminarla, estas mascotas quedarán sin categoría.
+                        </div>
+                    }
+
+                    <hr />
+
+                    @using (Html.BeginForm("Delete", "Categorias", new { area = "Admin" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Categoría
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-default">
+                                <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    .card-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+    .card-header.bg-danger {
+        background-color: #d9534f;
+        color: white;
+    }
+    .card-header h3 {
+        margin: 0;
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .dl-horizontal dt {
+        width: 180px;
+        font-weight: 600;
+    }
+    .dl-horizontal dd {
+        margin-left: 200px;
+    }
+</style>

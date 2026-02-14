@@ -72,7 +72,7 @@ namespace Integrador.Areas.Admin.Controllers
                 {
                     Permiso = permiso,
                     TieneAcceso = TieneAccesoPermiso(rol, permiso.Id),
-                    PermisosCrud = new PermisoCrud
+                    PermisoCrud = new PermisoCrud
                     {
                         PermisoId = permiso.Id,
                         Rol = rol,
@@ -129,15 +129,15 @@ namespace Integrador.Areas.Admin.Controllers
         {
             return new List<Permisos>
             {
-                new Permisos { Id = 1, Nombre = "Dashboard", ControllerName = "Admin", ActionName = "Index", Icono = "??", Orden = 1, EsActivo = true, TieneCrud = false },
-                new Permisos { Id = 2, Nombre = "Usuarios", ControllerName = "Usuarios", ActionName = "Index", Icono = "??", Orden = 2, EsActivo = true, TieneCrud = true },
-                new Permisos { Id = 3, Nombre = "Mascotas", ControllerName = "Mascotas", ActionName = "Index", Icono = "??", Orden = 3, EsActivo = true, TieneCrud = true },
-                new Permisos { Id = 4, Nombre = "Campañas", ControllerName = "Campanas", ActionName = "Index", Icono = "??", Orden = 4, EsActivo = true, TieneCrud = true },
-                new Permisos { Id = 5, Nombre = "Adopciones", ControllerName = "Adopciones", ActionName = "Index", Icono = "??", Orden = 5, EsActivo = true, TieneCrud = true },
-                new Permisos { Id = 6, Nombre = "Centros", ControllerName = "Centros", ActionName = "Index", Icono = "??", Orden = 6, EsActivo = true, TieneCrud = false },
-                new Permisos { Id = 7, Nombre = "Perfil", ControllerName = "Ciudadano", ActionName = "Perfil", Icono = "??", Orden = 7, EsActivo = true, TieneCrud = false },
-                new Permisos { Id = 8, Nombre = "Notificaciones", ControllerName = "Ciudadano", ActionName = "Notificaciones", Icono = "??", Orden = 8, EsActivo = true, TieneCrud = false },
-                new Permisos { Id = 9, Nombre = "Permisos", ControllerName = "Permisos", ActionName = "Index", Icono = "??", Orden = 9, EsActivo = true, TieneCrud = false }
+                new Permisos { Id = 1, Nombre = "Dashboard", ControllerName = "Admin", ActionName = "Index", Icono = "??", Orden = 1, EstaActivo = true, TieneCrud = false },
+                new Permisos { Id = 2, Nombre = "Usuarios", ControllerName = "Usuarios", ActionName = "Index", Icono = "??", Orden = 2, EstaActivo = true, TieneCrud = true },
+                new Permisos { Id = 3, Nombre = "Mascotas", ControllerName = "Mascotas", ActionName = "Index", Icono = "??", Orden = 3, EstaActivo = true, TieneCrud = true },
+                new Permisos { Id = 4, Nombre = "Campañas", ControllerName = "Campanas", ActionName = "Index", Icono = "??", Orden = 4, EstaActivo = true, TieneCrud = true },
+                new Permisos { Id = 5, Nombre = "Adopciones", ControllerName = "Adopciones", ActionName = "Index", Icono = "??", Orden = 5, EstaActivo = true, TieneCrud = true },
+                new Permisos { Id = 6, Nombre = "Centros", ControllerName = "Centros", ActionName = "Index", Icono = "??", Orden = 6, EstaActivo = true, TieneCrud = false },
+                new Permisos { Id = 7, Nombre = "Perfil", ControllerName = "Ciudadano", ActionName = "Perfil", Icono = "??", Orden = 7, EstaActivo = true, TieneCrud = false },
+                new Permisos { Id = 8, Nombre = "Notificaciones", ControllerName = "Ciudadano", ActionName = "Notificaciones", Icono = "??", Orden = 8, EstaActivo = true, TieneCrud = false },
+                new Permisos { Id = 9, Nombre = "Permisos", ControllerName = "Permisos", ActionName = "Index", Icono = "??", Orden = 9, EstaActivo = true, TieneCrud = false }
             };
         }
 

@@ -1,0 +1,249 @@
+@model Integrador.Models.MascotasPerdidas
+
+@{
+    ViewBag.Title = "Detalles - " + Model.Nombre;
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .details-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .details-header {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .details-content {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .details-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+    }
+    
+    .details-body {
+        padding: 30px;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .info-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+    }
+    
+    .info-label {
+        font-size: 13px;
+        color: #7f8c8d;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+    
+    .info-value {
+        font-size: 18px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .contact-box {
+        background: #e8f4f8;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 30px 0;
+        border-left: 5px solid #3498db;
+    }
+    
+    .contact-box h4 {
+        margin: 0 0 15px 0;
+        color: #2c3e50;
+        font-size: 20px;
+    }
+    
+    .contact-item {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #2c3e50;
+    }
+    
+    .status-found {
+        background: #d4edda;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 5px solid #28a745;
+        margin: 20px 0;
+    }
+    
+    .status-lost {
+        background: #f8d7da;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 5px solid #dc3545;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="details-container">
+    <div class="details-header">
+        <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-light" style="margin-bottom: 15px;">
+            <i class="glyphicon glyphicon-arrow-left"></i> Volver al listado
+        </a>
+        <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">
+            @Model.Nombre
+        </h2>
+    </div>
+    
+    <div class="details-content">
+        @if (!string.IsNullOrEmpty(Model.FotoUrl))
+        {
+            <img src="@Model.FotoUrl" alt="@Model.Nombre" class="details-image" />
+        }
+        else
+        {
+            <div class="details-image" style="height: 400px; background: #ecf0f1; display: flex; align-items: center; justify-content: center; font-size: 120px;">
+                ??
+            </div>
+        }
+        
+        <div class="details-body">
+            @if (Model.Encontrada)
+            {
+                <div class="status-found">
+                    <h4 style="margin: 0; color: #155724;">
+                        <i class="glyphicon glyphicon-ok-circle"></i> óMascota Encontrada!
+                    </h4>
+                    <p style="margin: 10px 0 0 0; color: #155724;">
+                        Esta mascota fue encontrada el @Model.FechaEncontrada?.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="status-lost">
+                    <h4 style="margin: 0; color: #721c24;">
+                        <i class="glyphicon glyphicon-exclamation-sign"></i> Mascota Perdida
+                    </h4>
+                    <p style="margin: 10px 0 0 0; color: #721c24;">
+                        Si has visto a esta mascota, por favor contacta con el dueóo usando la información de contacto abajo.
+                    </p>
+                </div>
+            }
+            
+            <h3 style="margin-top: 30px; color: #2c3e50;">Información de la Mascota</h3>
+            
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Tipo</div>
+                    <div class="info-value">@(Model.Tipo ?? "No especificado")</div>
+                </div>
+                
+                @if (!string.IsNullOrEmpty(Model.Raza))
+                {
+                    <div class="info-box">
+                        <div class="info-label">Raza</div>
+                        <div class="info-value">@Model.Raza</div>
+                    </div>
+                }
+                
+                @if (!string.IsNullOrEmpty(Model.Color))
+                {
+                    <div class="info-box">
+                        <div class="info-label">Color</div>
+                        <div class="info-value">@Model.Color</div>
+                    </div>
+                }
+                
+                <div class="info-box">
+                    <div class="info-label">Fecha de Reporte</div>
+                    <div class="info-value">@Model.FechaReporte.ToString("dd/MM/yyyy")</div>
+                </div>
+            </div>
+            
+            <div class="info-box" style="margin: 20px 0;">
+                <div class="info-label">?? óltima Ubicación Conocida</div>
+                <div class="info-value">@(Model.Ubicacion ?? "No especificada")</div>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Model.Descripcion))
+            {
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Descripción</h4>
+                    <p style="line-height: 1.8; color: #555; font-size: 16px;">
+                        @Model.Descripcion
+                    </p>
+                </div>
+            }
+            
+            <div class="contact-box">
+                <h4>?? Información de Contacto</h4>
+                
+                @if (!string.IsNullOrEmpty(Model.NombreContacto))
+                {
+                    <div class="contact-item">
+                        <strong>Nombre:</strong> @Model.NombreContacto
+                    </div>
+                }
+                
+                @if (!string.IsNullOrEmpty(Model.Telefono))
+                {
+                    <div class="contact-item">
+                        <strong>Telófono:</strong> 
+                        <a href="tel:@Model.Telefono" style="color: #3498db; font-weight: 600;">@Model.Telefono</a>
+                    </div>
+                }
+                
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <div class="contact-item">
+                        <strong>Email:</strong> 
+                        <a href="mailto:@Model.Email" style="color: #3498db; font-weight: 600;">@Model.Email</a>
+                    </div>
+                }
+            </div>
+            
+            @if (!Model.Encontrada && Session["UsuarioId"] != null)
+            {
+                <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 5px solid #ffc107;">
+                    <h4 style="margin: 0 0 10px 0; color: #856404;">óEncontraste a tu mascota?</h4>
+                    <p style="margin: 0 0 15px 0; color: #856404;">
+                        Si encontraste a tu mascota, marca este reporte como "Encontrada" para que otros lo sepan.
+                    </p>
+                    
+                    @using (Html.BeginForm("MarcarEncontrada", "MascotasPerdidas", new { id = Model.Id }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success btn-lg" onclick="return confirm('¿Estás seguro de que encontraste a tu mascota?')">
+                            <i class="glyphicon glyphicon-ok"></i> Marcar como Encontrada
+                        </button>
+                    }
+                </div>
+            }
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-default btn-lg">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

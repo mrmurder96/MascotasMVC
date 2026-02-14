@@ -1,0 +1,64 @@
+@* Vista parcial para mostrar mensajes de éxito/error/info/warning *@
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert" aria-live="polite">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong><i class="glyphicon glyphicon-ok-sign" aria-hidden="true"></i> Éxito:</strong>
+        <span id="successMessage">@TempData["SuccessMessage"]</span>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert" aria-live="assertive">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong><i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> Error:</strong>
+        <span id="errorMessage">@TempData["ErrorMessage"]</span>
+    </div>
+}
+
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info alert-dismissible" role="alert" aria-live="polite">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Información:</strong>
+        <span id="infoMessage">@TempData["InfoMessage"]</span>
+    </div>
+}
+
+@if (TempData["WarningMessage"] != null)
+{
+    <div class="alert alert-warning alert-dismissible" role="alert" aria-live="polite">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong><i class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i> Advertencia:</strong>
+        <span id="warningMessage">@TempData["WarningMessage"]</span>
+    </div>
+}
+
+<style>
+    .alert {
+        margin-bottom: 20px;
+        border-radius: 4px;
+        animation: slideDown 0.3s ease-out;
+    }
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="adopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="adopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Adopciones">
           <Key>
             <PropertyRef Name="Id" />
@@ -30,6 +30,18 @@
           <Property Name="Activa" Type="bit" Nullable="false" />
           <Property Name="ImagenUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
+          <Property Name="Icono" Type="nvarchar" MaxLength="50" />
+          <Property Name="EstaActiva" Type="bit" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Centros">
           <Key>
             <PropertyRef Name="Id" />
@@ -53,6 +65,29 @@
           <Property Name="Descripcion" Type="nvarchar(max)" />
           <Property Name="FotoUrl" Type="nvarchar" MaxLength="500" />
           <Property Name="Estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoriaId" Type="int" />
+          <Property Name="RefugioId" Type="int" />
+        </EntityType>
+        <EntityType Name="MascotasPerdidas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TipoReporte" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TipoMascota" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Raza" Type="nvarchar" MaxLength="100" />
+          <Property Name="UbicacionReporte" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="FotoUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="FechaReporte" Type="datetime" Nullable="false" />
+          <Property Name="NombreReportante" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="TelefonoContacto" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="EmailContacto" Type="nvarchar" MaxLength="150" />
+          <Property Name="Estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UsuarioRegistraId" Type="int" />
+          <Property Name="FechaResolucion" Type="datetime" />
+          <Property Name="Notas" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="Notificaciones">
           <Key>
@@ -64,6 +99,67 @@
           <Property Name="Mensaje" Type="nvarchar(max)" />
           <Property Name="Leido" Type="bit" Nullable="false" />
           <Property Name="Fecha" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ControllerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ActionName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Icono" Type="nvarchar" MaxLength="50" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+          <Property Name="TieneCrud" Type="bit" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
+          <Property Name="EstaActivo" Type="bit" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Refugios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
+          <Property Name="Direccion" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" />
+          <Property Name="NombreResponsable" Type="nvarchar" MaxLength="200" />
+          <Property Name="Latitud" Type="decimal" Precision="10" Scale="7" />
+          <Property Name="Longitud" Type="decimal" Precision="10" Scale="7" />
+          <Property Name="SitioWeb" Type="nvarchar" MaxLength="500" />
+          <Property Name="CapacidadMaxima" Type="int" Nullable="false" />
+          <Property Name="MascotasActuales" Type="int" Nullable="false" />
+          <Property Name="EstaActivo" Type="bit" Nullable="false" />
+          <Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RolPermisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Rol" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PermisoId" Type="int" Nullable="false" />
+          <Property Name="TieneAcceso" Type="bit" Nullable="false" />
+          <Property Name="PuedeCrear" Type="bit" Nullable="false" />
+          <Property Name="PuedeLeer" Type="bit" Nullable="false" />
+          <Property Name="PuedeActualizar" Type="bit" Nullable="false" />
+          <Property Name="PuedeEliminar" Type="bit" Nullable="false" />
+          <Property Name="FechaAsignacion" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Seguimientos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdopcionId" Type="int" Nullable="false" />
+          <Property Name="FechaSeguimiento" Type="datetime" Nullable="false" />
+          <Property Name="TipoSeguimiento" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Observaciones" Type="nvarchar" MaxLength="2000" Nullable="false" />
+          <Property Name="EstadoMascota" Type="nvarchar" MaxLength="50" />
+          <Property Name="UsuarioRealizaSeguimientoId" Type="int" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="UsuarioImagenes">
           <Key>
@@ -97,6 +193,8 @@
           <Property Name="TokenRecuperacion" Type="nvarchar" MaxLength="100" />
           <Property Name="TokenExpiracion" Type="datetime" />
           <Property Name="EstaActivo" Type="bit" Nullable="false" />
+          <Property Name="FechaNacimiento" Type="date" />
+          <Property Name="FechaUltimoCambioPassword" Type="datetime" />
         </EntityType>
         <Association Name="FK_Adopciones_Mascotas">
           <End Role="Mascotas" Type="Self.Mascotas" Multiplicity="1" />
@@ -110,6 +208,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Mascotas_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="0..1" />
+          <End Role="Mascotas" Type="Self.Mascotas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Mascotas">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mascotas_Refugios">
+          <End Role="Refugios" Type="Self.Refugios" Multiplicity="0..1" />
+          <End Role="Mascotas" Type="Self.Mascotas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Refugios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Mascotas">
+              <PropertyRef Name="RefugioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Notificaciones_Usuarios">
           <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
           <End Role="Notificaciones" Type="Self.Notificaciones" Multiplicity="*" />
@@ -119,6 +241,32 @@
             </Principal>
             <Dependent Role="Notificaciones">
               <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolPermisos_Permisos">
+          <End Role="Permisos" Type="Self.Permisos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RolPermisos" Type="Self.RolPermisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permisos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolPermisos">
+              <PropertyRef Name="PermisoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Seguimientos_Adopciones">
+          <End Role="Adopciones" Type="Self.Adopciones" Multiplicity="1" />
+          <End Role="Seguimientos" Type="Self.Seguimientos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adopciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Seguimientos">
+              <PropertyRef Name="AdopcionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -137,26 +285,47 @@
         <EntityContainer Name="adopModelStoreContainer">
           <EntitySet Name="Adopciones" EntityType="Self.Adopciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Campanias" EntityType="Self.Campanias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Centros" EntityType="Self.Centros" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mascotas" EntityType="Self.Mascotas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MascotasPerdidas" EntityType="Self.MascotasPerdidas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notificaciones" EntityType="Self.Notificaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permisos" EntityType="Self.Permisos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Refugios" EntityType="Self.Refugios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RolPermisos" EntityType="Self.RolPermisos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Seguimientos" EntityType="Self.Seguimientos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsuarioImagenes" EntityType="Self.UsuarioImagenes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Adopciones_Mascotas" Association="Self.FK_Adopciones_Mascotas">
             <End Role="Mascotas" EntitySet="Mascotas" />
             <End Role="Adopciones" EntitySet="Adopciones" />
           </AssociationSet>
+          <AssociationSet Name="FK_Mascotas_Categorias" Association="Self.FK_Mascotas_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Mascotas" EntitySet="Mascotas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mascotas_Refugios" Association="Self.FK_Mascotas_Refugios">
+            <End Role="Refugios" EntitySet="Refugios" />
+            <End Role="Mascotas" EntitySet="Mascotas" />
+          </AssociationSet>
           <AssociationSet Name="FK_Notificaciones_Usuarios" Association="Self.FK_Notificaciones_Usuarios">
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="Notificaciones" EntitySet="Notificaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolPermisos_Permisos" Association="Self.FK_RolPermisos_Permisos">
+            <End Role="Permisos" EntitySet="Permisos" />
+            <End Role="RolPermisos" EntitySet="RolPermisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Seguimientos_Adopciones" Association="Self.FK_Seguimientos_Adopciones">
+            <End Role="Adopciones" EntitySet="Adopciones" />
+            <End Role="Seguimientos" EntitySet="Seguimientos" />
           </AssociationSet>
           <AssociationSet Name="FK_UsuarioImagenes_Usuarios" Association="Self.FK_UsuarioImagenes_Usuarios">
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="UsuarioImagenes" EntitySet="UsuarioImagenes" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="adopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -173,6 +342,7 @@
           <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Mascotas" Relationship="Self.FK_Adopciones_Mascotas" FromRole="Adopciones" ToRole="Mascotas" />
+          <NavigationProperty Name="Seguimientos" Relationship="adopModel.FK_Seguimientos_Adopciones" FromRole="Adopciones" ToRole="Seguimientos" />
         </EntityType>
         <EntityType Name="Campanias">
           <Key>
@@ -210,6 +380,10 @@
           <Property Name="FotoUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Adopciones" Relationship="Self.FK_Adopciones_Mascotas" FromRole="Mascotas" ToRole="Adopciones" />
+          <Property Name="CategoriaId" Type="Int32" />
+          <Property Name="RefugioId" Type="Int32" />
+          <NavigationProperty Name="Categorias" Relationship="adopModel.FK_Mascotas_Categorias" FromRole="Mascotas" ToRole="Categorias" />
+          <NavigationProperty Name="Refugios" Relationship="adopModel.FK_Mascotas_Refugios" FromRole="Mascotas" ToRole="Refugios" />
         </EntityType>
         <EntityType Name="Notificaciones">
           <Key>
@@ -258,6 +432,8 @@
           <Property Name="EstaActivo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Notificaciones" Relationship="Self.FK_Notificaciones_Usuarios" FromRole="Usuarios" ToRole="Notificaciones" />
           <NavigationProperty Name="UsuarioImagenes" Relationship="Self.FK_UsuarioImagenes_Usuarios" FromRole="Usuarios" ToRole="UsuarioImagenes" />
+          <Property Name="FechaNacimiento" Type="DateTime" Precision="0" />
+          <Property Name="FechaUltimoCambioPassword" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_Adopciones_Mascotas">
           <End Role="Mascotas" Type="Self.Mascotas" Multiplicity="1" />
@@ -315,7 +491,178 @@
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="UsuarioImagenes" EntitySet="UsuarioImagenes" />
           </AssociationSet>
+          <EntitySet Name="Categorias" EntityType="adopModel.Categorias" />
+          <EntitySet Name="MascotasPerdidas" EntityType="adopModel.MascotasPerdidas" />
+          <EntitySet Name="Permisos" EntityType="adopModel.Permisos" />
+          <EntitySet Name="Refugios" EntityType="adopModel.Refugios" />
+          <EntitySet Name="RolPermisos" EntityType="adopModel.RolPermisos" />
+          <EntitySet Name="Seguimientos" EntityType="adopModel.Seguimientos" />
+          <AssociationSet Name="FK_Seguimientos_Adopciones" Association="adopModel.FK_Seguimientos_Adopciones">
+            <End Role="Adopciones" EntitySet="Adopciones" />
+            <End Role="Seguimientos" EntitySet="Seguimientos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mascotas_Categorias" Association="adopModel.FK_Mascotas_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Mascotas" EntitySet="Mascotas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mascotas_Refugios" Association="adopModel.FK_Mascotas_Refugios">
+            <End Role="Refugios" EntitySet="Refugios" />
+            <End Role="Mascotas" EntitySet="Mascotas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolPermisos_Permisos" Association="adopModel.FK_RolPermisos_Permisos">
+            <End Role="Permisos" EntitySet="Permisos" />
+            <End Role="RolPermisos" EntitySet="RolPermisos" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Icono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EstaActiva" Type="Boolean" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Mascotas" Relationship="adopModel.FK_Mascotas_Categorias" FromRole="Categorias" ToRole="Mascotas" />
+        </EntityType>
+        <EntityType Name="MascotasPerdidas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TipoReporte" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TipoMascota" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Raza" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UbicacionReporte" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="FotoUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FechaReporte" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NombreReportante" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TelefonoContacto" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EmailContacto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Estado" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UsuarioRegistraId" Type="Int32" />
+          <Property Name="FechaResolucion" Type="DateTime" Precision="3" />
+          <Property Name="Notas" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Permisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ActionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Icono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="TieneCrud" Type="Boolean" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EstaActivo" Type="Boolean" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="RolPermisos" Relationship="adopModel.FK_RolPermisos_Permisos" FromRole="Permisos" ToRole="RolPermisos" />
+        </EntityType>
+        <EntityType Name="Refugios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Direccion" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="NombreResponsable" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Latitud" Type="Decimal" Precision="10" Scale="7" />
+          <Property Name="Longitud" Type="Decimal" Precision="10" Scale="7" />
+          <Property Name="SitioWeb" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CapacidadMaxima" Type="Int32" Nullable="false" />
+          <Property Name="MascotasActuales" Type="Int32" Nullable="false" />
+          <Property Name="EstaActivo" Type="Boolean" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Mascotas" Relationship="adopModel.FK_Mascotas_Refugios" FromRole="Refugios" ToRole="Mascotas" />
+        </EntityType>
+        <EntityType Name="RolPermisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Rol" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PermisoId" Type="Int32" Nullable="false" />
+          <Property Name="TieneAcceso" Type="Boolean" Nullable="false" />
+          <Property Name="PuedeCrear" Type="Boolean" Nullable="false" />
+          <Property Name="PuedeLeer" Type="Boolean" Nullable="false" />
+          <Property Name="PuedeActualizar" Type="Boolean" Nullable="false" />
+          <Property Name="PuedeEliminar" Type="Boolean" Nullable="false" />
+          <Property Name="FechaAsignacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Permisos" Relationship="adopModel.FK_RolPermisos_Permisos" FromRole="RolPermisos" ToRole="Permisos" />
+        </EntityType>
+        <EntityType Name="Seguimientos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdopcionId" Type="Int32" Nullable="false" />
+          <Property Name="FechaSeguimiento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TipoSeguimiento" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Observaciones" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="EstadoMascota" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UsuarioRealizaSeguimientoId" Type="Int32" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Adopciones" Relationship="adopModel.FK_Seguimientos_Adopciones" FromRole="Seguimientos" ToRole="Adopciones" />
+        </EntityType>
+        <Association Name="FK_Seguimientos_Adopciones">
+          <End Type="adopModel.Adopciones" Role="Adopciones" Multiplicity="1" />
+          <End Type="adopModel.Seguimientos" Role="Seguimientos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adopciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Seguimientos">
+              <PropertyRef Name="AdopcionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mascotas_Categorias">
+          <End Type="adopModel.Categorias" Role="Categorias" Multiplicity="0..1" />
+          <End Type="adopModel.Mascotas" Role="Mascotas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Mascotas">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mascotas_Refugios">
+          <End Type="adopModel.Refugios" Role="Refugios" Multiplicity="0..1" />
+          <End Type="adopModel.Mascotas" Role="Mascotas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Refugios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Mascotas">
+              <PropertyRef Name="RefugioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolPermisos_Permisos">
+          <End Type="adopModel.Permisos" Role="Permisos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="adopModel.RolPermisos" Role="RolPermisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permisos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolPermisos">
+              <PropertyRef Name="PermisoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -364,6 +711,8 @@
           <EntitySetMapping Name="Mascotas">
             <EntityTypeMapping TypeName="adopModel.Mascotas">
               <MappingFragment StoreEntitySet="Mascotas">
+                <ScalarProperty Name="RefugioId" ColumnName="RefugioId" />
+                <ScalarProperty Name="CategoriaId" ColumnName="CategoriaId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
@@ -402,6 +751,8 @@
           <EntitySetMapping Name="Usuarios">
             <EntityTypeMapping TypeName="adopModel.Usuarios">
               <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="FechaUltimoCambioPassword" ColumnName="FechaUltimoCambioPassword" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombres" ColumnName="Nombres" />
                 <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
@@ -419,6 +770,106 @@
                 <ScalarProperty Name="TokenRecuperacion" ColumnName="TokenRecuperacion" />
                 <ScalarProperty Name="TokenExpiracion" ColumnName="TokenExpiracion" />
                 <ScalarProperty Name="EstaActivo" ColumnName="EstaActivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categorias">
+            <EntityTypeMapping TypeName="adopModel.Categorias">
+              <MappingFragment StoreEntitySet="Categorias">
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="EstaActiva" ColumnName="EstaActiva" />
+                <ScalarProperty Name="Icono" ColumnName="Icono" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MascotasPerdidas">
+            <EntityTypeMapping TypeName="adopModel.MascotasPerdidas">
+              <MappingFragment StoreEntitySet="MascotasPerdidas">
+                <ScalarProperty Name="Notas" ColumnName="Notas" />
+                <ScalarProperty Name="FechaResolucion" ColumnName="FechaResolucion" />
+                <ScalarProperty Name="UsuarioRegistraId" ColumnName="UsuarioRegistraId" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="EmailContacto" ColumnName="EmailContacto" />
+                <ScalarProperty Name="TelefonoContacto" ColumnName="TelefonoContacto" />
+                <ScalarProperty Name="NombreReportante" ColumnName="NombreReportante" />
+                <ScalarProperty Name="FechaReporte" ColumnName="FechaReporte" />
+                <ScalarProperty Name="FotoUrl" ColumnName="FotoUrl" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="UbicacionReporte" ColumnName="UbicacionReporte" />
+                <ScalarProperty Name="Raza" ColumnName="Raza" />
+                <ScalarProperty Name="TipoMascota" ColumnName="TipoMascota" />
+                <ScalarProperty Name="TipoReporte" ColumnName="TipoReporte" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permisos">
+            <EntityTypeMapping TypeName="adopModel.Permisos">
+              <MappingFragment StoreEntitySet="Permisos">
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="EstaActivo" ColumnName="EstaActivo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="TieneCrud" ColumnName="TieneCrud" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Icono" ColumnName="Icono" />
+                <ScalarProperty Name="ActionName" ColumnName="ActionName" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Refugios">
+            <EntityTypeMapping TypeName="adopModel.Refugios">
+              <MappingFragment StoreEntitySet="Refugios">
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="EstaActivo" ColumnName="EstaActivo" />
+                <ScalarProperty Name="MascotasActuales" ColumnName="MascotasActuales" />
+                <ScalarProperty Name="CapacidadMaxima" ColumnName="CapacidadMaxima" />
+                <ScalarProperty Name="SitioWeb" ColumnName="SitioWeb" />
+                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
+                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
+                <ScalarProperty Name="NombreResponsable" ColumnName="NombreResponsable" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RolPermisos">
+            <EntityTypeMapping TypeName="adopModel.RolPermisos">
+              <MappingFragment StoreEntitySet="RolPermisos">
+                <ScalarProperty Name="FechaAsignacion" ColumnName="FechaAsignacion" />
+                <ScalarProperty Name="PuedeEliminar" ColumnName="PuedeEliminar" />
+                <ScalarProperty Name="PuedeActualizar" ColumnName="PuedeActualizar" />
+                <ScalarProperty Name="PuedeLeer" ColumnName="PuedeLeer" />
+                <ScalarProperty Name="PuedeCrear" ColumnName="PuedeCrear" />
+                <ScalarProperty Name="TieneAcceso" ColumnName="TieneAcceso" />
+                <ScalarProperty Name="PermisoId" ColumnName="PermisoId" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Seguimientos">
+            <EntityTypeMapping TypeName="adopModel.Seguimientos">
+              <MappingFragment StoreEntitySet="Seguimientos">
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="UsuarioRealizaSeguimientoId" ColumnName="UsuarioRealizaSeguimientoId" />
+                <ScalarProperty Name="EstadoMascota" ColumnName="EstadoMascota" />
+                <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+                <ScalarProperty Name="TipoSeguimiento" ColumnName="TipoSeguimiento" />
+                <ScalarProperty Name="FechaSeguimiento" ColumnName="FechaSeguimiento" />
+                <ScalarProperty Name="AdopcionId" ColumnName="AdopcionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

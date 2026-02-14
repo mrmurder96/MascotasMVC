@@ -1,0 +1,88 @@
+@model Integrador.Models.Categoria
+@{
+    ViewBag.Title = "Nueva Categoría";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-plus"></i> Nueva Categoría de Mascota</h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "Categorias", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Nombre, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Ej: Perros, Gatos, Aves..." })
+                                @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 3, placeholder = "Descripción de la categoría..." })
+                                @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.EsActivo, new { @checked = "checked" })
+                                        Categoría activa
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Categoría
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+    .card-header h3 {
+        margin: 0;
+        color: #333;
+    }
+    .card-body {
+        padding: 30px;
+    }
+</style>

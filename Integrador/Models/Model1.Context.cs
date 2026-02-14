@@ -32,5 +32,11 @@ namespace Integrador.Models
         public virtual DbSet<Notificaciones> Notificaciones { get; set; }
         public virtual DbSet<UsuarioImagenes> UsuarioImagenes { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<Categorias> Categorias { get; set; }
+        public virtual DbSet<MascotasPerdidas> MascotasPerdidas { get; set; }
+        public virtual DbSet<Permisos> Permisos { get; set; }
+        public virtual DbSet<Refugios> Refugios { get; set; }
+        public virtual DbSet<RolPermisos> RolPermisos { get; set; }
+        public virtual DbSet<Seguimientos> Seguimientos { get; set; }
     }
 }

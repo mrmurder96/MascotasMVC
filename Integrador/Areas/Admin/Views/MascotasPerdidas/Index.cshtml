@@ -1,0 +1,156 @@
+@model IEnumerable<Integrador.Models.MascotaPerdida>
+@{
+    ViewBag.Title = "Mascotas Perdidas/Encontradas";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="glyphicon glyphicon-search" aria-hidden="true"></i> Mascotas Perdidas y Encontradas</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Create")" class="btn btn-success btn-lg" aria-label="Reportar nueva mascota">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Reportar Mascota
+            </a>
+        </div>
+    </div>
+
+    @Html.Partial("_AlertMessages")
+
+    <!-- Filtros -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Filtros de Búsqueda</h4>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Index", "MascotasPerdidas", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline", role = "search" }))
+            {
+                <div class="form-group">
+                    <label for="tipo">Tipo:</label>
+                    <select name="tipo" id="tipo" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Perro">Perro</option>
+                        <option value="Gato">Gato</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoReporte">Reporte:</label>
+                    <select name="tipoReporte" id="tipoReporte" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Perdida">Perdida</option>
+                        <option value="Encontrada">Encontrada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select name="estado" id="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Reunido">Reunido</option>
+                        <option value="Cerrado">Cerrado</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" aria-label="Buscar mascotas">
+                    <i class="glyphicon glyphicon-search" aria-hidden="true"></i> Buscar
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="row">
+                    @foreach (var mascota in Model)
+                    {
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="perdida-card @(mascota.TipoReporte == "Perdida" ? "perdida" : "encontrada")">
+                                <div class="perdida-header">
+                                    @if (mascota.TipoReporte == "Perdida")
+                                    {
+                                        <span class="label label-danger label-lg">?? PERDIDA</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-success label-lg">?? ENCONTRADA</span>
+                                    }
+                                    @if (mascota.Estado == "Reunido")
+                                    {
+                                        <span class="label label-info label-lg">? REUNIDO</span>
+                                    }
+                                </div>
+                                <div class="perdida-imagen">
+                                    @if (!string.IsNullOrEmpty(mascota.Imagen))
+                                    {
+                                        <img src="@Url.Content("~/Content/uploads/perdidas/" + mascota.Imagen)" 
+                                             alt="Foto de mascota @mascota.TipoReporte" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Content/images/no-image.png")" alt="Sin imagen" />
+                                    }
+                                </div>
+                                <div class="perdida-info">
+                                    <h4>@mascota.Nombre</h4>
+                                    <p><strong>@mascota.Tipo</strong> - @mascota.Raza</p>
+                                    <p><i class="glyphicon glyphicon-calendar" aria-hidden="true"></i> @mascota.FechaReporte.ToString("dd/MM/yyyy")</p>
+                                    <p><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i> @mascota.Ubicacion</p>
+                                    <p class="text-muted">@(mascota.Descripcion?.Length > 60 ? mascota.Descripcion.Substring(0, 60) + "..." : mascota.Descripcion)</p>
+                                    <p><strong>Contacto:</strong> @mascota.Telefono</p>
+                                </div>
+                                <div class="perdida-acciones">
+                                    <div class="btn-group btn-group-justified" role="group">
+                                        <a href="@Url.Action("Details", new { id = mascota.Id })" 
+                                           class="btn btn-info btn-sm"
+                                           aria-label="Ver detalles de reporte @mascota.Id">
+                                            <i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i> Ver
+                                        </a>
+                                        <a href="@Url.Action("Edit", new { id = mascota.Id })" 
+                                           class="btn btn-warning btn-sm"
+                                           aria-label="Editar reporte @mascota.Id">
+                                            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> Editar
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = mascota.Id })" 
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Eliminar reporte?')"
+                                           aria-label="Eliminar reporte @mascota.Id">
+                                            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Eliminar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    <h4>No hay reportes de mascotas perdidas o encontradas</h4>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    .perdida-card { background: white; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
+    .perdida-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .perdida-card.perdida { border-color: #d9534f; }
+    .perdida-card.encontrada { border-color: #5cb85c; }
+    .perdida-header { text-align: center; padding: 10px; background: #f8f9fa; }
+    .perdida-imagen { height: 200px; overflow: hidden; background: #f8f9fa; }
+    .perdida-imagen img { width: 100%; height: 100%; object-fit: cover; }
+    .perdida-info { padding: 15px; }
+    .perdida-info h4 { margin: 0 0 10px 0; color: #2c3e50; }
+    .perdida-info p { margin: 5px 0; font-size: 14px; }
+    .perdida-acciones { padding: 10px; background: #f8f9fa; }
+    .label-lg { font-size: 12px; padding: 6px 10px; margin: 5px; }
+    .mb-4 { margin-bottom: 20px; }
+</style>

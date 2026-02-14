@@ -94,7 +94,7 @@ namespace Integrador.Controllers
 
                 try
                 {
-                    var efConnString = ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"].ConnectionString;
+                    var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
                     var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
                     var providerConnStr = builder.ProviderConnectionString;
 
@@ -161,7 +161,7 @@ namespace Integrador.Controllers
             var lista = new List<Centro>();
             try
             {
-                var efConnString = ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"].ConnectionString;
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
                 var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
                 var providerConnStr = builder.ProviderConnectionString;
 
@@ -213,7 +213,7 @@ namespace Integrador.Controllers
             bool existe = false;
             try
             {
-                var efConnString = ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"].ConnectionString;
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
                 var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
                 var providerConnStr = builder.ProviderConnectionString;
 
@@ -248,6 +248,22 @@ namespace Integrador.Controllers
             return RedirectToAction("Centros");
         }
 
+        // GET: /Ciudadano/MisAdopciones
+        public ActionResult MisAdopciones()
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+            
+            var adopciones = db.Adopciones
+                .Where(a => a.UsuarioId == usuarioId)
+                .OrderByDescending(a => a.FechaSolicitud)
+                .ToList();
+
+            return View(adopciones);
+        }
+
         // GET: /Ciudadano/Notificaciones
         public ActionResult Notificaciones()
         {
@@ -259,10 +275,10 @@ namespace Integrador.Controllers
 
             try
             {
-                var connSetting = System.Configuration.ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"];
+                var connSetting = System.Configuration.ConfigurationManager.ConnectionStrings["adopEntities"];
                 if (connSetting == null)
                 {
-                    TempData["NotificacionesError"] = "ConnectionString 'AdopcionMascotasEntities' no encontrada en web.config.";
+                    TempData["NotificacionesError"] = "ConnectionString 'adopEntities' no encontrada en web.config.";
                     return View(lista);
                 }
 

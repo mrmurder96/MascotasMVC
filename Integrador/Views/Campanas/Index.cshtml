@@ -2,15 +2,15 @@
 @using System.Linq
 
 @{
-    ViewBag.Title = "Campa馻s";
+    ViewBag.Title = "Campa贸as";
 }
 
 <div class="container py-4">
-    <h2 class="text-success mb-4">Campa馻s</h2>
+    <h2 class="text-success mb-4">Campa贸as</h2>
 
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
-        <p>Ver tus campa馻s personales: <a class="btn btn-outline-primary" href='@Url.Action("MisCampanas","Campanas")'>Mis campa馻s</a></p>
+        <p>Ver tus campa贸as personales: <a class="btn btn-outline-primary" href='@Url.Action("MisCampanas","Campanas")'>Mis campa贸as</a></p>
 
         if (Model != null && Model.Any())
         {
@@ -37,11 +37,11 @@
         }
         else
         {
-            <p>No hay campa馻s activas para mostrar.</p>
+            <p>No hay campa贸as activas para mostrar.</p>
         }
     }
     else
     {
-        <p>Debes <a href='@Url.Action("Login","Account")'>iniciar sesi髇</a> para ver tus campa馻s.</p>
+        <p>Debes <a href='@Url.Action("Login","Account")'>iniciar sesi贸n</a> para ver tus campa贸as.</p>
     }
 </div>

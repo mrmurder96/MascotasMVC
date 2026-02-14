@@ -1,0 +1,88 @@
+@model Integrador.Models.Seguimiento
+@{
+    ViewBag.Title = "Eliminar Seguimiento";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente seguimiento:
+                    </div>
+
+                    <dl class="dl-horizontal">
+                        <dt>ID</dt>
+                        <dd><strong>#@Model.Id</strong></dd>
+
+                        <dt>Fecha</dt>
+                        <dd>@Model.FechaSeguimiento.ToString("dd/MM/yyyy")</dd>
+
+                        <dt>Adopción</dt>
+                        <dd>#@Model.AdopcionId</dd>
+
+                        <dt>Estado Mascota</dt>
+                        <dd>
+                            @if (Model.EstadoMascota == "Excelente" || Model.EstadoMascota == "Bueno")
+                            {
+                                <span class="label label-success">@Model.EstadoMascota</span>
+                            }
+                            else if (Model.EstadoMascota == "Regular")
+                            {
+                                <span class="label label-warning">@Model.EstadoMascota</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">@Model.EstadoMascota</span>
+                            }
+                        </dd>
+
+                        @if (Model.Adopcion != null)
+                        {
+                            <dt>Mascota</dt>
+                            <dd>@Model.Adopcion.Mascota?.Nombre</dd>
+
+                            <dt>Adoptante</dt>
+                            <dd>@Model.Adopcion.Usuario?.Nombre</dd>
+                        }
+
+                        <dt>Observaciones</dt>
+                        <dd>@(Model.Observaciones ?? "Sin observaciones")</dd>
+                    </dl>
+
+                    <hr />
+
+                    @using (Html.BeginForm("Delete", "Seguimientos", new { area = "Admin" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Seguimiento
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header.bg-danger { background-color: #d9534f; color: white; }
+    .card-header h3 { margin: 0; }
+    .card-body { padding: 30px; }
+    .dl-horizontal dt { width: 150px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 170px; }
+</style>

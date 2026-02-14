@@ -1,0 +1,116 @@
+@model IEnumerable<Integrador.Models.Adopciones>
+@{
+    ViewBag.Title = "Seguimientos Post-Adopción";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i> Seguimientos Post-Adopción</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Create")" class="btn btn-success btn-lg" aria-label="Crear nuevo seguimiento">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Nuevo Seguimiento
+            </a>
+        </div>
+    </div>
+
+    @Html.Partial("_AlertMessages")
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover" role="table" aria-label="Tabla de seguimientos de adopción">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Adopción</th>
+                                <th scope="col">Mascota</th>
+                                <th scope="col">Adoptante</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var seguimiento in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@seguimiento.Id</strong></td>
+                                    <td>@seguimiento.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                    <td>Adopción #@seguimiento.Id</td>
+                                    <td>
+                                        @if (seguimiento.Mascotas != null)
+                                        {
+                                            <strong>@seguimiento.Mascotas.Nombre</strong>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (seguimiento.Usuarios != null)
+                                        {
+                                            @seguimiento.Usuarios.Nombres @seguimiento.Usuarios.Apellidos
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (seguimiento.Estado == "Aprobada")
+                                        {
+                                            <span class="label label-success">@seguimiento.Estado</span>
+                                        }
+                                        else if (seguimiento.Estado == "Completada")
+                                        {
+                                            <span class="label label-info">@seguimiento.Estado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-warning">@seguimiento.Estado</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group" aria-label="Acciones del seguimiento">
+                                            <a href="@Url.Action("Details", new { id = seguimiento.Id })" 
+                                               class="btn btn-info btn-sm" 
+                                               title="Ver detalles"
+                                               aria-label="Ver detalles del seguimiento @seguimiento.Id">
+                                                <i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="@Url.Action("Edit", new { id = seguimiento.Id })" 
+                                               class="btn btn-warning btn-sm" 
+                                               title="Editar"
+                                               aria-label="Editar seguimiento @seguimiento.Id">
+                                                <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", new { id = seguimiento.Id })" 
+                                               class="btn btn-danger btn-sm" 
+                                               title="Eliminar"
+                                               onclick="return confirm('¿Eliminar seguimiento?')"
+                                               aria-label="Eliminar seguimiento @seguimiento.Id">
+                                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    <h4>No hay seguimientos registrados</h4>
+                    <p>Los seguimientos permiten monitorear el bienestar de las mascotas adoptadas.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    .table th { background-color: #f8f9fa; font-weight: 600; }
+    .mb-4 { margin-bottom: 20px; }
+</style>

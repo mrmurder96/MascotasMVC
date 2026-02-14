@@ -1,0 +1,147 @@
+@model IEnumerable<Integrador.Models.Refugio>
+@{
+    ViewBag.Title = "Gestión de Refugios";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="glyphicon glyphicon-home"></i> Refugios y Asociaciones</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Create")" class="btn btn-success">
+                <i class="glyphicon glyphicon-plus"></i> Nuevo Refugio
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="row">
+                    @foreach (var refugio in Model)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="refugio-card">
+                                <div class="refugio-header">
+                                    <h4>@refugio.Nombre</h4>
+                                    @if (refugio.EsActivo)
+                                    {
+                                        <span class="label label-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-default">Inactivo</span>
+                                    }
+                                </div>
+                                <div class="refugio-body">
+                                    <p><strong>Responsable:</strong> @refugio.Responsable</p>
+                                    <p><strong>Teléfono:</strong> @refugio.Telefono</p>
+                                    <p><strong>Email:</strong> @refugio.Email</p>
+                                    <p><strong>Dirección:</strong> @refugio.Direccion</p>
+                                    <p><strong>Ciudad:</strong> @refugio.Ciudad</p>
+                                    @if (!string.IsNullOrEmpty(refugio.Descripcion))
+                                    {
+                                        <p class="text-muted"><em>@refugio.Descripcion</em></p>
+                                    }
+                                    <div class="refugio-stats">
+                                        <span class="badge">@refugio.CantidadMascotas mascotas</span>
+                                    </div>
+                                </div>
+                                <div class="refugio-footer">
+                                    <div class="btn-group btn-group-justified">
+                                        <a href="@Url.Action("Details", new { id = refugio.Id })" class="btn btn-info btn-sm">
+                                            <i class="glyphicon glyphicon-eye-open"></i> Ver
+                                        </a>
+                                        <a href="@Url.Action("Edit", new { id = refugio.Id })" class="btn btn-warning btn-sm">
+                                            <i class="glyphicon glyphicon-edit"></i> Editar
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = refugio.Id })" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Eliminar este refugio?')">
+                                            <i class="glyphicon glyphicon-trash"></i> Eliminar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay refugios registrados</h4>
+                    <p>Haga clic en "Nuevo Refugio" para agregar el primero.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .refugio-card {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+    .refugio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .refugio-header {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .refugio-header h4 {
+        margin: 0;
+        font-size: 18px;
+    }
+    .refugio-body {
+        padding: 15px;
+    }
+    .refugio-body p {
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    .refugio-stats {
+        margin-top: 10px;
+    }
+    .refugio-footer {
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+</style>

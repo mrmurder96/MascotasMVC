@@ -1,0 +1,163 @@
+@model IEnumerable<Integrador.Models.Adopciones>
+@{
+    ViewBag.Title = "Solicitudes de Adopción";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="glyphicon glyphicon-list-alt"></i> Gestión de Solicitudes de Adopción</h2>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <!-- Tabs de Estado -->
+    <ul class="nav nav-tabs">
+        <li class="@(Request.QueryString["estado"] == null || Request.QueryString["estado"] == "Pendiente" ? "active" : "")">
+            <a href="@Url.Action("Index", new { estado = "Pendiente" })">
+                <i class="glyphicon glyphicon-time"></i> Pendientes 
+                <span class="badge">@ViewBag.PendientesCount</span>
+            </a>
+        </li>
+        <li class="@(Request.QueryString["estado"] == "Aprobada" ? "active" : "")">
+            <a href="@Url.Action("Index", new { estado = "Aprobada" })">
+                <i class="glyphicon glyphicon-ok"></i> Aprobadas
+                <span class="badge badge-success">@ViewBag.AprobadasCount</span>
+            </a>
+        </li>
+        <li class="@(Request.QueryString["estado"] == "Rechazada" ? "active" : "")">
+            <a href="@Url.Action("Index", new { estado = "Rechazada" })">
+                <i class="glyphicon glyphicon-remove"></i> Rechazadas
+                <span class="badge badge-danger">@ViewBag.RechazadasCount</span>
+            </a>
+        </li>
+        <li class="@(Request.QueryString["estado"] == "Finalizada" ? "active" : "")">
+            <a href="@Url.Action("Index", new { estado = "Finalizada" })">
+                <i class="glyphicon glyphicon-check"></i> Finalizadas
+                <span class="badge badge-info">@ViewBag.FinalizadasCount</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha Solicitud</th>
+                            <th>Ciudadano</th>
+                            <th>Mascota</th>
+                            <th>Estado</th>
+                            <th>Motivo</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var solicitud in Model)
+                        {
+                            <tr>
+                                <td><strong>#@solicitud.Id</strong></td>
+                                <td>@solicitud.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (solicitud.Usuario != null)
+                                    {
+                                        <strong>@solicitud.Usuario.Nombre</strong><br />
+                                        <small>@solicitud.Usuario.Email</small>
+                                    }
+                                </td>
+                                <td>
+                                    @if (solicitud.Mascota != null)
+                                    {
+                                        <strong>@solicitud.Mascota.Nombre</strong><br />
+                                        <small>@solicitud.Mascota.Tipo - @solicitud.Mascota.Raza</small>
+                                    }
+                                </td>
+                                <td>
+                                    @if (solicitud.Estado == "Pendiente")
+                                    {
+                                        <span class="label label-warning">Pendiente</span>
+                                    }
+                                    else if (solicitud.Estado == "Aprobada")
+                                    {
+                                        <span class="label label-success">Aprobada</span>
+                                    }
+                                    else if (solicitud.Estado == "Rechazada")
+                                    {
+                                        <span class="label label-danger">Rechazada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-info">Finalizada</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (solicitud.Motivo?.Length > 50)
+                                    {
+                                        @(solicitud.Motivo.Substring(0, 50) + "...")
+                                    }
+                                    else
+                                    {
+                                        @solicitud.Motivo
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", new { id = solicitud.Id })" 
+                                           class="btn btn-info btn-sm" title="Ver detalles">
+                                            <i class="glyphicon glyphicon-eye-open"></i>
+                                        </a>
+                                        @if (solicitud.Estado == "Pendiente")
+                                        {
+                                            <a href="@Url.Action("Aprobar", new { id = solicitud.Id })" 
+                                               class="btn btn-success btn-sm" title="Aprobar"
+                                               onclick="return confirm('¿Aprobar esta solicitud?')">
+                                                <i class="glyphicon glyphicon-ok"></i>
+                                            </a>
+                                            <a href="@Url.Action("Rechazar", new { id = solicitud.Id })" 
+                                               class="btn btn-danger btn-sm" title="Rechazar">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </a>
+                                        }
+                                        @if (solicitud.Estado == "Aprobada")
+                                        {
+                                            <a href="@Url.Action("Finalizar", new { id = solicitud.Id })" 
+                                               class="btn btn-primary btn-sm" title="Finalizar">
+                                                <i class="glyphicon glyphicon-check"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay solicitudes en este estado</h4>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-body { padding: 20px; }
+    .nav-tabs { border-bottom: 2px solid #dee2e6; }
+    .nav-tabs > li > a { color: #555; }
+    .nav-tabs > li.active > a { border-top: 3px solid #3498db; font-weight: bold; }
+    .table th { background-color: #f8f9fa; }
+</style>

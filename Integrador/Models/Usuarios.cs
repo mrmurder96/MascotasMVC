@@ -38,6 +38,8 @@ namespace Integrador.Models
         public string TokenRecuperacion { get; set; }
         public Nullable<System.DateTime> TokenExpiracion { get; set; }
         public bool EstaActivo { get; set; }
+        public Nullable<System.DateTime> FechaNacimiento { get; set; }
+        public Nullable<System.DateTime> FechaUltimoCambioPassword { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Notificaciones> Notificaciones { get; set; }

@@ -1,0 +1,158 @@
+@model IEnumerable<Integrador.Models.Mascotas>
+@{
+    ViewBag.Title = "Gestión de Mascotas (Admin)";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="glyphicon glyphicon-paw"></i> Gestión de Mascotas</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Create")" class="btn btn-success btn-lg">
+                <i class="glyphicon glyphicon-plus"></i> Nueva Mascota
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>?</strong> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Filtros -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Filtros de Búsqueda</h4>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Index", "Mascotas", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" name="nombre" class="form-control" value="@Request.QueryString["nombre"]" placeholder="Buscar por nombre..." />
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo:</label>
+                            <select name="tipo" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Ave">Ave</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estado:</label>
+                            <select name="estado" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="Adoptado">Adoptado</option>
+                                <option value="En Proceso">En Proceso</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-search"></i> Buscar
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+                    }
+                </div>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="row mt-4">
+                    @foreach (var mascota in Model)
+                    {
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="mascota-card">
+                                <div class="mascota-imagen">
+                                    @if (!string.IsNullOrEmpty(mascota.Imagen))
+                                    {
+                                        <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.Imagen)" alt="@mascota.Nombre" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/Content/images/no-image.png")" alt="Sin imagen" />
+                                    }
+                                    <div class="mascota-estado">
+                                        @if (mascota.Estado == "Disponible")
+                                        {
+                                            <span class="label label-success">@mascota.Estado</span>
+                                        }
+                                        else if (mascota.Estado == "Adoptado")
+                                        {
+                                            <span class="label label-info">@mascota.Estado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-warning">@mascota.Estado</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="mascota-info">
+                                    <h4>@mascota.Nombre</h4>
+                                    <p><strong>@mascota.IconoTipo @mascota.Tipo</strong> • @mascota.Raza</p>
+                                    <p><strong>Edad:</strong> @mascota.Edad años</p>
+                                    <p><strong>Sexo:</strong> @mascota.Sexo</p>
+                                    @if (mascota.CategoriaId.HasValue)
+                                    {
+                                        <p><strong>Categoría:</strong> @(mascota.Categoria != null ? mascota.Categoria.Nombre : "N/A")</p>
+                                    }
+                                </div>
+                                <div class="mascota-acciones">
+                                    <a href="@Url.Action("Details", new { id = mascota.Id })" class="btn btn-info btn-sm btn-block">
+                                        <i class="glyphicon glyphicon-eye-open"></i> Ver Detalles
+                                    </a>
+                                    <div class="btn-group btn-group-justified">
+                                        <a href="@Url.Action("Edit", new { id = mascota.Id })" class="btn btn-warning btn-sm">
+                                            <i class="glyphicon glyphicon-edit"></i> Editar
+                                        </a>
+                                        @if (mascota.Estado == "Disponible")
+                                        {
+                                            <a href="@Url.Action("CambiarEstado", new { id = mascota.Id, nuevoEstado = "En Proceso" })" 
+                                               class="btn btn-primary btn-sm">
+                                                <i class="glyphicon glyphicon-pause"></i> En Proceso
+                                            </a>
+                                        }
+                                        <a href="@Url.Action("Delete", new { id = mascota.Id })" 
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Eliminar mascota?')">
+                                            <i class="glyphicon glyphicon-trash"></i> Eliminar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay mascotas registradas</h4>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    .mascota-card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
+    .mascota-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .mascota-imagen { position: relative; height: 250px; overflow: hidden; background: #f8f9fa; }
+    .mascota-imagen img { width: 100%; height: 100%; object-fit: cover; }
+    .mascota-estado { position: absolute; top: 10px; right: 10px; }
+    .mascota-info { padding: 15px; }
+    .mascota-info h4 { margin: 0 0 10px 0; color: #2c3e50; }
+    .mascota-info p { margin: 5px 0; font-size: 14px; }
+    .mascota-acciones { padding: 10px; background: #f8f9fa; }
+</style>

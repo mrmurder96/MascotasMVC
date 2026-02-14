@@ -1,0 +1,219 @@
+@model IEnumerable<Integrador.Models.Adopciones>
+
+@{
+    ViewBag.Title = "Mis Adopciones";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .adopciones-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .adopcion-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+    
+    .adopcion-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+    
+    .estado-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .estado-pendiente { background: #fff3cd; color: #856404; }
+    .estado-aprobada { background: #d4edda; color: #155724; }
+    .estado-rechazada { background: #f8d7da; color: #721c24; }
+    .estado-finalizada { background: #d1ecf1; color: #0c5460; }
+    
+    .mascota-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin: 15px 0;
+    }
+    
+    .mascota-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+    }
+    
+    .info-row {
+        display: flex;
+        gap: 30px;
+        margin: 10px 0;
+        flex-wrap: wrap;
+    }
+    
+    .info-item {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+        font-size: 16px;
+        color: #333;
+        margin-top: 5px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+</style>
+
+<div class="adopciones-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div>
+            <h2 style="margin: 0; color: #2c3e50;">?? Mis Adopciones</h2>
+            <p style="margin: 5px 0 0 0; color: #7f8c8d;">Historial de solicitudes de adopción</p>
+        </div>
+        <a href="@Url.Action("Index", "Mascotas")" class="btn btn-primary">
+            <i class="glyphicon glyphicon-search"></i> Buscar Mascotas
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var adopcion in Model)
+        {
+            string estadoClass = "";
+            string estadoTexto = "";
+            
+            switch (adopcion.Estado?.ToLower())
+            {
+                case "pendiente":
+                    estadoClass = "estado-pendiente";
+                    estadoTexto = "? Pendiente";
+                    break;
+                case "aprobada":
+                    estadoClass = "estado-aprobada";
+                    estadoTexto = "? Aprobada";
+                    break;
+                case "rechazada":
+                    estadoClass = "estado-rechazada";
+                    estadoTexto = "? Rechazada";
+                    break;
+                case "finalizada":
+                    estadoClass = "estado-finalizada";
+                    estadoTexto = "? Finalizada";
+                    break;
+                default:
+                    estadoClass = "estado-pendiente";
+                    estadoTexto = adopcion.Estado ?? "Desconocido";
+                    break;
+            }
+            
+            <div class="adopcion-card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div>
+                        <h3 style="margin: 0; color: #2c3e50;">Solicitud #@adopcion.Id</h3>
+                        <small style="color: #7f8c8d;">@adopcion.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+                    <span class="@estadoClass estado-badge">@estadoTexto</span>
+                </div>
+
+                @if (adopcion.Mascota != null)
+                {
+                    <div class="mascota-info">
+                        @if (!string.IsNullOrEmpty(adopcion.Mascota.FotoUrl))
+                        {
+                            <img src="@adopcion.Mascota.FotoUrl" alt="@adopcion.Mascota.Nombre" class="mascota-img" />
+                        }
+                        else
+                        {
+                            <div class="mascota-img" style="background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 40px;">
+                                ??
+                            </div>
+                        }
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: #2c3e50;">@adopcion.Mascota.Nombre</h4>
+                            <p style="margin: 0; color: #7f8c8d;">
+                                @(adopcion.Mascota.Raza ?? "Raza no especificada") ó 
+                                @(adopcion.Mascota.Edad > 0 ? adopcion.Mascota.Edad + " aóos" : "Edad no especificada")
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                <div class="info-row">
+                    @if (adopcion.FechaAprobacion.HasValue)
+                    {
+                        <div class="info-item">
+                            <div class="info-label">Fecha Aprobación</div>
+                            <div class="info-value">@adopcion.FechaAprobacion.Value.ToString("dd/MM/yyyy")</div>
+                        </div>
+                    }
+                    
+                    @if (adopcion.FechaFinalizacion.HasValue)
+                    {
+                        <div class="info-item">
+                            <div class="info-label">Fecha Finalización</div>
+                            <div class="info-value">@adopcion.FechaFinalizacion.Value.ToString("dd/MM/yyyy")</div>
+                        </div>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(adopcion.Comentarios))
+                {
+                    <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 5px; border-left: 4px solid #3498db;">
+                        <div class="info-label">Comentarios</div>
+                        <div class="info-value">@adopcion.Comentarios</div>
+                    </div>
+                }
+
+                @if (adopcion.Estado?.ToLower() == "aprobada")
+                {
+                    <div style="margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 5px; border-left: 4px solid #28a745;">
+                        <strong style="color: #155724;">?? óFelicitaciones!</strong>
+                        <p style="margin: 5px 0 0 0; color: #155724;">Tu solicitud ha sido aprobada. Por favor, contacta al refugio para completar el proceso de adopción.</p>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">??</div>
+            <h3 style="color: #7f8c8d; margin-bottom: 15px;">No tienes solicitudes de adopción</h3>
+            <p style="color: #95a5a6; margin-bottom: 30px;">¿Estás listo para darle un hogar a una mascota?</p>
+            <a href="@Url.Action("Index", "Mascotas")" class="btn btn-lg btn-primary">
+                <i class="glyphicon glyphicon-search"></i> Explorar Mascotas Disponibles
+            </a>
+        </div>
+    }
+</div>

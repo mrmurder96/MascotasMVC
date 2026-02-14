@@ -1,0 +1,189 @@
+@model Integrador.Models.MascotasPerdidas
+
+@{
+    ViewBag.Title = "Reportar Mascota Perdida";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-header {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .form-content {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .form-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+    
+    .form-control {
+        border-radius: 6px;
+        border: 2px solid #e0e0e0;
+        padding: 12px;
+        font-size: 15px;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .help-text {
+        font-size: 13px;
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+    
+    .required-field::after {
+        content: " *";
+        color: #e74c3c;
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-header">
+        <h2 style="margin: 0; font-size: 32px; font-weight: 700;">?? Reportar Mascota Perdida</h2>
+        <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.95;">
+            Complete el formulario con la mayor información posible para ayudarnos a encontrar a su mascota
+        </p>
+    </div>
+    
+    <div class="form-content">
+        @using (Html.BeginForm("Create", "MascotasPerdidas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                
+                <div class="form-group">
+                    <label class="required-field">Nombre de la Mascota</label>
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", placeholder = "Ej: Max, Luna, Bobby..." })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    <label class="required-field">Tipo de Mascota</label>
+                    @Html.DropDownListFor(model => model.Tipo, new SelectList(new[] { "Perro", "Gato", "Otro" }), "Seleccione un tipo", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    <label>Raza</label>
+                    @Html.TextBoxFor(model => model.Raza, new { @class = "form-control", placeholder = "Ej: Labrador, Siamós..." })
+                    <small class="help-text">Si no conoce la raza exacta, puede dejarlo en blanco</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Color</label>
+                    @Html.TextBoxFor(model => model.Color, new { @class = "form-control", placeholder = "Ej: Cafó, Negro, Blanco..." })
+                </div>
+                
+                <div class="form-group">
+                    <label class="required-field">Descripción</label>
+                    @Html.TextAreaFor(model => model.Descripcion, 5, 40, new { @class = "form-control", placeholder = "Describa caracterósticas fósicas, comportamiento, seóas particulares..." })
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                    <small class="help-text">Sea lo mós detallado posible: tamaóo, marcas, collar, chip, etc.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required-field">óltima Ubicación Conocida</label>
+                    @Html.TextBoxFor(model => model.Ubicacion, new { @class = "form-control", placeholder = "Ej: Parque Central, cerca de la 5ta Avenida..." })
+                    @Html.ValidationMessageFor(model => model.Ubicacion, "", new { @class = "text-danger" })
+                    <small class="help-text">Indique lugar, barrio, referencias cercanas</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Foto de la Mascota</label>
+                    <input type="file" name="foto" accept="image/*" class="form-control" />
+                    <small class="help-text">Formato JPG, PNG o GIF. Tamaóo móximo: 5 MB</small>
+                </div>
+                
+                <hr style="margin: 30px 0;" />
+                
+                <h4 style="color: #2c3e50; margin-bottom: 20px;">?? Información de Contacto</h4>
+                
+                <div class="form-group">
+                    <label class="required-field">Nombre de Contacto</label>
+                    @Html.TextBoxFor(model => model.NombreContacto, new { @class = "form-control", placeholder = "Su nombre completo" })
+                    @Html.ValidationMessageFor(model => model.NombreContacto, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    <label class="required-field">Telófono</label>
+                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control", placeholder = "Ej: +57 300 123 4567", type = "tel" })
+                    @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    <label class="required-field">Email</label>
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "su.email@ejemplo.com", type = "email" })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+                
+                <div style="background: #e8f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h5 style="margin: 0 0 10px 0; color: #2c3e50;">?? Información Importante</h5>
+                    <ul style="margin: 0; padding-left: 20px; color: #555;">
+                        <li>Su información de contacto seró visible póblicamente para que puedan contactarlo si encuentran a su mascota</li>
+                        <li>Mantenga su telófono disponible para recibir llamadas</li>
+                        <li>Revise su email regularmente</li>
+                        <li>Una vez encuentre a su mascota, puede marcar el reporte como "Encontrada"</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">
+                        <i class="glyphicon glyphicon-ok"></i> Publicar Reporte
+                    </button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-default btn-lg">
+                        <i class="glyphicon glyphicon-remove"></i> Cancelar
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

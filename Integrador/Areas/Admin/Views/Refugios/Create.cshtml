@@ -1,0 +1,142 @@
+@model Integrador.Models.Refugio
+@{
+    ViewBag.Title = "Nuevo Refugio";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="glyphicon glyphicon-plus"></i> Registrar Nuevo Refugio</h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "Refugios", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <h4 class="section-title">Información General</h4>
+                        <hr />
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Nombre, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre del refugio o asociación" })
+                                @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Responsable, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Responsable, new { @class = "form-control", placeholder = "Nombre del responsable" })
+                                @Html.ValidationMessageFor(m => m.Responsable, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 3, placeholder = "Descripción del refugio..." })
+                                @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <h4 class="section-title">Información de Contacto</h4>
+                        <hr />
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Ej: 123-456-7890" })
+                                @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@refugio.com", type = "email" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <h4 class="section-title">Ubicación</h4>
+                        <hr />
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Direccion, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", placeholder = "Dirección completa" })
+                                @Html.ValidationMessageFor(m => m.Direccion, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Ciudad, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(m => m.Ciudad, new { @class = "form-control", placeholder = "Ciudad" })
+                                @Html.ValidationMessageFor(m => m.Ciudad, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.EsActivo, new { @checked = "checked" })
+                                        Refugio activo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Refugio
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                                    <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+    }
+    .card-header h3 {
+        margin: 0;
+        color: #333;
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .section-title {
+        color: #2c3e50;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+</style>

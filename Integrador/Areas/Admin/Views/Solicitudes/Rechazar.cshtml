@@ -1,0 +1,100 @@
+@model Integrador.Models.Adopciones
+@{
+    ViewBag.Title = "Rechazar Solicitud";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3><i class="glyphicon glyphicon-remove-circle" aria-hidden="true"></i> Rechazar Solicitud de Adopción</h3>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_AlertMessages")
+
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Solicitud #@Model.Id</strong> - @Model.Usuario?.Nombre solicita adoptar a <strong>@Model.Mascota?.Nombre</strong>
+                    </div>
+
+                    @using (Html.BeginForm("Rechazar", "Solicitudes", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert" })
+
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h4>Motivo del Rechazo</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label" for="MotivoRechazo">
+                                        Por favor, especifique el motivo del rechazo <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea name="MotivoRechazo" 
+                                              id="MotivoRechazo"
+                                              class="form-control" 
+                                              rows="5" 
+                                              required
+                                              aria-required="true"
+                                              aria-describedby="motivoHelp"
+                                              placeholder="Explique las razones por las cuales se rechaza esta solicitud..."></textarea>
+                                    <small id="motivoHelp" class="text-muted">
+                                        Este mensaje será enviado al solicitante por email.
+                                    </small>
+                                </div>
+
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Consecuencias del rechazo:</strong>
+                                    <ul>
+                                        <li>? La solicitud quedará marcada como <span class="label label-danger">Rechazada</span></li>
+                                        <li>?? Se enviará un email al solicitante con el motivo del rechazo</li>
+                                        <li>?? La mascota volverá a estar <span class="label label-success">Disponible</span> para otros adoptantes</li>
+                                    </ul>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
+                                {
+                                    <div class="text-center mt-3">
+                                        <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 
+                                             alt="Foto de @Model.Mascota.Nombre" 
+                                             class="img-thumbnail" 
+                                             style="max-width: 200px;" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" 
+                                    class="btn btn-danger btn-lg"
+                                    aria-label="Confirmar rechazo de la solicitud">
+                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Rechazar Solicitud
+                            </button>
+                            <a href="@Url.Action("Details", new { id = Model.Id })" 
+                               class="btn btn-default btn-lg"
+                               aria-label="Cancelar y volver a detalles">
+                                <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
+    .card-header.bg-danger { background-color: #d9534f; color: white; }
+    .card-header h3 { margin: 0; }
+    .card-body { padding: 30px; }
+    .mt-3 { margin-top: 15px; }
+</style>

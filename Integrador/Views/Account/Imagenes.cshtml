@@ -1,18 +1,18 @@
 @model IEnumerable<Integrador.Models.UsuarioImagen>
 
 @{
-    ViewBag.Title = "Mis imágenes";
+    ViewBag.Title = "Mis ImÃ¡genes";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Mis imágenes</h3>
+        <h3>Mis ImÃ¡genes</h3>
         <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-secondary">Volver al perfil</a>
     </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">No tienes imágenes subidas.</div>
+        <div class="alert alert-info">No tienes ImÃ¡genes subidas.</div>
     }
     else
     {
@@ -36,7 +36,7 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@img.Id" />
-                                    <button class="btn btn-sm btn-danger w-100" type="submit" onclick="return confirm('¿Eliminar imagen?');">Eliminar</button>
+                                    <button class="btn btn-sm btn-danger w-100" type="submit" onclick="return confirm('Ã³Eliminar imagen?');">Eliminar</button>
                                 }
                             </div>
                         </div>
