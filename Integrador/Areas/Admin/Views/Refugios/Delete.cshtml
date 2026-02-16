@@ -1,4 +1,4 @@
-@model Integrador.Models.Refugio
+@model Integrador.Models.Refugios
 @{
     ViewBag.Title = "Eliminar Refugio";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -9,11 +9,11 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header bg-danger">
-                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar EliminaciÃ³n</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning">
-                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente refugio:
+                        <strong>Â¡AtenciÃ³n!</strong> EstÃ¡ a punto de eliminar el siguiente refugio:
                     </div>
 
                     <dl class="dl-horizontal">
@@ -21,28 +21,28 @@
                         <dd><strong>@Model.Nombre</strong></dd>
 
                         <dt>Responsable</dt>
-                        <dd>@Model.Responsable</dd>
+                        <dd>@Model.NombreResponsable</dd>
 
-                        <dt>Teléfono</dt>
+                        <dt>TelÃ©fono</dt>
                         <dd>@Model.Telefono</dd>
 
                         <dt>Email</dt>
                         <dd>@Model.Email</dd>
 
-                        <dt>Dirección</dt>
-                        <dd>@Model.Direccion, @Model.Ciudad</dd>
+                        <dt>DirecciÃ³n</dt>
+                        <dd>@Model.Direccion</dd>
 
-                        <dt>Mascotas Albergadas</dt>
+                        <dt>Mascotas</dt>
                         <dd>
-                            <span class="badge">@Model.CantidadMascotas mascotas</span>
+                            <span class="badge">@Model.MascotasActuales mascotas albergadas</span>
                         </dd>
                     </dl>
 
-                    @if (Model.CantidadMascotas > 0)
+                    @if (ViewBag.TieneMascotas != null && (bool)ViewBag.TieneMascotas)
                     {
                         <div class="alert alert-danger">
-                            <strong>?? Advertencia:</strong> Este refugio tiene <strong>@Model.CantidadMascotas mascotas</strong> albergadas.
-                            Al eliminarlo, estas mascotas quedarán sin refugio asociado.
+                            <strong><i class="glyphicon glyphicon-exclamation-sign"></i> Advertencia:</strong> Este refugio tiene mascotas asociadas.
+                            No se puede eliminar hasta que se reasignen las mascotas.
                         </div>
                     }
 
@@ -54,8 +54,8 @@
                         @Html.HiddenFor(m => m.Id)
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-danger btn-lg">
-                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Refugio
+                            <button type="submit" class="btn btn-danger btn-lg" @(ViewBag.TieneMascotas != null && (bool)ViewBag.TieneMascotas ? "disabled" : "")>
+                                <i class="glyphicon glyphicon-trash"></i> SÃ­, Eliminar Refugio
                             </button>
                             <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
                                 <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
@@ -69,32 +69,6 @@
 </div>
 
 <style>
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-    .card-header {
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        border-radius: 8px 8px 0 0;
-    }
-    .card-header.bg-danger {
-        background-color: #d9534f;
-        color: white;
-    }
-    .card-header h3 {
-        margin: 0;
-    }
-    .card-body {
-        padding: 30px;
-    }
-    .dl-horizontal dt {
-        width: 180px;
-        font-weight: 600;
-    }
-    .dl-horizontal dd {
-        margin-left: 200px;
-    }
+    .dl-horizontal dt { width: 180px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 200px; }
 </style>

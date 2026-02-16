@@ -1,13 +1,16 @@
 @model Integrador.Models.Notificaciones
 @{
-    ViewBag.Title = "Crear NotificaciÛn";
+    ViewBag.Title = "Crear Notificaci√≥n";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
-    <h2><i class="fas fa-bell"></i> Crear Nueva NotificaciÛn</h2>
+    <h2><i class="glyphicon glyphicon-bell" style="color:#93A597"></i> Crear Nueva Notificaci√≥n</h2>
 
     <div class="card">
+        <div class="card-header">
+            <h4><i class="glyphicon glyphicon-plus"></i> Nueva Notificaci√≥n</h4>
+        </div>
         <div class="card-body">
             @using (Html.BeginForm())
             {
@@ -28,9 +31,16 @@
                     @Html.TextAreaFor(model => model.Mensaje, new { @class = "form-control", rows = 4, required = "required" })
                 </div>
 
-                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
+                <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
                 <a href="@Url.Action("Index")" class="btn btn-default">Cancelar</a>
             }
         </div>
     </div>
 </div>
+
+<style>
+    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 20px; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h4 { margin: 0; color: #000; }
+    .card-body { padding: 20px; }
+</style>

@@ -7,13 +7,13 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h2 class="text-danger"><i class="fas fa-user-times"></i> Eliminar Usuario</h2>
+            <h2 class="text-danger"><i class="glyphicon glyphicon-trash" style="color:#FA8C99"></i> Eliminar Usuario</h2>
         </div>
     </div>
 
-    <div class="alert alert-danger">
-        <h4><i class="fas fa-exclamation-triangle"></i> ¿Está seguro de que desea eliminar este usuario?</h4>
-        <p>Esta acción no se puede deshacer.</p>
+    <div class="alert alert-danger" style="background-color:#FA8C99; border-color:#FA8C99; color:#000;">
+        <h4><i class="glyphicon glyphicon-exclamation-sign"></i> Â¿EstÃ¡ seguro de que desea eliminar este usuario?</h4>
+        <p>Esta acciÃ³n no se puede deshacer.</p>
     </div>
 
     <div class="card">
@@ -53,10 +53,10 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Confirmar Eliminación
+                        <i class="glyphicon glyphicon-trash"></i> Confirmar EliminaciÃ³n
                     </button>
                     <a href="@Url.Action("Index")" class="btn btn-default">
-                        <i class="fas fa-times"></i> Cancelar
+                        <i class="glyphicon glyphicon-remove"></i> Cancelar
                     </a>
                 </div>
             }
@@ -65,11 +65,8 @@
 </div>
 
 <style>
-    .dl-horizontal dt {
-        width: 200px;
-    }
-    
-    .dl-horizontal dd {
-        margin-left: 220px;
-    }
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-body { padding: 30px; }
+    .dl-horizontal dt { width: 200px; }
+    .dl-horizontal dd { margin-left: 220px; }
 </style>

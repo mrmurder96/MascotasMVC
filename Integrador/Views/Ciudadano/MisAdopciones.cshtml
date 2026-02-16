@@ -98,10 +98,10 @@
 <div class="adopciones-container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <div>
-            <h2 style="margin: 0; color: #2c3e50;">?? Mis Adopciones</h2>
-            <p style="margin: 5px 0 0 0; color: #7f8c8d;">Historial de solicitudes de adopción</p>
+            <h2 style="margin: 0; color: #333;"><i class="glyphicon glyphicon-heart" aria-hidden="true"></i> Mis Adopciones</h2>
+            <p style="margin: 5px 0 0 0; color: #777;">Historial de solicitudes de adopción</p>
         </div>
-        <a href="@Url.Action("Index", "Mascotas")" class="btn btn-primary">
+        <a href="@Url.Action("Index", "Mascotas")" class="btn btn-primary" style="background:#8CFAA4; border-color:#8CFAA4; color:#000;">
             <i class="glyphicon glyphicon-search"></i> Buscar Mascotas
         </a>
     </div>
@@ -117,19 +117,19 @@
             {
                 case "pendiente":
                     estadoClass = "estado-pendiente";
-                    estadoTexto = "? Pendiente";
+                    estadoTexto = "Pendiente";
                     break;
                 case "aprobada":
                     estadoClass = "estado-aprobada";
-                    estadoTexto = "? Aprobada";
+                    estadoTexto = "Aprobada";
                     break;
                 case "rechazada":
                     estadoClass = "estado-rechazada";
-                    estadoTexto = "? Rechazada";
+                    estadoTexto = "Rechazada";
                     break;
                 case "finalizada":
                     estadoClass = "estado-finalizada";
-                    estadoTexto = "? Finalizada";
+                    estadoTexto = "Finalizada";
                     break;
                 default:
                     estadoClass = "estado-pendiente";
@@ -140,8 +140,8 @@
             <div class="adopcion-card">
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
                     <div>
-                        <h3 style="margin: 0; color: #2c3e50;">Solicitud #@adopcion.Id</h3>
-                        <small style="color: #7f8c8d;">@adopcion.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</small>
+                        <h3 style="margin: 0; color: #333;">Solicitud #@adopcion.Id</h3>
+                        <small style="color: #777;">@adopcion.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</small>
                     </div>
                     <span class="@estadoClass estado-badge">@estadoTexto</span>
                 </div>
@@ -156,14 +156,14 @@
                         else
                         {
                             <div class="mascota-img" style="background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 40px;">
-                                ??
+                                <i class="glyphicon glyphicon-picture" aria-hidden="true"></i>
                             </div>
                         }
                         <div>
-                            <h4 style="margin: 0 0 5px 0; color: #2c3e50;">@adopcion.Mascota.Nombre</h4>
-                            <p style="margin: 0; color: #7f8c8d;">
-                                @(adopcion.Mascota.Raza ?? "Raza no especificada") ó 
-                                @(adopcion.Mascota.Edad > 0 ? adopcion.Mascota.Edad + " aóos" : "Edad no especificada")
+                            <h4 style="margin: 0 0 5px 0; color: #333;">@adopcion.Mascota.Nombre</h4>
+                            <p style="margin: 0; color: #777;">
+                                @(adopcion.Mascota.Raza ?? "Raza no especificada") - 
+                                @(adopcion.Mascota.Edad > 0 ? adopcion.Mascota.Edad + " años" : "Edad no especificada")
                             </p>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
 
                 @if (!string.IsNullOrEmpty(adopcion.Comentarios))
                 {
-                    <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 5px; border-left: 4px solid #3498db;">
+                    <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 5px; border-left: 4px solid #8CFAA4;">
                         <div class="info-label">Comentarios</div>
                         <div class="info-value">@adopcion.Comentarios</div>
                     </div>
@@ -197,8 +197,8 @@
 
                 @if (adopcion.Estado?.ToLower() == "aprobada")
                 {
-                    <div style="margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 5px; border-left: 4px solid #28a745;">
-                        <strong style="color: #155724;">?? óFelicitaciones!</strong>
+                    <div style="margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 5px; border-left: 4px solid #8CFAA4;">
+                        <strong style="color: #155724;"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> ¡Felicitaciones!</strong>
                         <p style="margin: 5px 0 0 0; color: #155724;">Tu solicitud ha sido aprobada. Por favor, contacta al refugio para completar el proceso de adopción.</p>
                     </div>
                 }
@@ -208,10 +208,10 @@
     else
     {
         <div class="empty-state">
-            <div class="empty-state-icon">??</div>
-            <h3 style="color: #7f8c8d; margin-bottom: 15px;">No tienes solicitudes de adopción</h3>
-            <p style="color: #95a5a6; margin-bottom: 30px;">¿Estás listo para darle un hogar a una mascota?</p>
-            <a href="@Url.Action("Index", "Mascotas")" class="btn btn-lg btn-primary">
+            <div class="empty-state-icon"><i class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="font-size:60px; color:#ccc;"></i></div>
+            <h3 style="color: #777; margin-bottom: 15px;">No tienes solicitudes de adopción</h3>
+            <p style="color: #999; margin-bottom: 30px;">¿Estás listo para darle un hogar a una mascota?</p>
+            <a href="@Url.Action("Index", "Mascotas")" class="btn btn-lg btn-primary" style="background:#8CFAA4; border-color:#8CFAA4; color:#000;">
                 <i class="glyphicon glyphicon-search"></i> Explorar Mascotas Disponibles
             </a>
         </div>

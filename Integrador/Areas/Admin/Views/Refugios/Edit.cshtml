@@ -1,4 +1,4 @@
-@model Integrador.Models.Refugio
+@model Integrador.Models.Refugios
 @{
     ViewBag.Title = "Editar Refugio";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -16,10 +16,10 @@
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.Id)
-                        @Html.HiddenFor(m => m.FechaCreacion)
+                        @Html.HiddenFor(m => m.FechaRegistro)
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <h4 class="section-title">Informaci�n General</h4>
+                        <h4 class="section-title">Información General</h4>
                         <hr />
 
                         <div class="form-group">
@@ -31,10 +31,10 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Responsable, new { @class = "col-md-3 control-label" })
+                            @Html.LabelFor(m => m.NombreResponsable, "Responsable", new { @class = "col-md-3 control-label" })
                             <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.Responsable, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Responsable, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(m => m.NombreResponsable, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.NombreResponsable, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
@@ -46,7 +46,7 @@
                             </div>
                         </div>
 
-                        <h4 class="section-title">Informaci�n de Contacto</h4>
+                        <h4 class="section-title">Información de Contacto</h4>
                         <hr />
 
                         <div class="form-group">
@@ -65,7 +65,7 @@
                             </div>
                         </div>
 
-                        <h4 class="section-title">Ubicaci�n</h4>
+                        <h4 class="section-title">Ubicación y Capacidad</h4>
                         <hr />
 
                         <div class="form-group">
@@ -77,10 +77,18 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Ciudad, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.TextBoxFor(m => m.Ciudad, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Ciudad, "", new { @class = "text-danger" })
+                            @Html.LabelFor(m => m.CapacidadMaxima, "Capacidad Máxima", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.CapacidadMaxima, new { @class = "form-control", type = "number", min = "0" })
+                                @Html.ValidationMessageFor(m => m.CapacidadMaxima, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.MascotasActuales, "Mascotas Actuales", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.MascotasActuales, new { @class = "form-control", type = "number", min = "0" })
+                                @Html.ValidationMessageFor(m => m.MascotasActuales, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
@@ -88,7 +96,7 @@
                             <div class="col-md-9 col-md-offset-3">
                                 <div class="checkbox">
                                     <label>
-                                        @Html.CheckBoxFor(m => m.EsActivo)
+                                        @Html.CheckBoxFor(m => m.EstaActivo)
                                         Refugio activo
                                     </label>
                                 </div>
@@ -117,28 +125,5 @@
 }
 
 <style>
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-    .card-header {
-        background-color: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        border-radius: 8px 8px 0 0;
-    }
-    .card-header h3 {
-        margin: 0;
-        color: #333;
-    }
-    .card-body {
-        padding: 30px;
-    }
-    .section-title {
-        color: #2c3e50;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
+    .section-title { color: #333; margin-top: 20px; margin-bottom: 10px; }
 </style>

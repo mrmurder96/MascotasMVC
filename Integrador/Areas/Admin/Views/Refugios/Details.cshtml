@@ -1,4 +1,4 @@
-@model Integrador.Models.Refugio
+@model Integrador.Models.Refugios
 @{
     ViewBag.Title = "Detalles del Refugio";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -9,12 +9,12 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-home"></i> Información del Refugio</h3>
+                    <h3><i class="glyphicon glyphicon-home"></i> InformaciÃ³n del Refugio</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="section-title">Información General</h4>
+                            <h4 class="section-title">InformaciÃ³n General</h4>
                             <dl class="dl-horizontal">
                                 <dt>ID</dt>
                                 <dd>@Model.Id</dd>
@@ -23,11 +23,11 @@
                                 <dd><strong class="text-primary">@Model.Nombre</strong></dd>
 
                                 <dt>Responsable</dt>
-                                <dd>@Model.Responsable</dd>
+                                <dd>@Model.NombreResponsable</dd>
 
                                 <dt>Estado</dt>
                                 <dd>
-                                    @if (Model.EsActivo)
+                                    @if (Model.EstaActivo)
                                     {
                                         <span class="label label-success">Activo</span>
                                     }
@@ -37,28 +37,25 @@
                                     }
                                 </dd>
 
-                                <dt>Descripción</dt>
-                                <dd>@(Model.Descripcion ?? "Sin descripción")</dd>
+                                <dt>DescripciÃ³n</dt>
+                                <dd>@(Model.Descripcion ?? "Sin descripciÃ³n")</dd>
                             </dl>
                         </div>
 
                         <div class="col-md-6">
-                            <h4 class="section-title">Contacto y Ubicación</h4>
+                            <h4 class="section-title">Contacto y UbicaciÃ³n</h4>
                             <dl class="dl-horizontal">
-                                <dt>Teléfono</dt>
+                                <dt>TelÃ©fono</dt>
                                 <dd>@Model.Telefono</dd>
 
                                 <dt>Email</dt>
                                 <dd><a href="mailto:@Model.Email">@Model.Email</a></dd>
 
-                                <dt>Dirección</dt>
+                                <dt>DirecciÃ³n</dt>
                                 <dd>@Model.Direccion</dd>
 
-                                <dt>Ciudad</dt>
-                                <dd>@Model.Ciudad</dd>
-
                                 <dt>Fecha de Registro</dt>
-                                <dd>@Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</dd>
+                                <dd>@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
                             </dl>
                         </div>
                     </div>
@@ -66,8 +63,8 @@
                     <hr />
 
                     <div class="alert alert-info">
-                        <strong>Mascotas Albergadas:</strong> 
-                        <span class="badge badge-info" style="font-size: 16px;">@Model.CantidadMascotas mascotas</span>
+                        <strong>Capacidad:</strong>
+                        <span class="badge badge-info" style="font-size: 16px;">@Model.MascotasActuales / @Model.CapacidadMaxima mascotas</span>
                     </div>
 
                     <hr />
@@ -76,8 +73,7 @@
                         <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning btn-lg">
                             <i class="glyphicon glyphicon-edit"></i> Editar
                         </a>
-                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger btn-lg"
-                           onclick="return confirm('¿Está seguro de eliminar este refugio?')">
+                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger btn-lg">
                             <i class="glyphicon glyphicon-trash"></i> Eliminar
                         </a>
                         <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
@@ -91,36 +87,7 @@
 </div>
 
 <style>
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-    .card-header {
-        background-color: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        border-radius: 8px 8px 0 0;
-    }
-    .card-header h3 {
-        margin: 0;
-        color: #333;
-    }
-    .card-body {
-        padding: 30px;
-    }
-    .section-title {
-        color: #2c3e50;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 5px;
-    }
-    .dl-horizontal dt {
-        width: 120px;
-        font-weight: 600;
-    }
-    .dl-horizontal dd {
-        margin-left: 140px;
-    }
+    .section-title { color: #333; margin-bottom: 15px; border-bottom: 2px solid #8CFAA4; padding-bottom: 5px; }
+    .dl-horizontal dt { width: 120px; font-weight: 600; }
+    .dl-horizontal dd { margin-left: 140px; }
 </style>

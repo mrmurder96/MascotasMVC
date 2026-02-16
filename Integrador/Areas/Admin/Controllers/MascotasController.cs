@@ -84,6 +84,7 @@ namespace Integrador.Areas.Admin.Controllers
         {
             ViewBag.Estados = new SelectList(new[] { "Disponible", "No Disponible", "En Cuarentena", "En Tratamiento" });
             ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" });
+            CargarDropdowns();
             return View();
         }
 
@@ -106,6 +107,7 @@ namespace Integrador.Areas.Admin.Controllers
                         ModelState.AddModelError("", "Solo se permiten imágenes JPG, PNG o GIF");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "No Disponible", "En Cuarentena", "En Tratamiento" });
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" });
+                        CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
                         return View(mascota);
                     }
 
@@ -114,6 +116,7 @@ namespace Integrador.Areas.Admin.Controllers
                         ModelState.AddModelError("", "La imagen no puede superar los 5 MB");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "No Disponible", "En Cuarentena", "En Tratamiento" });
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" });
+                        CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
                         return View(mascota);
                     }
 
@@ -145,6 +148,7 @@ namespace Integrador.Areas.Admin.Controllers
 
             ViewBag.Estados = new SelectList(new[] { "Disponible", "No Disponible", "En Cuarentena", "En Tratamiento" });
             ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" });
+            CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
             return View(mascota);
         }
 
@@ -165,6 +169,7 @@ namespace Integrador.Areas.Admin.Controllers
 
             ViewBag.Estados = new SelectList(new[] { "Disponible", "Adoptado", "En Proceso", "No Disponible", "En Cuarentena", "En Tratamiento" }, mascota.Estado);
             ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" }, mascota.Tipo);
+            CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
 
             return View(mascota);
         }
@@ -188,6 +193,7 @@ namespace Integrador.Areas.Admin.Controllers
                         ModelState.AddModelError("", "Solo se permiten imágenes JPG, PNG o GIF");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "Adoptado", "En Proceso", "No Disponible" }, mascota.Estado);
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" }, mascota.Tipo);
+                        CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
                         return View(mascota);
                     }
 
@@ -196,6 +202,7 @@ namespace Integrador.Areas.Admin.Controllers
                         ModelState.AddModelError("", "La imagen no puede superar los 5 MB");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "Adoptado", "En Proceso", "No Disponible" }, mascota.Estado);
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" }, mascota.Tipo);
+                        CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
                         return View(mascota);
                     }
 
@@ -232,6 +239,7 @@ namespace Integrador.Areas.Admin.Controllers
 
             ViewBag.Estados = new SelectList(new[] { "Disponible", "Adoptado", "En Proceso", "No Disponible" }, mascota.Estado);
             ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" }, mascota.Tipo);
+            CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
             return View(mascota);
         }
 
@@ -312,6 +320,12 @@ namespace Integrador.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Error: " + ex.Message });
             }
+        }
+
+        private void CargarDropdowns(int? categoriaId = null, int? refugioId = null)
+        {
+            ViewBag.Categorias = new SelectList(db.Categorias.OrderBy(c => c.Nombre), "Id", "Nombre", categoriaId);
+            ViewBag.Refugios = new SelectList(db.Refugios.OrderBy(r => r.Nombre), "Id", "Nombre", refugioId);
         }
 
         protected override void Dispose(bool disposing)

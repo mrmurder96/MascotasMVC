@@ -1,4 +1,4 @@
-@model IEnumerable<Integrador.Models.MascotaPerdida>
+@model IEnumerable<Integrador.Models.MascotasPerdidas>
 @{
     ViewBag.Title = "Mascotas Perdidas/Encontradas";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -21,7 +21,7 @@
     <!-- Filtros -->
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>Filtros de Búsqueda</h4>
+            <h4>Filtros de BÃºsqueda</h4>
         </div>
         <div class="panel-body">
             @using (Html.BeginForm("Index", "MascotasPerdidas", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline", role = "search" }))
@@ -72,15 +72,15 @@
                                 <div class="perdida-header">
                                     @if (mascota.TipoReporte == "Perdida")
                                     {
-                                        <span class="label label-danger label-lg">?? PERDIDA</span>
+                                        <span class="label label-danger label-lg"><i class="glyphicon glyphicon-exclamation-sign"></i> PERDIDA</span>
                                     }
                                     else
                                     {
-                                        <span class="label label-success label-lg">?? ENCONTRADA</span>
+                                        <span class="label label-success label-lg"><i class="glyphicon glyphicon-ok-sign"></i> ENCONTRADA</span>
                                     }
                                     @if (mascota.Estado == "Reunido")
                                     {
-                                        <span class="label label-info label-lg">? REUNIDO</span>
+                                        <span class="label label-info label-lg"><i class="glyphicon glyphicon-heart"></i> REUNIDO</span>
                                     }
                                 </div>
                                 <div class="perdida-imagen">
@@ -116,7 +116,7 @@
                                         </a>
                                         <a href="@Url.Action("Delete", new { id = mascota.Id })" 
                                            class="btn btn-danger btn-sm"
-                                           onclick="return confirm('¿Eliminar reporte?')"
+                                           onclick="return confirm('Â¿Eliminar reporte?')"
                                            aria-label="Eliminar reporte @mascota.Id">
                                             <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Eliminar
                                         </a>
@@ -142,15 +142,16 @@
     .card-body { padding: 20px; }
     .perdida-card { background: white; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
     .perdida-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .perdida-card.perdida { border-color: #d9534f; }
-    .perdida-card.encontrada { border-color: #5cb85c; }
+    .perdida-card.perdida { border-color: #FA8C99; }
+    .perdida-card.encontrada { border-color: #8CFAA4; }
     .perdida-header { text-align: center; padding: 10px; background: #f8f9fa; }
     .perdida-imagen { height: 200px; overflow: hidden; background: #f8f9fa; }
     .perdida-imagen img { width: 100%; height: 100%; object-fit: cover; }
     .perdida-info { padding: 15px; }
-    .perdida-info h4 { margin: 0 0 10px 0; color: #2c3e50; }
+    .perdida-info h4 { margin: 0 0 10px 0; color: #333; }
     .perdida-info p { margin: 5px 0; font-size: 14px; }
     .perdida-acciones { padding: 10px; background: #f8f9fa; }
     .label-lg { font-size: 12px; padding: 6px 10px; margin: 5px; }
     .mb-4 { margin-bottom: 20px; }
+    .panel-heading h4 { margin: 0; color: #333; }
 </style>

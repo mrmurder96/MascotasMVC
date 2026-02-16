@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -51,7 +51,7 @@
         .icon-wrapper {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FA8C99 0%, #FAA88C 100%);
             border-radius: 50%;
             margin: 0 auto 30px;
             display: flex;
@@ -90,7 +90,7 @@
 
         .info-box {
             background: #f8f9fa;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #8CFAA4;
             padding: 20px;
             margin-bottom: 30px;
             text-align: left;
@@ -126,25 +126,26 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #8CFAA4 0%, #BBFA8C 100%);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(140, 250, 164, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 6px 20px rgba(140, 250, 164, 0.5);
+            color: #000;
         }
 
         .btn-secondary {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #333;
+            border: 2px solid #8CFAA4;
         }
 
         .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+            background: #8CFAA4;
+            color: #000;
             transform: translateY(-2px);
         }
 
@@ -170,12 +171,11 @@
             }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="acceso-denegado-container">
         <div class="icon-wrapper">
-            <i class="fas fa-lock"></i>
+            <i class="glyphicon glyphicon-lock"></i>
         </div>
         
         <h1>Acceso Denegado</h1>
@@ -185,10 +185,10 @@
         </p>
 
         <div class="info-box">
-            <p><strong><i class="fas fa-info-circle"></i> Información:</strong></p>
-            <p>ó Esta órea estó restringida a ciertos roles de usuario</p>
-            <p>ó Tu rol actual no tiene permisos para ver este contenido</p>
-            <p>ó Si crees que esto es un error, contacta al administrador</p>
+            <p><strong><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Información:</strong></p>
+            <p><i class="glyphicon glyphicon-minus" aria-hidden="true"></i> Esta área está restringida a ciertos roles de usuario</p>
+            <p><i class="glyphicon glyphicon-minus" aria-hidden="true"></i> Tu rol actual no tiene permisos para ver este contenido</p>
+            <p><i class="glyphicon glyphicon-minus" aria-hidden="true"></i> Si crees que esto es un error, contacta al administrador</p>
         </div>
 
         <div class="button-group">
@@ -197,25 +197,25 @@
                 if (Session["Rol"].ToString() == "Administrador")
                 {
                     <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="btn btn-primary">
-                        <i class="fas fa-home"></i> Ir al Panel de Admin
+                        <i class="glyphicon glyphicon-home" aria-hidden="true"></i> Ir al Panel de Admin
                     </a>
                 }
                 else if (Session["Rol"].ToString() == "Ciudadano")
                 {
                     <a href="@Url.Action("Index", "Ciudadano")" class="btn btn-primary">
-                        <i class="fas fa-home"></i> Ir a Mi Panel
+                        <i class="glyphicon glyphicon-home" aria-hidden="true"></i> Ir a Mi Panel
                     </a>
                 }
             }
             else
             {
                 <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i> Iniciar Sesión
                 </a>
             }
             
             <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver al Inicio
+                <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Volver al Inicio
             </a>
         </div>
     </div>

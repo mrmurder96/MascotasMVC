@@ -1,6 +1,6 @@
-@model Integrador.Models.Categoria
+@model Integrador.Models.Categorias
 @{
-    ViewBag.Title = "Detalles de Categoría";
+    ViewBag.Title = "Detalles de CategorÃ­a";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-info-sign"></i> Detalles de la Categoría</h3>
+                    <h3><i class="glyphicon glyphicon-info-sign"></i> Detalles de la CategorÃ­a</h3>
                 </div>
                 <div class="card-body">
                     <dl class="dl-horizontal">
@@ -17,10 +17,10 @@
                         <dd>@Html.DisplayFor(m => m.Id)</dd>
 
                         <dt>@Html.DisplayNameFor(m => m.Nombre)</dt>
-                        <dd><strong class="text-primary">@Html.DisplayFor(m => m.Nombre)</strong></dd>
+                        <dd><strong style="color: #93A597;">@Html.DisplayFor(m => m.Nombre)</strong></dd>
 
                         <dt>@Html.DisplayNameFor(m => m.Descripcion)</dt>
-                        <dd>@(Model.Descripcion ?? "Sin descripción")</dd>
+                        <dd>@(Model.Descripcion ?? "Sin descripciÃ³n")</dd>
 
                         <dt>Estado</dt>
                         <dd>
@@ -50,7 +50,7 @@
                             <i class="glyphicon glyphicon-edit"></i> Editar
                         </a>
                         <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger"
-                           onclick="return confirm('¿Está seguro de eliminar esta categoría?')">
+                           onclick="return confirm('Â¿EstÃ¡ seguro de eliminar esta categorÃ­a?')">
                             <i class="glyphicon glyphicon-trash"></i> Eliminar
                         </a>
                         <a href="@Url.Action("Index")" class="btn btn-default">
@@ -71,14 +71,14 @@
         margin-top: 20px;
     }
     .card-header {
-        background-color: #f8f9fa;
+        background-color: #BBFA8C;
         padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid #93A597;
         border-radius: 8px 8px 0 0;
     }
     .card-header h3 {
         margin: 0;
-        color: #333;
+        color: #000;
     }
     .card-body {
         padding: 30px;

@@ -1,17 +1,17 @@
 @model IEnumerable<Integrador.Models.Notificaciones>
 @{
-    ViewBag.Title = "Gestión de Notificaciones";
+    ViewBag.Title = "GestiÃ³n de Notificaciones";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-bell"></i> Gestión de Notificaciones</h2>
+            <h2><i class="glyphicon glyphicon-bell" style="color:#93A597"></i> GestiÃ³n de Notificaciones</h2>
         </div>
         <div class="col-md-6 text-right">
             <a href="@Url.Action("Create")" class="btn btn-success">
-                <i class="fas fa-plus"></i> Nueva Notificación
+                <i class="glyphicon glyphicon-plus"></i> Nueva NotificaciÃ³n
             </a>
         </div>
     </div>
@@ -20,7 +20,7 @@
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["Success"]
+            <strong><i class="glyphicon glyphicon-ok-sign"></i></strong> @TempData["Success"]
         </div>
     }
 
@@ -33,7 +33,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Usuario</th>
-                            <th>Título</th>
+                            <th>TÃ­tulo</th>
                             <th>Mensaje</th>
                             <th>Fecha</th>
                             <th>Estado</th>
@@ -52,18 +52,18 @@
                                 <td>
                                     @if (item.Leido)
                                     {
-                                        <span class="label label-success">Leído</span>
+                                        <span class="label label-success">LeÃ­do</span>
                                     }
                                     else
                                     {
-                                        <span class="label label-warning">No leído</span>
+                                        <span class="label label-warning">No leÃ­do</span>
                                     }
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -74,9 +74,15 @@
             else
             {
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No hay notificaciones registradas.
+                    <i class="glyphicon glyphicon-info-sign"></i> No hay notificaciones registradas.
                 </div>
             }
         </div>
     </div>
 </div>
+
+<style>
+    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    table thead th { background-color: #BBFA8C; color: #000; }
+</style>

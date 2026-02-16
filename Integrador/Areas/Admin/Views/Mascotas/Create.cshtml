@@ -17,7 +17,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <h4 class="section-title">Información Básica</h4>
+                        <h4 class="section-title">InformaciÃ³n BÃ¡sica</h4>
                         <hr />
 
                         <div class="form-group">
@@ -31,7 +31,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Tipo, new { @class = "col-md-3 control-label" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Tipo, new SelectList(new[] { "Perro", "Gato", "Ave", "Roedor", "Reptil", "Otro" }), "Seleccione tipo...", new { @class = "form-control" })
+                                @Html.DropDownListFor(m => m.Tipo, ViewBag.Tipos as SelectList, "Seleccione tipo...", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                             <div class="col-md-3">
                                 @Html.TextBoxFor(m => m.Edad, new { @class = "form-control", type = "number", min = "0", max = "30" })
                                 @Html.ValidationMessageFor(m => m.Edad, "", new { @class = "text-danger" })
-                                <small class="text-muted">Años</small>
+                                <small class="text-muted">AÃ±os</small>
                             </div>
                         </div>
 
@@ -64,18 +64,18 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Tamano, new { @class = "col-md-3 control-label" })
                             <div class="col-md-4">
-                                @Html.DropDownListFor(m => m.Tamano, new SelectList(new[] { "Pequeño", "Mediano", "Grande" }), "Seleccione tamaño...", new { @class = "form-control" })
+                                @Html.DropDownListFor(m => m.Tamano, new SelectList(new[] { "PequeÃ±o", "Mediano", "Grande" }), "Seleccione tamaÃ±o...", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Tamano, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <h4 class="section-title">Descripción y Estado</h4>
+                        <h4 class="section-title">DescripciÃ³n y Estado</h4>
                         <hr />
 
                         <div class="form-group">
                             @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-3 control-label" })
                             <div class="col-md-9">
-                                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 4, placeholder = "Descripción de la mascota, temperamento, necesidades especiales..." })
+                                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 4, placeholder = "DescripciÃ³n de la mascota, temperamento, necesidades especiales..." })
                                 @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -83,18 +83,18 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Estado, new { @class = "col-md-3 control-label" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Estado, new SelectList(new[] { "Disponible", "En Proceso", "Adoptado" }), new { @class = "form-control" })
+                                @Html.DropDownListFor(m => m.Estado, ViewBag.Estados as SelectList, "Seleccione estado...", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <h4 class="section-title">Categoría y Refugio</h4>
+                        <h4 class="section-title">CategorÃ­a y Refugio</h4>
                         <hr />
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Categoría</label>
+                            <label class="col-md-3 control-label">CategorÃ­a</label>
                             <div class="col-md-5">
-                                @Html.DropDownList("CategoriaId", ViewBag.Categorias as SelectList, "Seleccione categoría...", new { @class = "form-control" })
+                                @Html.DropDownList("CategoriaId", ViewBag.Categorias as SelectList, "Seleccione categorÃ­a...", new { @class = "form-control" })
                             </div>
                         </div>
 
@@ -112,7 +112,7 @@
                             <label class="col-md-3 control-label">Foto de la Mascota</label>
                             <div class="col-md-9">
                                 <input type="file" name="ImagenFile" class="form-control" accept="image/*" />
-                                <small class="text-muted">Formatos: JPG, PNG. Tamaño máximo: 2MB</small>
+                                <small class="text-muted">Formatos: JPG, PNG. TamaÃ±o mÃ¡ximo: 2MB</small>
                             </div>
                         </div>
 
@@ -139,8 +139,8 @@
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #333; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #000; }
     .card-body { padding: 30px; }
-    .section-title { color: #2c3e50; margin-top: 20px; margin-bottom: 10px; }
+    .section-title { color: #333; margin-top: 20px; margin-bottom: 10px; }
 </style>

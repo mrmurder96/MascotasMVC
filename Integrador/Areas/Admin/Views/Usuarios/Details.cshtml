@@ -7,11 +7,14 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h2><i class="fas fa-user"></i> Detalles del Usuario</h2>
+            <h2><i class="glyphicon glyphicon-user" style="color:#93A597"></i> Detalles del Usuario</h2>
         </div>
     </div>
 
     <div class="card">
+        <div class="card-header">
+            <h4><i class="glyphicon glyphicon-info-sign"></i> Informaci√≥n del Usuario</h4>
+        </div>
         <div class="card-body">
             <dl class="dl-horizontal">
                 <dt>@Html.DisplayNameFor(model => model.Id)</dt>
@@ -60,7 +63,7 @@
                 <dd>
                     @if (Model.EstaActivo)
                     {
-                        <span class="label label-success">SÌ</span>
+                        <span class="label label-success">S√≠</span>
                     }
                     else
                     {
@@ -72,7 +75,7 @@
                 <dd>
                     @if (Model.Bloqueado)
                     {
-                        <span class="label label-danger">SÌ</span>
+                        <span class="label label-danger">S√≠</span>
                     }
                     else
                     {
@@ -83,13 +86,13 @@
 
             <div class="form-group">
                 <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">
-                    <i class="fas fa-edit"></i> Editar
+                    <i class="glyphicon glyphicon-edit"></i> Editar
                 </a>
                 <a href="@Url.Action("ResetPassword", new { id = Model.Id })" class="btn btn-primary">
-                    <i class="fas fa-key"></i> Cambiar ContraseÒa
+                    <i class="glyphicon glyphicon-lock"></i> Cambiar Contrase√±a
                 </a>
                 <a href="@Url.Action("Index")" class="btn btn-default">
-                    <i class="fas fa-arrow-left"></i> Volver al Listado
+                    <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
                 </a>
             </div>
         </div>
@@ -97,11 +100,10 @@
 </div>
 
 <style>
-    .dl-horizontal dt {
-        width: 200px;
-    }
-    
-    .dl-horizontal dd {
-        margin-left: 220px;
-    }
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h4 { margin: 0; color: #000; }
+    .card-body { padding: 30px; }
+    .dl-horizontal dt { width: 200px; }
+    .dl-horizontal dd { margin-left: 220px; }
 </style>

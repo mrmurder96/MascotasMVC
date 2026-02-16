@@ -1,17 +1,17 @@
 @model IEnumerable<Integrador.Models.Campanias>
 @{
-    ViewBag.Title = "Gestión de Campañas";
+    ViewBag.Title = "GestiÃ³n de CampaÃ±as";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-bullhorn"></i> Gestión de Campañas</h2>
+            <h2><i class="glyphicon glyphicon-bullhorn" style="color:#93A597"></i> GestiÃ³n de CampaÃ±as</h2>
         </div>
         <div class="col-md-6 text-right">
             <a href="@Url.Action("Create")" class="btn btn-success">
-                <i class="fas fa-plus"></i> Nueva Campaña
+                <i class="glyphicon glyphicon-plus"></i> Nueva CampaÃ±a
             </a>
         </div>
     </div>
@@ -20,7 +20,7 @@
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["Success"]
+            <strong><i class="glyphicon glyphicon-ok-sign"></i></strong> @TempData["Success"]
         </div>
     }
 
@@ -28,7 +28,7 @@
     {
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["Error"]
+            <strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> @TempData["Error"]
         </div>
     }
 
@@ -40,8 +40,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Título</th>
-                            <th>Descripción</th>
+                            <th>TÃ­tulo</th>
+                            <th>DescripciÃ³n</th>
                             <th>Fecha Inicio</th>
                             <th>Fecha Fin</th>
                             <th>Estado</th>
@@ -71,15 +71,15 @@
                                     <div class="btn-group">
                                         <a href="@Url.Action("Details", new { id = item.Id })" 
                                            class="btn btn-info btn-sm" title="Ver detalles">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="glyphicon glyphicon-eye-open"></i>
                                         </a>
                                         <a href="@Url.Action("Edit", new { id = item.Id })" 
                                            class="btn btn-warning btn-sm" title="Editar">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="glyphicon glyphicon-edit"></i>
                                         </a>
                                         <a href="@Url.Action("Delete", new { id = item.Id })" 
                                            class="btn btn-danger btn-sm" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="glyphicon glyphicon-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -91,7 +91,7 @@
             else
             {
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No hay campañas registradas en el sistema.
+                    <i class="glyphicon glyphicon-info-sign"></i> No hay campaÃ±as registradas en el sistema.
                 </div>
             }
         </div>
@@ -99,37 +99,7 @@
 </div>
 
 <style>
-    .card {
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .card-body {
-        padding: 20px;
-    }
-
-    .table {
-        margin-bottom: 0;
-    }
-
-    .btn-group .btn {
-        margin: 0 2px;
-    }
-
-    .label {
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 12px;
-    }
-
-    h2 {
-        color: #2c3e50;
-        margin-bottom: 20px;
-    }
-
-    h2 i {
-        color: #3498db;
-    }
+    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 20px; }
+    .card-body { padding: 20px; }
+    table thead th { background-color: #BBFA8C; color: #000; }
 </style>

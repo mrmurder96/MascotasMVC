@@ -9,7 +9,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header bg-success">
-                    <h3><i class="glyphicon glyphicon-ok-circle" aria-hidden="true"></i> Aprobar Solicitud de AdopciÛn</h3>
+                    <h3><i class="glyphicon glyphicon-ok-circle" aria-hidden="true"></i> Aprobar Solicitud de Adopci√≥n</h3>
                 </div>
                 <div class="card-body">
                     @Html.Partial("_AlertMessages")
@@ -21,7 +21,7 @@
                     @if (ViewBag.ValidationErrors != null && ViewBag.ValidationErrors.Count > 0)
                     {
                         <div class="alert alert-danger" role="alert" aria-live="assertive">
-                            <h4>?? No se puede aprobar esta solicitud:</h4>
+                            <h4><i class="glyphicon glyphicon-exclamation-sign"></i> No se puede aprobar esta solicitud:</h4>
                             <ul>
                                 @foreach (var error in ViewBag.ValidationErrors)
                                 {
@@ -40,15 +40,15 @@
                     {
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h4>ConfirmaciÛn de AprobaciÛn</h4>
+                                <h4>Confirmaci√≥n de Aprobaci√≥n</h4>
                             </div>
                             <div class="panel-body">
                                 <p><strong>Al aprobar esta solicitud:</strong></p>
                                 <ul>
-                                    <li>? El usuario <strong>@Model.Usuario?.Nombre</strong> podr· adoptar a <strong>@Model.Mascota?.Nombre</strong></li>
-                                    <li>? El estado de la mascota cambiar· a <span class="label label-warning">En Proceso</span></li>
-                                    <li>? Se enviar· un email de confirmaciÛn al solicitante</li>
-                                    <li>? La solicitud quedar· registrada como <span class="label label-success">Aprobada</span></li>
+                                    <li><i class="glyphicon glyphicon-ok text-success"></i> El usuario <strong>@Model.Usuario?.Nombre</strong> podr√° adoptar a <strong>@Model.Mascota?.Nombre</strong></li>
+                                    <li><i class="glyphicon glyphicon-ok text-success"></i> El estado de la mascota cambiar√° a <span class="label label-warning">En Proceso</span></li>
+                                    <li><i class="glyphicon glyphicon-ok text-success"></i> Se enviar√° un email de confirmaci√≥n al solicitante</li>
+                                    <li><i class="glyphicon glyphicon-ok text-success"></i> La solicitud quedar√° registrada como <span class="label label-success">Aprobada</span></li>
                                 </ul>
 
                                 @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
@@ -70,8 +70,8 @@
                             <div class="text-center">
                                 <button type="submit" 
                                         class="btn btn-success btn-lg"
-                                        aria-label="Confirmar aprobaciÛn de la solicitud">
-                                    <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> SÌ, Aprobar Solicitud
+                                        aria-label="Confirmar aprobaci√≥n de la solicitud">
+                                    <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> S√≠, Aprobar Solicitud
                                 </button>
                                 <a href="@Url.Action("Details", new { id = Model.Id })" 
                                    class="btn btn-default btn-lg"
@@ -90,7 +90,7 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
     .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header.bg-success { background-color: #5cb85c; color: white; }
+    .card-header.bg-success { background-color: #8CFAA4; color: #000; }
     .card-header h3 { margin: 0; }
     .card-body { padding: 30px; }
     .mt-3 { margin-top: 15px; }

@@ -1,13 +1,13 @@
 @model IEnumerable<Integrador.Models.Adopciones>
 @{
-    ViewBag.Title = "Solicitudes de Adopción";
+    ViewBag.Title = "Solicitudes de AdopciÃ³n";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h2><i class="glyphicon glyphicon-list-alt"></i> Gestión de Solicitudes de Adopción</h2>
+            <h2><i class="glyphicon glyphicon-list-alt"></i> GestiÃ³n de Solicitudes de AdopciÃ³n</h2>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["SuccessMessage"]
+            <i class="glyphicon glyphicon-ok-sign"></i> @TempData["SuccessMessage"]
         </div>
     }
 
@@ -70,17 +70,14 @@
                                 <td><strong>#@solicitud.Id</strong></td>
                                 <td>@solicitud.FechaSolicitud.ToString("dd/MM/yyyy")</td>
                                 <td>
-                                    @if (solicitud.Usuario != null)
-                                    {
-                                        <strong>@solicitud.Usuario.Nombre</strong><br />
-                                        <small>@solicitud.Usuario.Email</small>
-                                    }
+                                    <strong>@solicitud.NombreSolicitante</strong><br />
+                                    <small>@solicitud.Email</small>
                                 </td>
                                 <td>
-                                    @if (solicitud.Mascota != null)
+                                    @if (solicitud.Mascotas != null)
                                     {
-                                        <strong>@solicitud.Mascota.Nombre</strong><br />
-                                        <small>@solicitud.Mascota.Tipo - @solicitud.Mascota.Raza</small>
+                                        <strong>@solicitud.Mascotas.Nombre</strong><br />
+                                        <small>@solicitud.Mascotas.Tipo</small>
                                     }
                                 </td>
                                 <td>
@@ -121,7 +118,7 @@
                                         {
                                             <a href="@Url.Action("Aprobar", new { id = solicitud.Id })" 
                                                class="btn btn-success btn-sm" title="Aprobar"
-                                               onclick="return confirm('¿Aprobar esta solicitud?')">
+                                               onclick="return confirm('Â¿Aprobar esta solicitud?')">
                                                 <i class="glyphicon glyphicon-ok"></i>
                                             </a>
                                             <a href="@Url.Action("Rechazar", new { id = solicitud.Id })" 
@@ -156,8 +153,10 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
     .card-body { padding: 20px; }
-    .nav-tabs { border-bottom: 2px solid #dee2e6; }
+    .nav-tabs { border-bottom: 2px solid #93A597; }
     .nav-tabs > li > a { color: #555; }
-    .nav-tabs > li.active > a { border-top: 3px solid #3498db; font-weight: bold; }
-    .table th { background-color: #f8f9fa; }
+    .nav-tabs > li.active > a { border-top: 3px solid #8CFAA4; font-weight: bold; }
+    .table th { background-color: #BBFA8C; color: #000; }
+    .mb-4 { margin-bottom: 20px; }
+    .mt-3 { margin-top: 15px; }
 </style>

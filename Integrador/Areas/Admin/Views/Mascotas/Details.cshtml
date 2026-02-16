@@ -9,7 +9,7 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Información de la Mascota</h3>
+                    <h3><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> InformaciÃ³n de la Mascota</h3>
                 </div>
                 <div class="card-body">
                     @Html.Partial("_AlertMessages")
@@ -24,7 +24,7 @@
                                          alt="Foto de @Model.Nombre, @Model.Tipo @Model.Raza" 
                                          class="img-responsive img-thumbnail" 
                                          aria-describedby="mascotaImagenDesc" />
-                                    <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
+                                    <span id="mascotaImagenDesc" class="sr-only">FotografÃ­a de la mascota @Model.Nombre</span>
                                 }
                                 else
                                 {
@@ -49,7 +49,7 @@
                             </div>
                         </div>
 
-                        <!-- Información de la mascota -->
+                        <!-- InformaciÃ³n de la mascota -->
                         <div class="col-md-8">
                             <h2 class="mascota-nombre">@Model.Nombre</h2>
                             <p class="mascota-tipo" aria-label="Tipo y raza">
@@ -63,15 +63,15 @@
                                 <dd>@Model.Id</dd>
 
                                 <dt>Edad</dt>
-                                <dd>@Model.Edad años</dd>
+                                <dd>@Model.Edad aÃ±os</dd>
 
                                 <dt>Sexo</dt>
                                 <dd>@Model.Sexo</dd>
 
-                                <dt>Tamaño</dt>
+                                <dt>TamaÃ±o</dt>
                                 <dd>@Model.Tamano</dd>
 
-                                <dt>Categoría</dt>
+                                <dt>CategorÃ­a</dt>
                                 <dd>
                                     @if (Model.CategoriaId.HasValue && Model.Categoria != null)
                                     {
@@ -79,7 +79,7 @@
                                     }
                                     else
                                     {
-                                        <span class="text-muted">Sin categoría</span>
+                                        <span class="text-muted">Sin categorÃ­a</span>
                                     }
                                 </dd>
 
@@ -108,8 +108,8 @@
 
                             @if (!string.IsNullOrEmpty(Model.Descripcion))
                             {
-                                <div class="mascota-descripcion" role="region" aria-label="Descripción de la mascota">
-                                    <h4>Descripción</h4>
+                                <div class="mascota-descripcion" role="region" aria-label="DescripciÃ³n de la mascota">
+                                    <h4>DescripciÃ³n</h4>
                                     <p>@Model.Descripcion</p>
                                 </div>
                             }
@@ -121,7 +121,7 @@
                                 <div class="btn-group" role="group">
                                     <a href="@Url.Action("Edit", new { id = Model.Id })" 
                                        class="btn btn-warning btn-lg"
-                                       aria-label="Editar información de @Model.Nombre">
+                                       aria-label="Editar informaciÃ³n de @Model.Nombre">
                                         <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> Editar
                                     </a>
                                     
@@ -144,7 +144,7 @@
                                     
                                     <a href="@Url.Action("Delete", new { id = Model.Id })" 
                                        class="btn btn-danger btn-lg"
-                                       onclick="return confirm('¿Está seguro de eliminar a @Model.Nombre?')"
+                                       onclick="return confirm('Â¿EstÃ¡ seguro de eliminar a @Model.Nombre?')"
                                        aria-label="Eliminar mascota @Model.Nombre">
                                         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Eliminar
                                     </a>
@@ -168,17 +168,17 @@
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #333; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #000; }
     .card-body { padding: 30px; }
     .mascota-imagen-detail { position: relative; text-align: center; margin-bottom: 20px; }
     .mascota-imagen-detail img { width: 100%; border-radius: 8px; }
     .estado-badge { margin-top: 10px; }
     .label-lg { font-size: 14px; padding: 8px 12px; }
-    .mascota-nombre { color: #2c3e50; margin-bottom: 10px; }
-    .mascota-tipo { font-size: 18px; color: #7f8c8d; }
-    .mascota-descripcion { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #3498db; }
-    .mascota-descripcion h4 { margin-top: 0; color: #2c3e50; }
+    .mascota-nombre { color: #333; margin-bottom: 10px; }
+    .mascota-tipo { font-size: 18px; color: #93A597; }
+    .mascota-descripcion { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #8CFAA4; }
+    .mascota-descripcion h4 { margin-top: 0; color: #333; }
     .dl-horizontal dt { width: 150px; font-weight: 600; }
     .dl-horizontal dd { margin-left: 170px; }
     .btn-toolbar { margin-top: 20px; }

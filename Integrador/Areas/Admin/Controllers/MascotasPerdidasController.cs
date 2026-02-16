@@ -11,7 +11,7 @@ using Integrador.Models;
 namespace Integrador.Areas.Admin.Controllers
 {
     /// <summary>
-    /// Controlador para gestión de Mascotas Perdidas/Encontradas (RF-19, RF-26)
+    /// Controlador para gestion de Mascotas Perdidas/Encontradas (RF-19, RF-26)
     /// </summary>
     [AdminAuthorize]
     [CargarPermisos]
@@ -23,9 +23,26 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidarPermisoCrud(ControllerName = "MascotasPerdidas", Operacion = "Leer")]
         public ActionResult Index(string filtroTipo, string filtroEstado, string buscar)
         {
-            // NOTA: MascotaPerdida no está en BD actual, por ahora retornamos lista vacía
-            // En producción: var reportes = db.MascotasPerdidas.AsQueryable();
-            var reportes = new System.Collections.Generic.List<MascotaPerdida>();
+            var reportes = db.MascotasPerdidas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroTipo) && filtroTipo != "Todos")
+            {
+                reportes = reportes.Where(m => m.TipoReporte == filtroTipo);
+            }
+
+            if (!string.IsNullOrEmpty(filtroEstado) && filtroEstado != "Todos")
+            {
+                reportes = reportes.Where(m => m.Estado == filtroEstado);
+            }
+
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                reportes = reportes.Where(m =>
+                    m.Nombre.Contains(buscar) ||
+                    m.Descripcion.Contains(buscar) ||
+                    m.UbicacionReporte.Contains(buscar) ||
+                    m.NombreReportante.Contains(buscar));
+            }
 
             ViewBag.TiposReporte = new SelectList(new[] { "Todos", "Perdida", "Encontrada" });
             ViewBag.Estados = new SelectList(new[] { "Todos", "Activo", "Resuelto", "Cerrado" });
@@ -33,11 +50,11 @@ namespace Integrador.Areas.Admin.Controllers
             ViewBag.EstadoSeleccionado = filtroEstado;
             ViewBag.Buscar = buscar;
 
-            ViewBag.TotalPerdidas = 0; // db.MascotasPerdidas.Count(m => m.TipoReporte == "Perdida" && m.Estado == "Activo");
-            ViewBag.TotalEncontradas = 0; // db.MascotasPerdidas.Count(m => m.TipoReporte == "Encontrada" && m.Estado == "Activo");
-            ViewBag.TotalResueltos = 0; // db.MascotasPerdidas.Count(m => m.Estado == "Resuelto");
+            ViewBag.TotalPerdidas = db.MascotasPerdidas.Count(m => m.TipoReporte == "Perdida" && m.Estado == "Activo");
+            ViewBag.TotalEncontradas = db.MascotasPerdidas.Count(m => m.TipoReporte == "Encontrada" && m.Estado == "Activo");
+            ViewBag.TotalResueltos = db.MascotasPerdidas.Count(m => m.Estado == "Resuelto");
 
-            return View(reportes);
+            return View(reportes.OrderByDescending(m => m.FechaReporte).ToList());
         }
 
         // GET: Admin/MascotasPerdidas/Details/5
@@ -49,9 +66,13 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // En producción: var reporte = db.MascotasPerdidas.Find(id);
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            var reporte = db.MascotasPerdidas.Find(id);
+            if (reporte == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(reporte);
         }
 
         // GET: Admin/MascotasPerdidas/Create
@@ -62,7 +83,7 @@ namespace Integrador.Areas.Admin.Controllers
             ViewBag.TiposMascota = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Otro" });
             ViewBag.Estados = new SelectList(new[] { "Activo", "Resuelto", "Cerrado" });
 
-            var reporte = new MascotaPerdida
+            var reporte = new MascotasPerdidas
             {
                 FechaReporte = DateTime.Now,
                 Estado = "Activo"
@@ -75,7 +96,7 @@ namespace Integrador.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "MascotasPerdidas", Operacion = "Crear")]
-        public ActionResult Create(MascotaPerdida reporte, HttpPostedFileBase foto)
+        public ActionResult Create(MascotasPerdidas reporte, HttpPostedFileBase foto)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +108,7 @@ namespace Integrador.Areas.Admin.Controllers
 
                     if (!allowedExtensions.Contains(extension))
                     {
-                        ModelState.AddModelError("", "Solo se permiten imágenes JPG, PNG o GIF");
+                        ModelState.AddModelError("", "Solo se permiten imagenes JPG, PNG o GIF");
                         ViewBag.TiposReporte = new SelectList(new[] { "Perdida", "Encontrada" });
                         ViewBag.TiposMascota = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Otro" });
                         ViewBag.Estados = new SelectList(new[] { "Activo", "Resuelto", "Cerrado" });
@@ -123,12 +144,10 @@ namespace Integrador.Areas.Admin.Controllers
                     reporte.UsuarioRegistraId = Convert.ToInt32(Session["UsuarioId"]);
                 }
 
-                // NOTA: Guardar en BD cuando se migre
-                // db.MascotasPerdidas.Add(reporte);
-                // db.SaveChanges();
+                db.MascotasPerdidas.Add(reporte);
+                db.SaveChanges();
 
                 TempData["Success"] = "Reporte registrado exitosamente";
-                TempData["Info"] = "Función completa después de migración de BD";
                 return RedirectToAction("Index");
             }
 
@@ -147,12 +166,17 @@ namespace Integrador.Areas.Admin.Controllers
         {
             try
             {
-                // En producción:
-                // var reporte = db.MascotasPerdidas.Find(id);
-                // reporte.Estado = "Resuelto";
-                // reporte.FechaResolucion = DateTime.Now;
-                // reporte.Notas = notas;
-                // db.SaveChanges();
+                var reporte = db.MascotasPerdidas.Find(id);
+                if (reporte == null)
+                {
+                    TempData["Error"] = "Reporte no encontrado";
+                    return RedirectToAction("Index");
+                }
+
+                reporte.Estado = "Resuelto";
+                reporte.FechaResolucion = DateTime.Now;
+                reporte.Notas = notas;
+                db.SaveChanges();
 
                 TempData["Success"] = "Reporte marcado como resuelto";
                 return RedirectToAction("Index");
@@ -173,8 +197,60 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            var reporte = db.MascotasPerdidas.Find(id);
+            if (reporte == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.TiposReporte = new SelectList(new[] { "Perdida", "Encontrada" }, reporte.TipoReporte);
+            ViewBag.TiposMascota = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Otro" }, reporte.TipoMascota);
+            ViewBag.Estados = new SelectList(new[] { "Activo", "Resuelto", "Cerrado" }, reporte.Estado);
+
+            return View(reporte);
+        }
+
+        // POST: Admin/MascotasPerdidas/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "MascotasPerdidas", Operacion = "Actualizar")]
+        public ActionResult Edit(MascotasPerdidas reporte, HttpPostedFileBase foto)
+        {
+            if (ModelState.IsValid)
+            {
+                if (foto != null && foto.ContentLength > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(foto.FileName).ToLower();
+
+                    if (allowedExtensions.Contains(extension) && foto.ContentLength <= 5 * 1024 * 1024)
+                    {
+                        var uploadsPath = Server.MapPath("~/Content/uploads/perdidas");
+                        if (!Directory.Exists(uploadsPath))
+                        {
+                            Directory.CreateDirectory(uploadsPath);
+                        }
+
+                        var fileName = Guid.NewGuid().ToString() + extension;
+                        var filePath = Path.Combine(uploadsPath, fileName);
+                        foto.SaveAs(filePath);
+
+                        reporte.FotoUrl = "/Content/uploads/perdidas/" + fileName;
+                    }
+                }
+
+                db.Entry(reporte).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                TempData["Success"] = "Reporte actualizado exitosamente";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.TiposReporte = new SelectList(new[] { "Perdida", "Encontrada" }, reporte.TipoReporte);
+            ViewBag.TiposMascota = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Otro" }, reporte.TipoMascota);
+            ViewBag.Estados = new SelectList(new[] { "Activo", "Resuelto", "Cerrado" }, reporte.Estado);
+
+            return View(reporte);
         }
 
         // GET: Admin/MascotasPerdidas/Delete/5
@@ -186,7 +262,31 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
+            var reporte = db.MascotasPerdidas.Find(id);
+            if (reporte == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(reporte);
+        }
+
+        // POST: Admin/MascotasPerdidas/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "MascotasPerdidas", Operacion = "Eliminar")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var reporte = db.MascotasPerdidas.Find(id);
+            if (reporte == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.MascotasPerdidas.Remove(reporte);
+            db.SaveChanges();
+
+            TempData["Success"] = "Reporte eliminado exitosamente";
             return RedirectToAction("Index");
         }
 

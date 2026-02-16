@@ -1,0 +1,182 @@
+@model List<Integrador.Models.Seguimientos>
+@{
+    ViewBag.Title = "Reporte de Post-Seguimiento";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<div class="container-fluid">
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2><i class="glyphicon glyphicon-eye-open"></i> Reporte de Post-Seguimiento de Mascotas</h2>
+    </div>
+</div>
+
+    @Html.Partial("_AlertMessages")
+
+    <!-- Filtros -->
+    <div class="card mb-3">
+        <div class="card-body">
+            @using (Html.BeginForm("PostSeguimiento", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    <label>Desde:</label>
+                    <input type="date" name="fechaDesde" class="form-control" value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="form-group">
+                    <label>Hasta:</label>
+                    <input type="date" name="fechaHasta" class="form-control" value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="form-group">
+                    <label>Estado Mascota:</label>
+                    @Html.DropDownList("estadoMascota", (SelectList)ViewBag.EstadosMascota, new { @class = "form-control" })
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-search"></i> Filtrar
+                </button>
+                <a href="@Url.Action("PostSeguimiento", "Reportes", new { area = "Admin", fechaDesde = ViewBag.FechaDesde, fechaHasta = ViewBag.FechaHasta, estadoMascota = ViewBag.EstadoMascotaSeleccionado, formato = "csv" })" 
+                   class="btn btn-success">
+                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>@ViewBag.TotalSeguimientos</h4>
+                    <p>Total Seguimientos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4>@ViewBag.SeguimientosExcelente / @ViewBag.SeguimientosBueno</h4>
+                    <p>Excelente / Bueno</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4>@ViewBag.SeguimientosRegular</h4>
+                    <p>Regular</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h4>@ViewBag.SeguimientosCritico</h4>
+                    <p>Requiere Atención / Crítico</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Adopciones sin seguimiento reciente (30 días)</strong>
+                </div>
+                <div class="panel-body">
+                    <h3>@ViewBag.AdopcionesSinSeguimiento <small>de @ViewBag.TotalAdopcionesActivas adopciones activas</small></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Seguimientos por Tipo</strong>
+                </div>
+                <div class="panel-body">
+                    @if (ViewBag.PorTipo != null)
+                    {
+                        <ul class="list-group">
+                            @foreach (var item in (IEnumerable<dynamic>)ViewBag.PorTipo)
+                            {
+                                <li class="list-group-item">
+                                    <span class="badge">@item.Cantidad</span>
+                                    @item.Tipo
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Seguimientos -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Detalle de Seguimientos</strong>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mascota</th>
+                        <th>Adoptante</th>
+                        <th>Tipo Seguimiento</th>
+                        <th>Fecha</th>
+                        <th>Estado Mascota</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            var estadoClass = "";
+                            switch (item.EstadoMascota)
+                            {
+                                case "Excelente": estadoClass = "success"; break;
+                                case "Bueno": estadoClass = "info"; break;
+                                case "Regular": estadoClass = "warning"; break;
+                                default: estadoClass = "danger"; break;
+                            }
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@(item.Adopciones?.Mascotas?.Nombre ?? "N/A")</td>
+                                <td>@(item.Adopciones?.NombreSolicitante ?? "N/A")</td>
+                                <td>@item.TipoSeguimiento</td>
+                                <td>@item.FechaSeguimiento.ToString("dd/MM/yyyy")</td>
+                                <td><span class="label label-@estadoClass">@item.EstadoMascota</span></td>
+                                <td>@(item.Observaciones != null && item.Observaciones.Length > 50 ? item.Observaciones.Substring(0, 47) + "..." : item.Observaciones)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">No se encontraron seguimientos en el periodo seleccionado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="btn btn-default">
+                <i class="glyphicon glyphicon-arrow-left"></i> Volver a Reportes
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card-body { padding: 20px; }
+    .mb-3 { margin-bottom: 15px; }
+    .mb-4 { margin-bottom: 20px; }
+    .table th { background-color: #BBFA8C; color: #000; font-weight: 600; }
+</style>

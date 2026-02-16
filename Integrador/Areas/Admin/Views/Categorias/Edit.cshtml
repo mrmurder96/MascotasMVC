@@ -1,6 +1,6 @@
-@model Integrador.Models.Categoria
+@model Integrador.Models.Categorias
 @{
-    ViewBag.Title = "Editar Categoría";
+    ViewBag.Title = "Editar CategorÃ­a";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-edit"></i> Editar Categoría: @Model.Nombre</h3>
+                    <h3><i class="glyphicon glyphicon-edit"></i> Editar CategorÃ­a: @Model.Nombre</h3>
                 </div>
                 <div class="card-body">
                     @using (Html.BeginForm("Edit", "Categorias", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
@@ -40,7 +40,7 @@
                                 <div class="checkbox">
                                     <label>
                                         @Html.CheckBoxFor(m => m.EsActivo)
-                                        Categoría activa
+                                        CategorÃ­a activa
                                     </label>
                                 </div>
                             </div>
@@ -75,14 +75,14 @@
         margin-top: 20px;
     }
     .card-header {
-        background-color: #f8f9fa;
+        background-color: #BBFA8C;
         padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid #93A597;
         border-radius: 8px 8px 0 0;
     }
     .card-header h3 {
         margin: 0;
-        color: #333;
+        color: #000;
     }
     .card-body {
         padding: 30px;

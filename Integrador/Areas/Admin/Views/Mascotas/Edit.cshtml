@@ -22,7 +22,7 @@
                         @Html.HiddenFor(m => m.Imagen)
                         @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert" })
 
-                        <h4 class="section-title">Información Básica</h4>
+                        <h4 class="section-title">InformaciÃ³n BÃ¡sica</h4>
                         <hr />
 
                         <div class="form-group">
@@ -36,7 +36,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Tipo, new { @class = "col-md-3 control-label" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Tipo, new SelectList(new[] { "Perro", "Gato", "Ave", "Roedor", "Reptil", "Otro" }), "Seleccione tipo...", new { @class = "form-control", aria_required = "true" })
+                                @Html.DropDownListFor(m => m.Tipo, ViewBag.Tipos as SelectList, "Seleccione tipo...", new { @class = "form-control", aria_required = "true" })
                                 @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "text-danger", role = "alert" })
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                             <div class="col-md-3">
                                 @Html.TextBoxFor(m => m.Edad, new { @class = "form-control", type = "number", min = "0", max = "30", aria_required = "true" })
                                 @Html.ValidationMessageFor(m => m.Edad, "", new { @class = "text-danger", role = "alert" })
-                                <small class="text-muted">Años</small>
+                                <small class="text-muted">AÃ±os</small>
                             </div>
                         </div>
 
@@ -69,12 +69,12 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Tamano, new { @class = "col-md-3 control-label" })
                             <div class="col-md-4">
-                                @Html.DropDownListFor(m => m.Tamano, new SelectList(new[] { "Pequeño", "Mediano", "Grande" }), "Seleccione tamaño...", new { @class = "form-control", aria_required = "true" })
+                                @Html.DropDownListFor(m => m.Tamano, new SelectList(new[] { "PequeÃ±o", "Mediano", "Grande" }), "Seleccione tamaÃ±o...", new { @class = "form-control", aria_required = "true" })
                                 @Html.ValidationMessageFor(m => m.Tamano, "", new { @class = "text-danger", role = "alert" })
                             </div>
                         </div>
 
-                        <h4 class="section-title">Descripción y Estado</h4>
+                        <h4 class="section-title">DescripciÃ³n y Estado</h4>
                         <hr />
 
                         <div class="form-group">
@@ -89,18 +89,18 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Estado, new { @class = "col-md-3 control-label" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Estado, new SelectList(new[] { "Disponible", "En Proceso", "Adoptado" }), new { @class = "form-control", aria_required = "true" })
+                                @Html.DropDownListFor(m => m.Estado, ViewBag.Estados as SelectList, "Seleccione estado...", new { @class = "form-control", aria_required = "true" })
                                 @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger", role = "alert" })
                             </div>
                         </div>
 
-                        <h4 class="section-title">Categoría y Refugio</h4>
+                        <h4 class="section-title">CategorÃ­a y Refugio</h4>
                         <hr />
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Categoría</label>
+                            <label class="col-md-3 control-label">CategorÃ­a</label>
                             <div class="col-md-5">
-                                @Html.DropDownList("CategoriaId", ViewBag.Categorias as SelectList, "Seleccione categoría...", new { @class = "form-control" })
+                                @Html.DropDownList("CategoriaId", ViewBag.Categorias as SelectList, "Seleccione categorÃ­a...", new { @class = "form-control" })
                             </div>
                         </div>
 
@@ -135,7 +135,7 @@
                             <label class="col-md-3 control-label">Cambiar Foto</label>
                             <div class="col-md-9">
                                 <input type="file" name="ImagenFile" class="form-control" accept="image/*" aria-describedby="imagenHelp" />
-                                <small id="imagenHelp" class="text-muted">Dejar vacío para mantener la imagen actual. Formatos: JPG, PNG. Máximo: 2MB</small>
+                                <small id="imagenHelp" class="text-muted">Dejar vacÃ­o para mantener la imagen actual. Formatos: JPG, PNG. MÃ¡ximo: 2MB</small>
                             </div>
                         </div>
 
@@ -144,7 +144,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg" aria-label="Guardar cambios de la mascota">
                                     <i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i> Guardar Cambios
                                 </button>
-                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg" aria-label="Cancelar edición y volver al listado">
+                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg" aria-label="Cancelar ediciÃ³n y volver al listado">
                                     <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Cancelar
                                 </a>
                             </div>
@@ -162,8 +162,8 @@
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #333; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #000; }
     .card-body { padding: 30px; }
-    .section-title { color: #2c3e50; margin-top: 20px; margin-bottom: 10px; }
+    .section-title { color: #333; margin-top: 20px; margin-bottom: 10px; }
 </style>

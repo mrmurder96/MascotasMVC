@@ -9,38 +9,41 @@
     }
     
     .dashboard-header {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        background: linear-gradient(135deg, #3d6b4f 0%, #4a7c5c 100%);
         padding: 40px;
-        border-radius: 15px;
+        border-radius: 16px;
         margin-bottom: 30px;
         color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 30px rgba(61,107,79,0.3);
     }
     
     .dashboard-header h2 {
         margin: 0;
-        font-size: 36px;
-        font-weight: 700;
+        font-size: 32px;
+        font-weight: 800;
+        color: #BBFA8C;
     }
     
     .dashboard-header p {
         margin: 10px 0 0 0;
-        font-size: 18px;
+        font-size: 17px;
         opacity: 0.9;
+        color: rgba(255,255,255,0.9);
     }
     
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
         margin-bottom: 30px;
     }
     
     .stat-card {
         background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 24px;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid #eef1f3;
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
@@ -58,60 +61,63 @@
     
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
     
     .stat-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
+        font-size: 36px;
+        margin-bottom: 12px;
         display: inline-block;
+        color: var(--stat-color);
+        opacity: 0.8;
     }
     
     .stat-number {
-        font-size: 40px;
-        font-weight: 700;
+        font-size: 36px;
+        font-weight: 800;
         color: var(--stat-color);
         margin: 0;
         line-height: 1;
     }
     
     .stat-label {
-        font-size: 14px;
-        color: #7f8c8d;
+        font-size: 13px;
+        color: #555;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-top: 8px;
-        font-weight: 600;
+        font-weight: 700;
     }
     
     .stat-sublabel {
-        font-size: 13px;
-        color: #95a5a6;
-        margin-top: 5px;
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
     }
     
-    .card-mascotas { --stat-color: #3498db; }
-    .card-adopciones { --stat-color: #e74c3c; }
-    .card-usuarios { --stat-color: #2ecc71; }
-    .card-perdidas { --stat-color: #f39c12; }
-    .card-disponibles { --stat-color: #1abc9c; }
-    .card-pendientes { --stat-color: #e67e22; }
+    .card-mascotas    { --stat-color: #4a7c5c; }
+    .card-disponibles { --stat-color: #8CFAA4; }
+    .card-adopciones  { --stat-color: #FA8C99; }
+    .card-pendientes  { --stat-color: #FAA88C; }
+    .card-usuarios    { --stat-color: #93A597; }
+    .card-perdidas    { --stat-color: #BBFA8C; }
     
     .actions-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 20px;
-        margin-top: 30px;
+        margin-top: 24px;
     }
     
     .action-card {
         background: white;
-        padding: 25px;
-        border-radius: 12px;
+        padding: 28px 24px;
+        border-radius: 14px;
         text-align: center;
         text-decoration: none;
         color: inherit;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid #eef1f3;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
@@ -123,7 +129,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 5px;
+        height: 4px;
         background: linear-gradient(90deg, var(--action-color-1), var(--action-color-2));
         transform: scaleX(0);
         transition: transform 0.3s ease;
@@ -134,16 +140,18 @@
     }
     
     .action-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        transform: translateY(-6px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.12);
         text-decoration: none;
+        color: inherit;
     }
     
     .action-icon {
-        font-size: 50px;
-        margin-bottom: 15px;
+        font-size: 40px;
+        margin-bottom: 14px;
         display: inline-block;
         transition: transform 0.3s ease;
+        color: var(--action-color-1);
     }
     
     .action-card:hover .action-icon {
@@ -151,136 +159,136 @@
     }
     
     .action-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
         margin: 10px 0 5px 0;
     }
     
     .action-description {
         font-size: 13px;
-        color: #7f8c8d;
+        color: #999;
+        margin: 0;
     }
     
-    .action-permisos { --action-color-1: #667eea; --action-color-2: #764ba2; }
-    .action-mascotas { --action-color-1: #3498db; --action-color-2: #2980b9; }
-    .action-solicitudes { --action-color-1: #e74c3c; --action-color-2: #c0392b; }
-    .action-seguimientos { --action-color-1: #f39c12; --action-color-2: #e67e22; }
-    .action-perdidas { --action-color-1: #9b59b6; --action-color-2: #8e44ad; }
-    .action-categorias { --action-color-1: #1abc9c; --action-color-2: #16a085; }
-    .action-refugios { --action-color-1: #27ae60; --action-color-2: #229954; }
-    .action-reportes { --action-color-1: #34495e; --action-color-2: #2c3e50; }
+    .action-permisos     { --action-color-1: #4a7c5c; --action-color-2: #3d6b4f; }
+    .action-mascotas     { --action-color-1: #8CFAA4; --action-color-2: #BBFA8C; }
+    .action-solicitudes  { --action-color-1: #FA8C99; --action-color-2: #f07080; }
+    .action-seguimientos { --action-color-1: #FAA88C; --action-color-2: #f5956d; }
+    .action-perdidas     { --action-color-1: #93A597; --action-color-2: #7d9182; }
+    .action-categorias   { --action-color-1: #BBFA8C; --action-color-2: #8CFAA4; }
+    .action-refugios     { --action-color-1: #4a7c5c; --action-color-2: #528564; }
+    .action-reportes     { --action-color-1: #93A597; --action-color-2: #4a7c5c; }
     
     .section-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: #2c3e50;
-        margin: 40px 0 20px 0;
-        padding-bottom: 15px;
-        border-bottom: 3px solid #ecf0f1;
+        font-size: 22px;
+        font-weight: 800;
+        color: #333;
+        margin: 36px 0 16px 0;
+        padding-bottom: 12px;
+        border-bottom: 3px solid #eef1f3;
     }
 </style>
 
 <div class="admin-dashboard">
     <div class="dashboard-header">
-        <h2>📊 Dashboard Administrador</h2>
-        <p>Bienvenido, <strong>@Session["Nombre"]</strong></p>
+        <h2><i class="fas fa-chart-line" aria-hidden="true"></i> Dashboard Administrador</h2>
+        <p>Bienvenido, <strong>@Session["Nombre"]</strong> — Panel de control del sistema</p>
     </div>
     
     <div class="stats-grid">
         <div class="stat-card card-mascotas">
-            <div class="stat-icon">🐾</div>
+            <div class="stat-icon"><i class="fas fa-paw" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.TotalMascotas</div>
             <div class="stat-label">Total Mascotas</div>
             <div class="stat-sublabel">En el sistema</div>
         </div>
         
         <div class="stat-card card-disponibles">
-            <div class="stat-icon">✨</div>
+            <div class="stat-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.MascotasDisponibles</div>
             <div class="stat-label">Disponibles</div>
             <div class="stat-sublabel">Para adopción</div>
         </div>
         
         <div class="stat-card card-adopciones">
-            <div class="stat-icon">❤️</div>
+            <div class="stat-icon"><i class="fas fa-heart" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.TotalAdopciones</div>
             <div class="stat-label">Adopciones</div>
             <div class="stat-sublabel">Total registradas</div>
         </div>
         
         <div class="stat-card card-pendientes">
-            <div class="stat-icon">⏳</div>
+            <div class="stat-icon"><i class="fas fa-clock" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.AdopcionesPendientes</div>
             <div class="stat-label">Pendientes</div>
             <div class="stat-sublabel">Por revisar</div>
         </div>
         
         <div class="stat-card card-usuarios">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.TotalUsuarios</div>
             <div class="stat-label">Usuarios</div>
             <div class="stat-sublabel">Registrados</div>
         </div>
         
         <div class="stat-card card-perdidas">
-            <div class="stat-icon">🔍</div>
+            <div class="stat-icon"><i class="fas fa-binoculars" aria-hidden="true"></i></div>
             <div class="stat-number">@ViewBag.MascotasPerdidas</div>
             <div class="stat-label">Perdidas</div>
             <div class="stat-sublabel">Sin encontrar</div>
         </div>
     </div>
     
-    <h3 class="section-title">⚡ Accesos Rápidos</h3>
+    <h3 class="section-title"><i class="fas fa-bolt" aria-hidden="true"></i> Accesos Rápidos</h3>
     
     <div class="actions-grid">
         <a href="@Url.Action("Index", "Permisos", new { area = "Admin" })" class="action-card action-permisos">
-            <div class="action-icon">🔐</div>
+            <div class="action-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
             <div class="action-title">Gestión de Permisos</div>
             <p class="action-description">Administrar roles y permisos</p>
         </a>
         
         <a href="@Url.Action("Index", "Mascotas", new { area = "Admin" })" class="action-card action-mascotas">
-            <div class="action-icon">🐾</div>
+            <div class="action-icon"><i class="fas fa-paw" aria-hidden="true"></i></div>
             <div class="action-title">Mascotas</div>
             <p class="action-description">Gestionar mascotas en adopción</p>
         </a>
         
         <a href="@Url.Action("Index", "Solicitudes", new { area = "Admin" })" class="action-card action-solicitudes">
-            <div class="action-icon">📋</div>
+            <div class="action-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
             <div class="action-title">Solicitudes</div>
             <p class="action-description">Revisar solicitudes de adopción</p>
         </a>
         
         <a href="@Url.Action("Index", "Seguimientos", new { area = "Admin" })" class="action-card action-seguimientos">
-            <div class="action-icon">📈</div>
+            <div class="action-icon"><i class="fas fa-clipboard-check" aria-hidden="true"></i></div>
             <div class="action-title">Seguimientos</div>
             <p class="action-description">Control post-adopción</p>
         </a>
         
         <a href="@Url.Action("Index", "MascotasPerdidas", new { area = "Admin" })" class="action-card action-perdidas">
-            <div class="action-icon">🔍</div>
+            <div class="action-icon"><i class="fas fa-search-location" aria-hidden="true"></i></div>
             <div class="action-title">Mascotas Perdidas</div>
             <p class="action-description">Gestionar reportes</p>
         </a>
         
         <a href="@Url.Action("Index", "Categorias", new { area = "Admin" })" class="action-card action-categorias">
-            <div class="action-icon">📂</div>
+            <div class="action-icon"><i class="fas fa-th-large" aria-hidden="true"></i></div>
             <div class="action-title">Categorías</div>
             <p class="action-description">Administrar categorías</p>
         </a>
         
         <a href="@Url.Action("Index", "Refugios", new { area = "Admin" })" class="action-card action-refugios">
-            <div class="action-icon">🏠</div>
+            <div class="action-icon"><i class="fas fa-house-chimney" aria-hidden="true"></i></div>
             <div class="action-title">Refugios</div>
             <p class="action-description">Gestionar refugios</p>
         </a>
         
         <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="action-card action-reportes">
-            <div class="action-icon">📊</div>
+            <div class="action-icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
             <div class="action-title">Reportes</div>
             <p class="action-description">Estadísticas y reportes</p>
         </a>
     </div>
 </div>
-

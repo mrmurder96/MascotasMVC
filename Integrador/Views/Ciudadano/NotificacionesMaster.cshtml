@@ -1,4 +1,4 @@
-@model IEnumerable<Integrador.Models.ViewModels.Notificacion>
+@model IEnumerable<Integrador.Models.Notificacion>
 
 @{
     ViewBag.Title = "Notificaciones";
@@ -34,13 +34,13 @@
     }
 
     .notif-item:hover {
-        border-color: #3498db;
+        border-color: #8CFAA4;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .notif-item.unread {
-        background: #f0f8ff;
-        border-color: #3498db;
+        background: #f0fff4;
+        border-color: #8CFAA4;
     }
 
     .notif-icon {
@@ -54,18 +54,18 @@
 
     .notif-title {
         font-weight: 600;
-        color: #2c3e50;
+        color: #333;
         margin: 0 0 10px 0;
     }
 
     .notif-message {
-        color: #7f8c8d;
+        color: #777;
         margin: 0 0 10px 0;
     }
 
     .notif-date {
         font-size: 12px;
-        color: #95a5a6;
+        color: #999;
     }
 
     .notif-actions {
@@ -75,8 +75,8 @@
 
     .btn-mark-read {
         padding: 5px 15px;
-        background: #3498db;
-        color: white;
+        background: #8CFAA4;
+        color: #000;
         border: none;
         border-radius: 5px;
         cursor: pointer;
@@ -84,7 +84,7 @@
     }
 
     .btn-mark-read:hover {
-        background: #2980b9;
+        background: #BBFA8C;
     }
 
     .alert {
@@ -108,48 +108,47 @@
 
 <div class="notificaciones-container">
     <div class="notif-header">
-        <h2>🔔 Notificaciones</h2>
-        @if (Model != null && Model.Any(n => !n.Leida))
+        <h2><i class="glyphicon glyphicon-bell" aria-hidden="true"></i> Notificaciones</h2>
+        @if (Model != null && Model.Any(n => !n.Leido))
         {
-            <span style="background: #e74c3c; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px;">
-                @Model.Count(n => !n.Leida) sin leer
+            <span style="background: #FA8C99; color: #000; padding: 5px 15px; border-radius: 20px; font-size: 14px;">
+                @Model.Count(n => !n.Leido) sin leer
             </span>
         }
     </div>
 
     @if (TempData["NotificacionesError"] != null)
     {
-        <div class="alert alert-danger">⚠️ @TempData["NotificacionesError"]</div>
+        <div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> @TempData["NotificacionesError"]</div>
     }
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">ℹ️ No tienes notificaciones.
-        </div>
+        <div class="alert alert-info"><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> No tienes notificaciones.</div>
     }
     else
     {
-        foreach (var notif in Model.OrderByDescending(n => n.FechaCreacion))
+        foreach (var notif in Model.OrderByDescending(n => n.Fecha))
         {
-            <div class="notif-item @(!notif.Leida ? "unread" : "")">
+            <div class="notif-item @(!notif.Leido ? "unread" : "")">
                 <div class="notif-icon">
-                    @if (!notif.Leida)
+                    @if (!notif.Leido)
                     {
-                        @:🔵
+                        <i class="glyphicon glyphicon-envelope" aria-hidden="true" style="color:#8CFAA4;"></i>
                     }
                     else
                     {
-                        @:⚪
+                        <i class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:#ccc;"></i>
                     }
                 </div>
                 <div class="notif-content">
                     <h4 class="notif-title">@notif.Titulo</h4>
                     <p class="notif-message">@notif.Mensaje</p>
                     <div class="notif-date">
-                        📅 @notif.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                        <i class="glyphicon glyphicon-time" aria-hidden="true"></i> @notif.Fecha.ToString("dd/MM/yyyy HH:mm")
                     </div>
                 </div>
-                @if (!notif.Leida)
+                @if (!notif.Leido)
                 {
                     <div class="notif-actions">
                         <button class="btn-mark-read" onclick="marcarLeida(@notif.Id)">
@@ -189,4 +188,3 @@
         }
     </script>
 }
-

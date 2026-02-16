@@ -5,166 +5,577 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Sistema de Gestión</title>
+    <title>@ViewBag.Title - Pura Compañía</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
         }
 
-        .master-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        .master-container { display: flex; min-height: 100vh; }
 
-        /* Sidebar */
+        /* ===== SIDEBAR ===== */
         .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
+            width: 260px;
+            background: linear-gradient(180deg, #3d6b4f 0%, #4a7c5c 40%, #528564 100%);
+            color: #fff;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            transition: all 0.3s;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
         }
 
-        .sidebar.collapsed {
-            width: 60px;
-        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .sidebar.collapsed { width: 68px; }
 
         .sidebar-header {
-            padding: 20px;
-            background-color: #1a252f;
+            padding: 24px 20px;
+            background: rgba(0,0,0,0.15);
             text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar.collapsed .sidebar-header h3,
-        .sidebar.collapsed .menu-item span {
-            display: none;
-        }
+        .sidebar.collapsed .menu-item span { display: none; }
 
         .sidebar-header h3 {
-            font-size: 18px;
+            font-size: 20px;
             margin: 0;
+            color: #BBFA8C;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 10px 0;
-        }
+        .sidebar-menu { list-style: none; padding: 12px 0; }
+        .sidebar-menu li { margin: 2px 8px; }
 
         .menu-item {
-            padding: 15px 20px;
+            padding: 12px 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
-            color: white;
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 10px;
         }
 
         .menu-item:hover {
-            background-color: #34495e;
+            background: rgba(187,250,140,0.2);
+            color: #BBFA8C;
+            text-decoration: none;
+            transform: translateX(4px);
         }
 
         .menu-item.active {
-            background-color: #3498db;
+            background: rgba(187,250,140,0.25);
+            color: #BBFA8C;
+            box-shadow: inset 3px 0 0 #BBFA8C;
         }
 
         .menu-item i {
-            font-size: 18px;
-            min-width: 20px;
+            font-size: 17px;
+            min-width: 22px;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            transition: color 0.25s;
         }
 
-        /* Main Content */
+        .menu-item:hover i { color: #BBFA8C; }
+
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
-            margin-left: 250px;
-            transition: margin-left 0.3s;
+            margin-left: 260px;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .main-content.expanded {
-            margin-left: 60px;
-        }
+        .main-content.expanded { margin-left: 68px; }
 
-        /* Navbar */
+        /* ===== NAVBAR ===== */
         .navbar-master {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 15px 30px;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 16px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #e8ecf0;
+            position: sticky;
+            top: 0;
+            z-index: 500;
         }
 
-        .navbar-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .navbar-left { display: flex; align-items: center; gap: 16px; }
 
         .toggle-sidebar {
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            color: #2c3e50;
+            color: #555;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .toggle-sidebar:hover { background: #f0f2f5; color: #333; }
+
+        .navbar-left h2 {
+            color: #333;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .navbar-right { display: flex; align-items: center; gap: 20px; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #3498db;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
+            color: #BBFA8C;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(74,124,92,0.3);
         }
 
+        .user-info strong { color: #333; font-size: 14px; }
+
         .logout-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 8px 15px;
+            background: #FA8C99;
+            color: #000;
+            padding: 9px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            transition: all 0.25s;
+            box-shadow: 0 2px 8px rgba(250,140,153,0.3);
         }
 
         .logout-btn:hover {
-            background-color: #c0392b;
+            background: #f07080;
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(250,140,153,0.4);
         }
 
-        /* Content Area */
+        /* ===== CONTENT AREA ===== */
         .content-area {
-            padding: 30px;
+            padding: 28px 32px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           GLOBAL UX DESIGN SYSTEM
+           ============================================================ */
+
+        /* --- BUTTONS --- */
+        .btn {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: 10px;
+            padding: 9px 20px;
+            border: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        .btn:hover { transform: translateY(-2px); text-decoration: none; }
+        .btn:active { transform: translateY(0); }
+        .btn-lg { padding: 12px 28px; font-size: 15px; border-radius: 12px; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
+
+        .btn-success {
+            background: linear-gradient(135deg, #8CFAA4, #BBFA8C);
+            color: #1a4a2a;
+            box-shadow: 0 3px 10px rgba(140,250,164,0.35);
+        }
+        .btn-success:hover { box-shadow: 0 6px 20px rgba(140,250,164,0.5); color: #1a4a2a; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(61,107,79,0.3);
+        }
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(61,107,79,0.4); color: #fff; background: linear-gradient(135deg, #528564, #4a7c5c); }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FA8C99, #f07080);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(250,140,153,0.3);
+        }
+        .btn-danger:hover { box-shadow: 0 6px 20px rgba(250,140,153,0.45); color: #fff; }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #FAA88C, #f5956d);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(250,168,140,0.3);
+        }
+        .btn-warning:hover { box-shadow: 0 6px 20px rgba(250,168,140,0.45); color: #fff; }
+
+        .btn-info {
+            background: linear-gradient(135deg, #93A597, #7d9182);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(147,165,151,0.3);
+        }
+        .btn-info:hover { box-shadow: 0 6px 20px rgba(147,165,151,0.45); color: #fff; }
+
+        .btn-default {
+            background: #fff;
+            color: #555;
+            border: 2px solid #dce0e4;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .btn-default:hover { background: #f8f9fa; border-color: #c0c4c8; color: #333; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+        .btn-block { width: 100%; justify-content: center; }
+        .btn-group .btn { border-radius: 0; }
+        .btn-group .btn:first-child { border-radius: 10px 0 0 10px; }
+        .btn-group .btn:last-child { border-radius: 0 10px 10px 0; }
+        .btn-group .btn:only-child { border-radius: 10px; }
+
+        /* --- TABLES --- */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
+            color: #BBFA8C;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .table tbody tr { transition: all 0.2s ease; }
+        .table tbody tr:hover { background: #f0faf4; }
+
+        .table tbody td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            border-top: 1px solid #eef1f3;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) { background-color: #fafcfb; }
+        .table-striped > tbody > tr:nth-of-type(odd):hover { background: #f0faf4; }
+
+        /* --- CARDS --- */
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-top: 20px;
+            border: 1px solid #eef1f3;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #eef1f3;
+            border-radius: 14px 14px 0 0;
+            background: linear-gradient(135deg, #f0faf4, #e8f5eb);
+        }
+
+        .card-header h3 { margin: 0; color: #333; font-size: 18px; font-weight: 700; }
+        .card-header.bg-danger { background: linear-gradient(135deg, #FA8C99, #f5a0aa); color: #000; }
+        .card-body { padding: 28px; }
+
+        /* --- PANELS --- */
+        .panel {
+            border-radius: 12px;
+            border: 1px solid #eef1f3;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .panel-heading { padding: 14px 20px; border-radius: 12px 12px 0 0; }
+        .panel-heading h4 { margin: 0; font-weight: 700; font-size: 15px; }
+
+        .panel-default > .panel-heading {
+            background: linear-gradient(135deg, #f8faf9, #f0f4f1);
+            border-color: #e0e6e2;
+            color: #333;
+        }
+
+        .panel-danger > .panel-heading {
+            background: linear-gradient(135deg, #FA8C99, #f5a0aa);
+            border-color: #FA8C99;
+            color: #000;
+        }
+
+        .panel-body { padding: 20px; }
+
+        /* --- FORMS --- */
+        .form-control {
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.25s;
+            background: #fff;
+            color: #333;
+        }
+
+        .form-control:focus {
+            border-color: #8CFAA4;
+            box-shadow: 0 0 0 3px rgba(140,250,164,0.15);
+            outline: none;
+        }
+
+        .form-control::placeholder { color: #aab0b7; }
+
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23777' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        .control-label { font-weight: 700; color: #444; font-size: 14px; }
+        .checkbox label { font-weight: 600; color: #555; }
+        .form-group { margin-bottom: 18px; }
+        .form-inline .form-group { margin-right: 14px; margin-bottom: 10px; }
+        .form-inline label { font-weight: 700; margin-right: 6px; color: #555; font-size: 13px; }
+
+        /* --- FORM-HORIZONTAL LAYOUT FIX --- */
+        .form-horizontal .form-group {
+            margin-left: -15px;
+            margin-right: -15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .form-horizontal .form-group::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .form-horizontal .control-label {
+            padding-top: 9px;
+            text-align: right;
+        }
+
+        @@media (max-width: 991px) {
+            .form-horizontal .control-label {
+                text-align: left;
+                padding-top: 0;
+                margin-bottom: 5px;
+            }
+            .form-horizontal .form-group {
+                flex-direction: column;
+            }
+        }
+
+        /* --- LABELS / BADGES --- */
+        .label {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        .label-success { background: linear-gradient(135deg, #8CFAA4, #BBFA8C); color: #1a4a2a; }
+        .label-warning { background: linear-gradient(135deg, #FAA88C, #ffc5a8); color: #5a3520; }
+        .label-danger  { background: linear-gradient(135deg, #FA8C99, #fca5b0); color: #5a1a25; }
+        .label-info    { background: linear-gradient(135deg, #93A597, #adbfb2); color: #fff; }
+        .label-default { background: #e4e8ec; color: #666; }
+
+        .badge {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
+            color: #BBFA8C;
+        }
+
+        /* --- ALERTS --- */
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .alert-success { background: linear-gradient(135deg, #e8fce0, #d4f5cc); color: #1a5a28; border-left: 4px solid #8CFAA4; }
+        .alert-danger  { background: linear-gradient(135deg, #fde8eb, #fcd5db); color: #6a1a25; border-left: 4px solid #FA8C99; }
+        .alert-warning { background: linear-gradient(135deg, #fff0e5, #fde6d5); color: #6a4020; border-left: 4px solid #FAA88C; }
+        .alert-info    { background: linear-gradient(135deg, #e8f0ea, #dde8e0); color: #2a4a30; border-left: 4px solid #93A597; }
+
+        .alert-dismissible .close { top: 4px; right: 8px; opacity: 0.6; }
+        .alert-dismissible .close:hover { opacity: 1; }
+
+        /* --- NAV TABS --- */
+        .nav-tabs { border-bottom: 2px solid #e0e4e8; margin-bottom: 0; }
+
+        .nav-tabs > li > a {
+            color: #777;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 12px 12px 0 0;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            border-bottom: none;
+            transition: all 0.25s;
+            margin-right: 2px;
+        }
+
+        .nav-tabs > li > a:hover {
+            background: #f0faf4;
+            color: #4a7c5c;
+            border-color: #e0e4e8;
+            border-bottom: none;
+        }
+
+        .nav-tabs > li.active > a,
+        .nav-tabs > li.active > a:hover,
+        .nav-tabs > li.active > a:focus {
+            background: #fff;
+            color: #3d6b4f;
+            border-color: #e0e4e8;
+            border-bottom-color: #fff;
+            border-top: 3px solid #8CFAA4;
+            font-weight: 800;
+        }
+
+        .nav-tabs .badge { font-size: 11px; padding: 3px 8px; margin-left: 4px; }
+
+        /* --- DL HORIZONTAL --- */
+        .dl-horizontal dt {
+            width: 180px;
+            font-weight: 700;
+            color: #555;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .dl-horizontal dd {
+            margin-left: 200px;
+            font-size: 15px;
+            color: #333;
+            padding: 4px 0;
+        }
+
+        /* --- HEADINGS --- */
+        .content-area h2 { color: #333; font-weight: 800; font-size: 24px; }
+
+        .content-area h2 .glyphicon,
+        .content-area h2 .fas,
+        .content-area h2 .fa { color: #4a7c5c; margin-right: 8px; }
+
+        /* --- LIST GROUP --- */
+        .list-group-item {
+            border-radius: 10px;
+            border: 1px solid #e0e4e8;
+            margin-bottom: 4px;
+            padding: 12px 16px;
+            transition: all 0.2s;
+        }
+        .list-group-item:hover { background: #f0faf4; }
+
+        .list-group-item.active,
+        .list-group-item.active:hover {
+            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
+            border-color: #4a7c5c;
+            color: #BBFA8C;
+        }
+
+        /* --- IMG THUMBNAIL --- */
+        .img-thumbnail { border-radius: 12px; border: 2px solid #e0e4e8; padding: 4px; }
+
+        /* --- PAGINATION --- */
+        .pagination > li > a {
+            color: #4a7c5c;
+            border-radius: 8px;
+            margin: 0 2px;
+            font-weight: 600;
+            border-color: #e0e4e8;
+        }
+        .pagination > li > a:hover { background: #f0faf4; border-color: #8CFAA4; color: #3d6b4f; }
+        .pagination > .active > a,
+        .pagination > .active > a:hover { background: linear-gradient(135deg, #4a7c5c, #3d6b4f); border-color: #4a7c5c; color: #BBFA8C; }
+
+        /* --- UTILITIES --- */
+        .text-danger  { color: #e74c5a; }
+        .text-success { color: #1a5a28; }
+        .text-warning { color: #b36b2d; }
+        .text-info    { color: #4a7c5c; }
+        .text-muted   { color: #999; }
+        .mb-4 { margin-bottom: 24px; }
+        .mt-4 { margin-top: 24px; }
+        .mt-3 { margin-top: 16px; }
+        hr { border-color: #eef1f3; }
+
+        /* --- RESPONSIVE --- */
+        @@media (max-width: 768px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .sidebar.show-mobile { width: 260px; }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 16px; }
+            .navbar-left h2 { font-size: 16px; }
         }
     </style>
 </head>
@@ -173,15 +584,23 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3>Sistema</h3>
+                <h3>Pura Compañía</h3>
             </div>
             <ul class="sidebar-menu">
                 @{
                     var rol = Session["Rol"]?.ToString();
                     var permisos = ViewBag.Permisos as List<Permisos>;
-                    
-                    // Agregar enlaces hardcodeados para ciudadanos (área raíz)
-                    if (rol == "Ciudadano")
+
+                    if (rol == "Administrador")
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="menu-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    }
+                    else
                     {
                         <li>
                             <a href="@Url.Action("Index", "Ciudadano")" class="menu-item">
@@ -190,16 +609,20 @@
                             </a>
                         </li>
                     }
-                    
-                    // Cargar permisos dinámicos de la BD
+
                     if (permisos != null && permisos.Count > 0)
                     {
                         foreach (var permiso in permisos)
                         {
-                            // Determinar el tipo de icono
+                            // Omitir Dashboard del loop ya que se agrega manualmente arriba
+                            if (permiso.ControllerName == "Admin" && permiso.ActionName == "Index")
+                            {
+                                continue;
+                            }
+
                             var esFontAwesome = permiso.Icono != null && permiso.Icono.StartsWith("fa-");
                             var esGlyphicon = permiso.Icono != null && permiso.Icono.StartsWith("glyphicon-");
-                            
+
                             <li>
                                 @if (!string.IsNullOrEmpty(permiso.Area))
                                 {
@@ -240,8 +663,7 @@
                             </li>
                         }
                     }
-                    
-                    // Agregar enlaces adicionales hardcodeados para ciudadanos
+
                     if (rol == "Ciudadano")
                     {
                         <li>
@@ -263,106 +685,6 @@
                             </a>
                         </li>
                     }
-                    else
-                    {
-                        // Menú por defecto según rol
-                        if (rol == "Administrador")
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-chart-line"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Permisos", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-lock"></i>
-                                    <span>Permisos</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Mascotas", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-paw"></i>
-                                    <span>Mascotas</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Solicitudes", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-file-alt"></i>
-                                    <span>Solicitudes</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Seguimientos", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-clipboard-list"></i>
-                                    <span>Seguimientos</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "MascotasPerdidas", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-search"></i>
-                                    <span>Mascotas Perdidas</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Categorias", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-folder"></i>
-                                    <span>Categorías</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Refugios", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-home"></i>
-                                    <span>Refugios</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="menu-item">
-                                    <i class="fas fa-chart-bar"></i>
-                                    <span>Reportes</span>
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li>
-                                <a href="@Url.Action("Index", "Ciudadano")" class="menu-item">
-                                    <i class="fas fa-home"></i>
-                                    <span>Inicio</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "Mascotas")" class="menu-item">
-                                    <i class="fas fa-paw"></i>
-                                    <span>Mascotas</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("MisAdopciones", "Ciudadano")" class="menu-item">
-                                    <i class="fas fa-heart"></i>
-                                    <span>Mis Adopciones</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Index", "MascotasPerdidas")" class="menu-item">
-                                    <i class="fas fa-search"></i>
-                                    <span>Mascotas Perdidas</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Perfil", "Ciudadano")" class="menu-item">
-                                    <i class="fas fa-user"></i>
-                                    <span>Perfil</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("Notificaciones", "Ciudadano")" class="menu-item">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Notificaciones</span>
-                                </a>
-                            </li>
-                        }
-                    }
                 }
             </ul>
         </aside>
@@ -372,7 +694,7 @@
             <!-- Navbar -->
             <nav class="navbar-master">
                 <div class="navbar-left">
-                    <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+                    <button class="toggle-sidebar" onclick="toggleSidebar()">&#9776;</button>
                     <h2>@ViewBag.Title</h2>
                 </div>
                 <div class="navbar-right">
@@ -385,10 +707,12 @@
                         </div>
                         <div>
                             <div><strong>@Session["Nombre"]</strong></div>
-                            <div style="font-size: 12px; color: #7f8c8d;">@Session["Rol"]</div>
+                            <div style="font-size: 12px; color: #999;">@Session["Rol"]</div>
                         </div>
                     </div>
-                    <a href="@Url.Action("Logout", "Account", new { area = "" })" class="logout-btn">Cerrar Sesión</a>
+                    <a href="@Url.Action("Logout", "Account", new { area = "" })" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
                 </div>
             </nav>
 
@@ -405,12 +729,25 @@
 
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            
+            var sidebar = document.getElementById('sidebar');
+            var mainContent = document.getElementById('mainContent');
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('expanded');
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('show-mobile');
+            }
         }
+
+        (function () {
+            var path = window.location.pathname.toLowerCase();
+            var items = document.querySelectorAll('.menu-item');
+            items.forEach(function (item) {
+                var href = (item.getAttribute('href') || '').toLowerCase();
+                if (href && href !== '/' && path.indexOf(href) === 0) {
+                    item.classList.add('active');
+                }
+            });
+        })();
     </script>
 </body>
 </html>

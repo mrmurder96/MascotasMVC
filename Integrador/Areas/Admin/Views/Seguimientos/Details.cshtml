@@ -1,153 +1,150 @@
-@model Integrador.Models.Seguimiento
+@model Integrador.Models.Adopciones
 @{
-    ViewBag.Title = "Detalles del Seguimiento";
+    ViewBag.Title = "Seguimientos de Adopci贸n";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
-<div class="container">
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="glyphicon glyphicon-list-alt"></i> Seguimientos Post-Adopci贸n</h2>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="@Url.Action("Create", new { adopcionId = Model.Id })" class="btn btn-success">
+                <i class="glyphicon glyphicon-plus"></i> Nuevo Seguimiento
+            </a>
+        </div>
+    </div>
+
+    @Html.Partial("_AlertMessages")
+
+    <!-- Informaci贸n de la Adopci贸n -->
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-list-alt"></i> Detalles del Seguimiento Post-Adopci髇</h3>
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>Informaci贸n de la Adopci贸n #@Model.Id</h4>
                 </div>
-                <div class="card-body">
-                    @Html.Partial("_AlertMessages")
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4>Informaci髇 del Seguimiento</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <dl class="dl-horizontal">
-                                        <dt>ID</dt>
-                                        <dd><strong>#@Model.Id</strong></dd>
-
-                                        <dt>Fecha</dt>
-                                        <dd>@Model.FechaSeguimiento.ToString("dd/MM/yyyy")</dd>
-
-                                        <dt>Estado de Mascota</dt>
-                                        <dd>
-                                            @if (Model.EstadoMascota == "Excelente" || Model.EstadoMascota == "Bueno")
-                                            {
-                                                <span class="label label-success">@Model.EstadoMascota</span>
-                                            }
-                                            else if (Model.EstadoMascota == "Regular")
-                                            {
-                                                <span class="label label-warning">@Model.EstadoMascota</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="label label-danger">@Model.EstadoMascota</span>
-                                            }
-                                        </dd>
-
-                                        <dt>Pr髕imo Seguimiento</dt>
-                                        <dd>
-                                            @if (Model.ProximoSeguimiento.HasValue)
-                                            {
-                                                @Model.ProximoSeguimiento.Value.ToString("dd/MM/yyyy")
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">No programado</span>
-                                            }
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4>Observaciones</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="well">
-                                        @(Model.Observaciones ?? "Sin observaciones registradas")
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            @if (Model.Adopcion != null)
-                            {
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>Informaci髇 de la Adopci髇</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <dl class="dl-horizontal">
-                                            <dt>Adopci髇</dt>
-                                            <dd><strong>#@Model.AdopcionId</strong></dd>
-
-                                            <dt>Fecha Solicitud</dt>
-                                            <dd>@Model.Adopcion.FechaSolicitud.ToString("dd/MM/yyyy")</dd>
-
-                                            @if (Model.Adopcion.Usuario != null)
-                                            {
-                                                <dt>Adoptante</dt>
-                                                <dd>
-                                                    <strong>@Model.Adopcion.Usuario.Nombre</strong><br />
-                                                    @Model.Adopcion.Usuario.Email<br />
-                                                    @Model.Adopcion.Usuario.Telefono
-                                                </dd>
-                                            }
-
-                                            @if (Model.Adopcion.Mascota != null)
-                                            {
-                                                <dt>Mascota</dt>
-                                                <dd>
-                                                    <strong>@Model.Adopcion.Mascota.Nombre</strong><br />
-                                                    @Model.Adopcion.Mascota.Tipo - @Model.Adopcion.Mascota.Raza<br />
-                                                    @Model.Adopcion.Mascota.Edad a駉s
-                                                </dd>
-                                            }
-                                        </dl>
-
-                                        @if (!string.IsNullOrEmpty(Model.Adopcion.Mascota?.Imagen))
-                                        {
-                                            <div class="text-center mt-3">
-                                                <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Adopcion.Mascota.Imagen)" 
-                                                     alt="@Model.Adopcion.Mascota.Nombre" 
-                                                     class="img-thumbnail" 
-                                                     style="max-width: 200px;" />
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <hr />
-
-                    <div class="text-center">
-                        <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning btn-lg">
-                            <i class="glyphicon glyphicon-edit"></i> Editar
-                        </a>
-                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger btn-lg"
-                           onclick="return confirm('縀liminar seguimiento?')">
-                            <i class="glyphicon glyphicon-trash"></i> Eliminar
-                        </a>
-                        <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
-                            <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
-                        </a>
-                    </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>Solicitante</dt>
+                        <dd><strong>@Model.NombreSolicitante</strong></dd>
+                        <dt>Email</dt>
+                        <dd>@Model.Email</dd>
+                        <dt>Tel茅fono</dt>
+                        <dd>@Model.Telefono</dd>
+                        <dt>Fecha Solicitud</dt>
+                        <dd>@Model.FechaSolicitud.ToString("dd/MM/yyyy")</dd>
+                        <dt>Estado</dt>
+                        <dd><span class="label label-success">@Model.Estado</span></dd>
+                    </dl>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
+            @if (Model.Mascotas != null)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Mascota: @Model.Mascotas.Nombre</h4>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Tipo</dt>
+                            <dd>@Model.Mascotas.Tipo</dd>
+                            <dt>Edad</dt>
+                            <dd>@(Model.Mascotas.Edad.HasValue ? Model.Mascotas.Edad + " a帽os" : "No especificada")</dd>
+                            <dt>Ubicaci贸n</dt>
+                            <dd>@Model.Mascotas.Ubicacion</dd>
+                        </dl>
+                        @if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
+                        {
+                            <div class="text-center">
+                                <img src="@Url.Content(Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" class="img-thumbnail" style="max-width: 150px;" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Lista de Seguimientos -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Historial de Seguimientos</h4>
+        </div>
+        <div class="panel-body">
+            @{
+                var seguimientos = ViewBag.Seguimientos as List<Integrador.Models.Seguimientos>;
+            }
+            @if (seguimientos != null && seguimientos.Any())
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Estado Mascota</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var seg in seguimientos)
+                        {
+                            var estadoClass = "default";
+                            switch (seg.EstadoMascota)
+                            {
+                                case "Excelente": estadoClass = "success"; break;
+                                case "Bueno": estadoClass = "info"; break;
+                                case "Regular": estadoClass = "warning"; break;
+                                default: estadoClass = "danger"; break;
+                            }
+                            <tr>
+                                <td>@seg.Id</td>
+                                <td>@seg.FechaSeguimiento.ToString("dd/MM/yyyy")</td>
+                                <td>@seg.TipoSeguimiento</td>
+                                <td><span class="label label-@estadoClass">@seg.EstadoMascota</span></td>
+                                <td>@(seg.Observaciones != null && seg.Observaciones.Length > 80 ? seg.Observaciones.Substring(0, 77) + "..." : seg.Observaciones)</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Edit", new { id = seg.Id })" class="btn btn-warning btn-xs" title="Editar">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = seg.Id })" class="btn btn-danger btn-xs" title="Eliminar"
+                                           onclick="return confirm('驴Eliminar seguimiento?')">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <h4>No hay seguimientos registrados para esta adopci贸n</h4>
+                    <p>Haga clic en "Nuevo Seguimiento" para registrar el primero.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="@Url.Action("Index")" class="btn btn-default">
+                <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
+            </a>
         </div>
     </div>
 </div>
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #333; }
-    .card-body { padding: 30px; }
-    .dl-horizontal dt { width: 150px; font-weight: 600; }
-    .dl-horizontal dd { margin-left: 170px; }
-    .mt-3 { margin-top: 15px; }
+    .mb-4 { margin-bottom: 20px; }
+    .table th { background-color: #BBFA8C; color: #000; font-weight: 600; }
+    .panel-info > .panel-heading { background-color: #8CFAA4; color: #000; border-color: #93A597; }
 </style>

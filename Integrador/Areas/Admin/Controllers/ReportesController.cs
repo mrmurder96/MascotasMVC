@@ -230,6 +230,69 @@ namespace Integrador.Areas.Admin.Controllers
             return View(listaUsuarios);
         }
 
+        // GET: Admin/Reportes/PostSeguimiento
+        [ValidarPermisoCrud(ControllerName = "Reportes", Operacion = "Leer")]
+        public ActionResult PostSeguimiento(DateTime? fechaDesde, DateTime? fechaHasta, string estadoMascota, string formato)
+        {
+            if (!fechaDesde.HasValue)
+                fechaDesde = DateTime.Now.AddMonths(-6);
+
+            if (!fechaHasta.HasValue)
+                fechaHasta = DateTime.Now;
+
+            var seguimientos = db.Seguimientos
+                .Include("Adopciones")
+                .Include("Adopciones.Mascotas")
+                .Where(s => s.FechaSeguimiento >= fechaDesde && s.FechaSeguimiento <= fechaHasta)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(estadoMascota) && estadoMascota != "Todos")
+            {
+                seguimientos = seguimientos.Where(s => s.EstadoMascota == estadoMascota);
+            }
+
+            var listaSeguimientos = seguimientos.OrderByDescending(s => s.FechaSeguimiento).ToList();
+
+            // Estadisticas
+            ViewBag.TotalSeguimientos = listaSeguimientos.Count;
+            ViewBag.SeguimientosExcelente = listaSeguimientos.Count(s => s.EstadoMascota == "Excelente");
+            ViewBag.SeguimientosBueno = listaSeguimientos.Count(s => s.EstadoMascota == "Bueno");
+            ViewBag.SeguimientosRegular = listaSeguimientos.Count(s => s.EstadoMascota == "Regular");
+            ViewBag.SeguimientosCritico = listaSeguimientos.Count(s => s.EstadoMascota == "Requiere Atencion" || s.EstadoMascota == "Critico");
+
+            // Estadisticas por tipo de seguimiento
+            ViewBag.PorTipo = listaSeguimientos
+                .GroupBy(s => s.TipoSeguimiento ?? "Sin tipo")
+                .Select(g => new { Tipo = g.Key, Cantidad = g.Count() })
+                .OrderByDescending(x => x.Cantidad)
+                .ToList();
+
+            // Adopciones sin seguimiento reciente (ultimos 30 dias)
+            var adopcionesAprobadas = db.Adopciones
+                .Where(a => a.Estado == "Aprobada" || a.Estado == "Completada")
+                .ToList();
+
+            var fechaLimite = DateTime.Now.AddDays(-30);
+            var adopcionesSinSeguimiento = adopcionesAprobadas
+                .Where(a => !db.Seguimientos.Any(s => s.AdopcionId == a.Id && s.FechaSeguimiento >= fechaLimite))
+                .Count();
+
+            ViewBag.AdopcionesSinSeguimiento = adopcionesSinSeguimiento;
+            ViewBag.TotalAdopcionesActivas = adopcionesAprobadas.Count;
+
+            ViewBag.FechaDesde = fechaDesde;
+            ViewBag.FechaHasta = fechaHasta;
+            ViewBag.EstadoMascotaSeleccionado = estadoMascota;
+            ViewBag.EstadosMascota = new SelectList(new[] { "Todos", "Excelente", "Bueno", "Regular", "Requiere Atencion", "Critico" });
+
+            if (!string.IsNullOrEmpty(formato) && formato == "csv")
+            {
+                return ExportarSeguimientos(listaSeguimientos, fechaDesde.Value, fechaHasta.Value);
+            }
+
+            return View(listaSeguimientos);
+        }
+
         // GET: Admin/Reportes/Auditoria (RF-28)
         [ValidarPermisoCrud(ControllerName = "Reportes", Operacion = "Leer")]
         public ActionResult Auditoria(DateTime? fechaDesde, DateTime? fechaHasta, string formato)
@@ -342,6 +405,21 @@ namespace Integrador.Areas.Admin.Controllers
             }
 
             return RedirectToAction("Usuarios");
+        }
+
+        private ActionResult ExportarSeguimientos(List<Seguimientos> seguimientos, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var csv = new System.Text.StringBuilder();
+            csv.AppendLine("ID,Adopcion ID,Mascota,Tipo Seguimiento,Fecha,Estado Mascota,Observaciones");
+
+            foreach (var s in seguimientos)
+            {
+                var nombreMascota = s.Adopciones?.Mascotas?.Nombre ?? "N/A";
+                csv.AppendLine($"{s.Id},{s.AdopcionId},{nombreMascota},{s.TipoSeguimiento},{s.FechaSeguimiento:yyyy-MM-dd},{s.EstadoMascota},{s.Observaciones?.Replace(",", " ")}");
+            }
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+            return File(bytes, "text/csv", $"PostSeguimiento_{fechaDesde:yyyyMMdd}_{fechaHasta:yyyyMMdd}.csv");
         }
 
         protected override void Dispose(bool disposing)

@@ -1,16 +1,16 @@
 @{
-    ViewBag.Title = "Reportes y Estad�sticas";
+    ViewBag.Title = "Reportes y Estadísticas";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h2><i class="glyphicon glyphicon-stats"></i> Reportes y Estad�sticas del Sistema</h2>
+            <h2><i class="glyphicon glyphicon-stats"></i> Reportes y Estadísticas del Sistema</h2>
         </div>
     </div>
 
-    <!-- Tarjetas de Estad�sticas -->
+    <!-- Tarjetas de Estadísticas -->
     <div class="row">
         <div class="col-md-3">
             <div class="stat-card stat-mascotas">
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <!-- Accesos R�pidos a Reportes -->
+    <!-- Accesos Rápidos a Reportes -->
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Reporte de Adopciones</h4>
+                                <h4><i class="glyphicon glyphicon-list-alt"></i> Reporte de Adopciones</h4>
                                 <p>Listado completo de adopciones realizadas con filtros por fecha y estado</p>
                                 <a href="@Url.Action("Adopciones")" class="btn btn-primary">Ver Reporte</a>
                                 <a href="@Url.Action("ExportarAdopciones")" class="btn btn-success">
@@ -71,8 +71,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Reporte de Mascotas</h4>
-                                <p>Estad�sticas de mascotas disponibles, adoptadas y en proceso</p>
+                                <h4><i class="glyphicon glyphicon-heart"></i> Reporte de Mascotas</h4>
+                                <p>Estadísticas de mascotas disponibles, adoptadas y en proceso</p>
                                 <a href="@Url.Action("Mascotas")" class="btn btn-primary">Ver Reporte</a>
                                 <a href="@Url.Action("ExportarMascotas")" class="btn btn-success">
                                     <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
@@ -83,8 +83,8 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Reporte de Solicitudes</h4>
-                                <p>An�lisis de solicitudes por estado (pendientes, aprobadas, rechazadas)</p>
+                                <h4><i class="glyphicon glyphicon-file"></i> Reporte de Solicitudes</h4>
+                                <p>Análisis de solicitudes por estado (pendientes, aprobadas, rechazadas)</p>
                                 <a href="@Url.Action("Solicitudes")" class="btn btn-primary">Ver Reporte</a>
                                 <a href="@Url.Action("ExportarSolicitudes")" class="btn btn-success">
                                     <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
@@ -93,8 +93,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Reporte de Usuarios</h4>
-                                <p>Listado de usuarios registrados y estad�sticas de adopci�n por usuario</p>
+                                <h4><i class="glyphicon glyphicon-user"></i> Reporte de Usuarios</h4>
+                                <p>Listado de usuarios registrados y estadísticas de adopción por usuario</p>
                                 <a href="@Url.Action("Usuarios")" class="btn btn-primary">Ver Reporte</a>
                                 <a href="@Url.Action("ExportarUsuarios")" class="btn btn-success">
                                     <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
@@ -105,16 +105,28 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Auditor�a de Seguridad</h4>
-                                <p>Registro de intentos fallidos de login y usuarios bloqueados</p>
-                                <a href="@Url.Action("Auditoria")" class="btn btn-primary">Ver Reporte</a>
+                                <h4><i class="glyphicon glyphicon-eye-open"></i> Post-Seguimiento de Mascotas</h4>
+                                <p>Control y seguimiento post-adopción de mascotas adoptadas</p>
+                                <a href="@Url.Action("PostSeguimiento")" class="btn btn-primary">Ver Reporte</a>
+                                <a href="@Url.Action("PostSeguimiento", new { formato = "csv" })" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="reporte-item">
-                                <h4><i>??</i> Estad�sticas Generales</h4>
-                                <p>Dashboard con gr�ficos y m�tricas clave del sistema</p>
-                                <a href="@Url.Action("Estadisticas")" class="btn btn-primary">Ver Estad�sticas</a>
+                                <h4><i class="glyphicon glyphicon-lock"></i> Auditoría de Seguridad</h4>
+                                <p>Registro de intentos fallidos de login y usuarios bloqueados</p>
+                                <a href="@Url.Action("Auditoria")" class="btn btn-primary">Ver Reporte</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="reporte-item">
+                                <h4><i class="glyphicon glyphicon-dashboard"></i> Estadísticas Generales</h4>
+                                <p>Dashboard con gráficos y métricas clave del sistema</p>
+                                <a href="@Url.Action("Estadisticas")" class="btn btn-primary">Ver Estadísticas</a>
                             </div>
                         </div>
                     </div>
@@ -144,23 +156,23 @@
         justify-content: center;
         border-radius: 50%;
     }
-    .stat-mascotas { border-left: 4px solid #3498db; }
-    .stat-mascotas .stat-icon { background: #ebf5fb; color: #3498db; }
-    .stat-adopciones { border-left: 4px solid #27ae60; }
-    .stat-adopciones .stat-icon { background: #e8f8f5; color: #27ae60; }
-    .stat-pendientes { border-left: 4px solid #f39c12; }
-    .stat-pendientes .stat-icon { background: #fef5e7; color: #f39c12; }
-    .stat-usuarios { border-left: 4px solid #9b59b6; }
-    .stat-usuarios .stat-icon { background: #f4ecf7; color: #9b59b6; }
+    .stat-mascotas { border-left: 4px solid #8CFAA4; }
+    .stat-mascotas .stat-icon { background: #e8fbe8; color: #8CFAA4; }
+    .stat-adopciones { border-left: 4px solid #BBFA8C; }
+    .stat-adopciones .stat-icon { background: #f0fde8; color: #6ab04c; }
+    .stat-pendientes { border-left: 4px solid #FAA88C; }
+    .stat-pendientes .stat-icon { background: #fef0eb; color: #FAA88C; }
+    .stat-usuarios { border-left: 4px solid #93A597; }
+    .stat-usuarios .stat-icon { background: #eef2ef; color: #93A597; }
     .stat-info h3 {
         margin: 0;
         font-size: 32px;
         font-weight: bold;
-        color: #2c3e50;
+        color: #333;
     }
     .stat-info p {
         margin: 0;
-        color: #7f8c8d;
+        color: #777;
         font-size: 14px;
     }
     .card {
@@ -169,14 +181,14 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .card-header {
-        background-color: #f8f9fa;
+        background-color: #BBFA8C;
         padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid #93A597;
         border-radius: 8px 8px 0 0;
     }
     .card-header h3 {
         margin: 0;
-        color: #333;
+        color: #000;
     }
     .card-body {
         padding: 30px;
@@ -185,14 +197,17 @@
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
-        border-left: 4px solid #3498db;
+        border-left: 4px solid #8CFAA4;
     }
     .reporte-item h4 {
         margin-top: 0;
-        color: #2c3e50;
+        color: #333;
     }
     .reporte-item p {
-        color: #7f8c8d;
+        color: #777;
         margin-bottom: 15px;
     }
+    .mt-3 { margin-top: 15px; }
+    .mt-4 { margin-top: 20px; }
+    .mb-4 { margin-bottom: 20px; }
 </style>

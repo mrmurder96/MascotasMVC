@@ -11,12 +11,12 @@
             <div class="list-group">
                 <a href="@Url.Action("Index", "Ciudadano")" class="list-group-item list-group-item-action">Dashboard</a>
                 <a href="@Url.Action("Perfil", "Ciudadano")" class="list-group-item list-group-item-action">Mi Perfil</a>
-                <a href="@Url.Action("Notificaciones", "Ciudadano")" class="list-group-item list-group-item-action active">Notificaciones</a>
+                <a href="@Url.Action("Notificaciones", "Ciudadano")" class="list-group-item list-group-item-action active" style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Notificaciones</a>
             </div>
         </div>
 
         <div class="col-md-9">
-            <h3>Notificaciones</h3>
+            <h3><i class="glyphicon glyphicon-bell" aria-hidden="true"></i> Notificaciones</h3>
 
             @if (TempData["NotificacionesError"] != null)
             {
@@ -45,14 +45,14 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "")>Marcar como leóda</button>
+                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "") style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Marcar como leída</button>
                                 }
 
                                 @using (Html.BeginForm("EliminarNotificacion", "Ciudadano", FormMethod.Post, new { @style = "display:inline; margin-left:8px;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('óEliminar notificación?');">Eliminar</button>
+                                    <button class="btn btn-sm btn-danger" type="submit" style="background-color:#FA8C99; border-color:#FA8C99; color:#000;" onclick="return confirm('¿Eliminar notificación?');">Eliminar</button>
                                 }
                             </div>
                         </div>

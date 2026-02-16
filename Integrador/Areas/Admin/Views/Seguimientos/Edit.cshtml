@@ -1,4 +1,4 @@
-@model Integrador.Models.Seguimiento
+@model Integrador.Models.Seguimientos
 @{
     ViewBag.Title = "Editar Seguimiento";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -22,10 +22,10 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         <div class="alert alert-info">
-                            <strong>Adopción:</strong> 
-                            @if (Model.Adopcion != null)
+                            <strong>AdopciÃ³n:</strong> 
+                            @if (Model.Adopciones != null)
                             {
-                                <text>@Model.Adopcion.Usuario?.Nombre adoptó a @Model.Adopcion.Mascota?.Nombre</text>
+                                <text>@Model.Adopciones.NombreSolicitante adoptÃ³ a @(Model.Adopciones.Mascotas != null ? Model.Adopciones.Mascotas.Nombre : "")</text>
                             }
                         </div>
 
@@ -54,9 +54,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Próximo Seguimiento</label>
+                            <label class="col-md-3 control-label">PrÃ³ximo Seguimiento</label>
                             <div class="col-md-4">
-                                @Html.TextBoxFor(m => m.ProximoSeguimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                                <input type="date" name="ProximoSeguimiento" class="form-control" />
                             </div>
                         </div>
 
@@ -83,7 +83,7 @@
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #333; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h3 { margin: 0; color: #000; }
     .card-body { padding: 30px; }
 </style>

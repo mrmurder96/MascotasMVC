@@ -6,7 +6,7 @@
 <div class="container-fluid">
 <div class="row mb-4">
     <div class="col-md-12">
-        <h2><i class="glyphicon glyphicon-stats"></i> Reporte de Adopciones</h2>
+        <h2><i class="glyphicon glyphicon-stats" style="color:#93A597"></i> Reporte de Adopciones</h2>
     </div>
 </div>
 
@@ -46,28 +46,28 @@
         </div>
     </div>
 
-    <!-- Estadísticas -->
+    <!-- EstadÃ­sticas -->
     <div class="row">
         <div class="col-md-3">
-            <div class="stat-box bg-info">
+            <div class="stat-box stat-info">
                 <h3>@ViewBag.TotalAdopciones</h3>
                 <p>Total Adopciones</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-warning">
+            <div class="stat-box stat-warning">
                 <h3>@ViewBag.Pendientes</h3>
                 <p>Pendientes</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-success">
+            <div class="stat-box stat-success">
                 <h3>@ViewBag.Aprobadas</h3>
                 <p>Aprobadas</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-primary">
+            <div class="stat-box stat-primary">
                 <h3>@ViewBag.Finalizadas</h3>
                 <p>Finalizadas</p>
             </div>
@@ -135,13 +135,14 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .card-body { padding: 20px; }
-    .stat-box { background: #3498db; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+    table thead th { background-color: #BBFA8C; color: #000; }
+    .stat-box { color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
     .stat-box h3 { font-size: 36px; margin: 0; }
     .stat-box p { margin: 5px 0 0 0; font-size: 14px; }
-    .stat-box.bg-info { background: #5bc0de; }
-    .stat-box.bg-warning { background: #f0ad4e; }
-    .stat-box.bg-success { background: #5cb85c; }
-    .stat-box.bg-primary { background: #337ab7; }
+    .stat-info { background: #8CFAA4; color: #000; }
+    .stat-warning { background: #FAA88C; color: #000; }
+    .stat-success { background: #BBFA8C; color: #000; }
+    .stat-primary { background: #93A597; color: #000; }
     .mb-3 { margin-bottom: 15px; }
     .mb-4 { margin-bottom: 20px; }
     .mt-4 { margin-top: 20px; }

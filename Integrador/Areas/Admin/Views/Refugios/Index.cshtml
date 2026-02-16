@@ -1,6 +1,6 @@
-@model IEnumerable<Integrador.Models.Refugio>
+@model IEnumerable<Integrador.Models.Refugios>
 @{
-    ViewBag.Title = "Gestión de Refugios";
+    ViewBag.Title = "GestiÃ³n de Refugios";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
@@ -16,19 +16,19 @@
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
+    @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["SuccessMessage"]
+            <i class="glyphicon glyphicon-ok-sign"></i> @TempData["Success"]
         </div>
     }
 
-    @if (TempData["ErrorMessage"] != null)
+    @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["ErrorMessage"]
+            <i class="glyphicon glyphicon-exclamation-sign"></i> @TempData["Error"]
         </div>
     }
 
@@ -43,7 +43,7 @@
                             <div class="refugio-card">
                                 <div class="refugio-header">
                                     <h4>@refugio.Nombre</h4>
-                                    @if (refugio.EsActivo)
+                                    @if (refugio.EstaActivo)
                                     {
                                         <span class="label label-success">Activo</span>
                                     }
@@ -53,17 +53,16 @@
                                     }
                                 </div>
                                 <div class="refugio-body">
-                                    <p><strong>Responsable:</strong> @refugio.Responsable</p>
-                                    <p><strong>Teléfono:</strong> @refugio.Telefono</p>
+                                    <p><strong>Responsable:</strong> @refugio.NombreResponsable</p>
+                                    <p><strong>TelÃ©fono:</strong> @refugio.Telefono</p>
                                     <p><strong>Email:</strong> @refugio.Email</p>
-                                    <p><strong>Dirección:</strong> @refugio.Direccion</p>
-                                    <p><strong>Ciudad:</strong> @refugio.Ciudad</p>
+                                    <p><strong>DirecciÃ³n:</strong> @refugio.Direccion</p>
                                     @if (!string.IsNullOrEmpty(refugio.Descripcion))
                                     {
                                         <p class="text-muted"><em>@refugio.Descripcion</em></p>
                                     }
                                     <div class="refugio-stats">
-                                        <span class="badge">@refugio.CantidadMascotas mascotas</span>
+                                        <span class="badge">Capacidad: @refugio.MascotasActuales / @refugio.CapacidadMaxima</span>
                                     </div>
                                 </div>
                                 <div class="refugio-footer">
@@ -74,8 +73,7 @@
                                         <a href="@Url.Action("Edit", new { id = refugio.Id })" class="btn btn-warning btn-sm">
                                             <i class="glyphicon glyphicon-edit"></i> Editar
                                         </a>
-                                        <a href="@Url.Action("Delete", new { id = refugio.Id })" class="btn btn-danger btn-sm"
-                                           onclick="return confirm('¿Eliminar este refugio?')">
+                                        <a href="@Url.Action("Delete", new { id = refugio.Id })" class="btn btn-danger btn-sm">
                                             <i class="glyphicon glyphicon-trash"></i> Eliminar
                                         </a>
                                     </div>
@@ -97,18 +95,9 @@
 </div>
 
 <style>
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    .card-body {
-        padding: 20px;
-    }
     .refugio-card {
         background: white;
-        border: 1px solid #dee2e6;
+        border: 2px solid #8CFAA4;
         border-radius: 8px;
         overflow: hidden;
         transition: transform 0.2s;
@@ -118,9 +107,9 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .refugio-header {
-        background-color: #f8f9fa;
+        background-color: #BBFA8C;
         padding: 15px;
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid #93A597;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -128,6 +117,7 @@
     .refugio-header h4 {
         margin: 0;
         font-size: 18px;
+        color: #000;
     }
     .refugio-body {
         padding: 15px;
@@ -144,4 +134,5 @@
         background-color: #f8f9fa;
         border-top: 1px solid #dee2e6;
     }
+    .mb-4 { margin-bottom: 20px; }
 </style>

@@ -1,4 +1,4 @@
-@model Integrador.Models.Seguimiento
+@model Integrador.Models.Seguimientos
 @{
     ViewBag.Title = "Eliminar Seguimiento";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -9,11 +9,11 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header bg-danger">
-                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar EliminaciÃ³n</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning">
-                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente seguimiento:
+                        <strong>Â¡AtenciÃ³n!</strong> EstÃ¡ a punto de eliminar el siguiente seguimiento:
                     </div>
 
                     <dl class="dl-horizontal">
@@ -23,7 +23,7 @@
                         <dt>Fecha</dt>
                         <dd>@Model.FechaSeguimiento.ToString("dd/MM/yyyy")</dd>
 
-                        <dt>Adopción</dt>
+                        <dt>AdopciÃ³n</dt>
                         <dd>#@Model.AdopcionId</dd>
 
                         <dt>Estado Mascota</dt>
@@ -42,13 +42,13 @@
                             }
                         </dd>
 
-                        @if (Model.Adopcion != null)
+                        @if (Model.Adopciones != null)
                         {
                             <dt>Mascota</dt>
-                            <dd>@Model.Adopcion.Mascota?.Nombre</dd>
+                            <dd>@(Model.Adopciones.Mascotas != null ? Model.Adopciones.Mascotas.Nombre : "N/A")</dd>
 
                             <dt>Adoptante</dt>
-                            <dd>@Model.Adopcion.Usuario?.Nombre</dd>
+                            <dd>@Model.Adopciones.NombreSolicitante</dd>
                         }
 
                         <dt>Observaciones</dt>
@@ -64,7 +64,7 @@
 
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-danger btn-lg">
-                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Seguimiento
+                                <i class="glyphicon glyphicon-trash"></i> SÃ­, Eliminar Seguimiento
                             </button>
                             <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
                                 <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
@@ -80,7 +80,7 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
     .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header.bg-danger { background-color: #d9534f; color: white; }
+    .card-header.bg-danger { background-color: #FA8C99; color: #000; }
     .card-header h3 { margin: 0; }
     .card-body { padding: 30px; }
     .dl-horizontal dt { width: 150px; font-weight: 600; }

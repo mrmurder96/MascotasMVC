@@ -1,13 +1,13 @@
 @model IEnumerable<Integrador.Models.Adopciones>
 @{
-    ViewBag.Title = "Seguimientos Post-Adopci髇";
+    ViewBag.Title = "Seguimientos Post-Adopci贸n";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i> Seguimientos Post-Adopci髇</h2>
+            <h2><i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i> Seguimientos Post-Adopci贸n</h2>
         </div>
         <div class="col-md-6 text-right">
             <a href="@Url.Action("Create")" class="btn btn-success btn-lg" aria-label="Crear nuevo seguimiento">
@@ -23,12 +23,12 @@
             @if (Model != null && Model.Any())
             {
                 <div class="table-responsive">
-                    <table class="table table-hover" role="table" aria-label="Tabla de seguimientos de adopci髇">
+                    <table class="table table-hover" role="table" aria-label="Tabla de seguimientos de adopci贸n">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Fecha</th>
-                                <th scope="col">Adopci髇</th>
+                                <th scope="col">Adopci贸n</th>
                                 <th scope="col">Mascota</th>
                                 <th scope="col">Adoptante</th>
                                 <th scope="col">Estado</th>
@@ -41,7 +41,7 @@
                                 <tr>
                                     <td><strong>#@seguimiento.Id</strong></td>
                                     <td>@seguimiento.FechaSolicitud.ToString("dd/MM/yyyy")</td>
-                                    <td>Adopci髇 #@seguimiento.Id</td>
+                                    <td>Adopci贸n #@seguimiento.Id</td>
                                     <td>
                                         @if (seguimiento.Mascotas != null)
                                         {
@@ -85,7 +85,7 @@
                                             <a href="@Url.Action("Delete", new { id = seguimiento.Id })" 
                                                class="btn btn-danger btn-sm" 
                                                title="Eliminar"
-                                               onclick="return confirm('縀liminar seguimiento?')"
+                                               onclick="return confirm('驴Eliminar seguimiento?')"
                                                aria-label="Eliminar seguimiento @seguimiento.Id">
                                                 <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                             </a>
@@ -111,6 +111,6 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .card-body { padding: 20px; }
-    .table th { background-color: #f8f9fa; font-weight: 600; }
+    .table th { background-color: #BBFA8C; font-weight: 600; color: #000; }
     .mb-4 { margin-bottom: 20px; }
 </style>

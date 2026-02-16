@@ -6,13 +6,13 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Mis Imágenes</h3>
+        <h3><i class="glyphicon glyphicon-picture" aria-hidden="true"></i> Mis Imágenes</h3>
         <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-secondary">Volver al perfil</a>
     </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">No tienes Imágenes subidas.</div>
+        <div class="alert alert-info">No tienes imágenes subidas.</div>
     }
     else
     {
@@ -30,13 +30,13 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@img.Id" />
-                                    <button class="btn btn-sm btn-success w-100" type="submit">Usar como perfil</button>
+                                    <button class="btn btn-sm btn-success w-100" type="submit" style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Usar como perfil</button>
                                 }
                                 @using (Html.BeginForm("EliminarImagen", "Account", FormMethod.Post, new { @style = "display:inline; margin-left:6px;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@img.Id" />
-                                    <button class="btn btn-sm btn-danger w-100" type="submit" onclick="return confirm('óEliminar imagen?');">Eliminar</button>
+                                    <button class="btn btn-sm btn-danger w-100" type="submit" style="background-color:#FA8C99; border-color:#FA8C99; color:#000;" onclick="return confirm('¿Eliminar imagen?');">Eliminar</button>
                                 }
                             </div>
                         </div>

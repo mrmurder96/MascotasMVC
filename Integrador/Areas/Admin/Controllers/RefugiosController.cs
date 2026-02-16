@@ -3,15 +3,11 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using Integrador.Controllers;
 using Integrador.Filters;
 using Integrador.Models;
 
 namespace Integrador.Areas.Admin.Controllers
 {
-    /// <summary>
-    /// Controlador para gestión de Refugios/Asociaciones (RF-11, RF-27)
-    /// </summary>
     [AdminAuthorize]
     [CargarPermisos]
     public class RefugiosController : Controller
@@ -22,57 +18,25 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Leer")]
         public ActionResult Index(string buscar, bool? soloActivos)
         {
-            // NOTA: Refugio no está en BD actual
-            // En producción: var refugios = db.Refugios.AsQueryable();
-            
-            var refugios = new System.Collections.Generic.List<Refugio>
-            {
-                new Refugio 
-                { 
-                    Id = 1, 
-                    Nombre = "Refugio Patitas Felices", 
-                    Direccion = "Av. Principal 123", 
-                    Telefono = "555-1234",
-                    Email = "contacto@patitasfelices.com",
-                    NombreResponsable = "María González",
-                    CapacidadMaxima = 50,
-                    MascotasActuales = 35,
-                    EstaActivo = true,
-                    FechaRegistro = DateTime.Now.AddYears(-2)
-                },
-                new Refugio 
-                { 
-                    Id = 2, 
-                    Nombre = "Asociación Amigos de los Animales", 
-                    Direccion = "Calle Secundaria 456", 
-                    Telefono = "555-5678",
-                    Email = "info@amigosanimales.com",
-                    NombreResponsable = "Juan Pérez",
-                    CapacidadMaxima = 30,
-                    MascotasActuales = 28,
-                    EstaActivo = true,
-                    FechaRegistro = DateTime.Now.AddYears(-1)
-                }
-            };
+            var refugios = db.Refugios.AsQueryable();
 
             if (soloActivos.HasValue && soloActivos.Value)
             {
-                refugios = refugios.Where(r => r.EstaActivo).ToList();
+                refugios = refugios.Where(r => r.EstaActivo);
             }
 
             if (!string.IsNullOrEmpty(buscar))
             {
-                refugios = refugios.Where(r => 
-                    r.Nombre.Contains(buscar) || 
+                refugios = refugios.Where(r =>
+                    r.Nombre.Contains(buscar) ||
                     r.Direccion.Contains(buscar) ||
-                    r.NombreResponsable.Contains(buscar)).ToList();
+                    r.NombreResponsable.Contains(buscar));
             }
 
             ViewBag.SoloActivos = soloActivos;
             ViewBag.Buscar = buscar;
-            ViewBag.Info = "Vista de demostración. Migrar BD para funcionalidad completa.";
 
-            return View(refugios);
+            return View(refugios.OrderBy(r => r.Nombre).ToList());
         }
 
         // GET: Admin/Refugios/Details/5
@@ -84,40 +48,42 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            Refugios refugio = db.Refugios.Find(id);
+            if (refugio == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(refugio);
         }
 
         // GET: Admin/Refugios/Create
         [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Crear")]
         public ActionResult Create()
         {
-            return View();
+            return View(new Refugios { EstaActivo = true });
         }
 
         // POST: Admin/Refugios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Crear")]
-        public ActionResult Create([Bind(Include = "Nombre,Descripcion,Direccion,Telefono,Email,NombreResponsable,Latitud,Longitud,SitioWeb,CapacidadMaxima,MascotasActuales,EstaActivo")] Refugio refugio)
+        public ActionResult Create([Bind(Include = "Nombre,Descripcion,Direccion,Telefono,Email,NombreResponsable,Latitud,Longitud,SitioWeb,CapacidadMaxima,MascotasActuales,EstaActivo")] Refugios refugio)
         {
             if (ModelState.IsValid)
             {
                 refugio.FechaRegistro = DateTime.Now;
 
-                // Validaciones adicionales
                 if (refugio.MascotasActuales > refugio.CapacidadMaxima)
                 {
-                    ModelState.AddModelError("MascotasActuales", "Las mascotas actuales no pueden superar la capacidad máxima");
+                    ModelState.AddModelError("MascotasActuales", "Las mascotas actuales no pueden superar la capacidad mÃ¡xima");
                     return View(refugio);
                 }
 
-                // NOTA: Guardar en BD cuando se migre
-                // db.Refugios.Add(refugio);
-                // db.SaveChanges();
+                db.Refugios.Add(refugio);
+                db.SaveChanges();
 
                 TempData["Success"] = "Refugio registrado exitosamente";
-                TempData["Info"] = "Función completa después de migración de BD";
                 return RedirectToAction("Index");
             }
 
@@ -133,57 +99,37 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            Refugios refugio = db.Refugios.Find(id);
+            if (refugio == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(refugio);
         }
 
         // POST: Admin/Refugios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Actualizar")]
-        public ActionResult Edit(Refugio refugio)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Descripcion,Direccion,Telefono,Email,NombreResponsable,Latitud,Longitud,SitioWeb,CapacidadMaxima,MascotasActuales,EstaActivo,FechaRegistro")] Refugios refugio)
         {
             if (ModelState.IsValid)
             {
-                // Validaciones
                 if (refugio.MascotasActuales > refugio.CapacidadMaxima)
                 {
-                    ModelState.AddModelError("MascotasActuales", "Las mascotas actuales no pueden superar la capacidad máxima");
+                    ModelState.AddModelError("MascotasActuales", "Las mascotas actuales no pueden superar la capacidad mÃ¡xima");
                     return View(refugio);
                 }
 
-                // db.Entry(refugio).State = EntityState.Modified;
-                // db.SaveChanges();
+                db.Entry(refugio).State = EntityState.Modified;
+                db.SaveChanges();
 
-                TempData["Success"] = "Refugio actualizado";
+                TempData["Success"] = "Refugio actualizado exitosamente";
                 return RedirectToAction("Index");
             }
 
             return View(refugio);
-        }
-
-        // POST: Actualizar contador de mascotas
-        [HttpPost]
-        [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Actualizar")]
-        public JsonResult ActualizarContador(int id, int cantidad)
-        {
-            try
-            {
-                // En producción:
-                // var refugio = db.Refugios.Find(id);
-                // refugio.MascotasActuales = cantidad;
-                // if (refugio.MascotasActuales > refugio.CapacidadMaxima)
-                // {
-                //     return Json(new { success = false, message = "Supera la capacidad máxima" });
-                // }
-                // db.SaveChanges();
-
-                return Json(new { success = true, message = "Contador actualizado" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
         }
 
         // GET: Admin/Refugios/Delete/5
@@ -195,8 +141,14 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            Refugios refugio = db.Refugios.Find(id);
+            if (refugio == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.TieneMascotas = db.Mascotas.Any(m => m.RefugioId == id);
+            return View(refugio);
         }
 
         // POST: Admin/Refugios/Delete/5
@@ -205,18 +157,18 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidarPermisoCrud(ControllerName = "Refugios", Operacion = "Eliminar")]
         public ActionResult DeleteConfirmed(int id)
         {
-            // Verificar que no tenga mascotas activas
-            // var refugio = db.Refugios.Find(id);
-            // if (refugio.MascotasActuales > 0)
-            // {
-            //     TempData["Error"] = "No se puede eliminar un refugio con mascotas activas";
-            //     return RedirectToAction("Index");
-            // }
+            var refugio = db.Refugios.Find(id);
 
-            // db.Refugios.Remove(refugio);
-            // db.SaveChanges();
+            if (db.Mascotas.Any(m => m.RefugioId == id))
+            {
+                TempData["Error"] = "No se puede eliminar un refugio con mascotas asociadas";
+                return RedirectToAction("Index");
+            }
 
-            TempData["Success"] = "Refugio eliminado";
+            db.Refugios.Remove(refugio);
+            db.SaveChanges();
+
+            TempData["Success"] = "Refugio eliminado exitosamente";
             return RedirectToAction("Index");
         }
 

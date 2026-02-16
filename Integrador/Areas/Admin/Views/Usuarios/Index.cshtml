@@ -1,13 +1,13 @@
 @model IEnumerable<Integrador.Models.Usuarios>
 @{
-    ViewBag.Title = "Gestión de Usuarios";
+    ViewBag.Title = "GestiÃ³n de Usuarios";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-users"></i> Gestión de Usuarios</h2>
+            <h2><i class="fas fa-users"></i> GestiÃ³n de Usuarios</h2>
         </div>
         <div class="col-md-6 text-right">
             <a href="@Url.Action("Create")" class="btn btn-success">
@@ -20,7 +20,7 @@
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["Success"]
+            <i class="glyphicon glyphicon-ok-sign"></i> @TempData["Success"]
         </div>
     }
 
@@ -28,7 +28,7 @@
     {
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["Error"]
+            <i class="glyphicon glyphicon-exclamation-sign"></i> @TempData["Error"]
         </div>
     }
 
@@ -42,8 +42,8 @@
                             <th>ID</th>
                             <th>Nombres</th>
                             <th>Email</th>
-                            <th>Cédula</th>
-                            <th>Teléfono</th>
+                            <th>CÃ©dula</th>
+                            <th>TelÃ©fono</th>
                             <th>Rol</th>
                             <th>Estado</th>
                             <th class="text-center">Acciones</th>
@@ -95,7 +95,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="@Url.Action("ResetPassword", new { id = item.Id })" 
-                                           class="btn btn-primary btn-sm" title="Cambiar contraseña">
+                                           class="btn btn-primary btn-sm" title="Cambiar contraseÃ±a">
                                             <i class="fas fa-key"></i>
                                         </a>
                                         <a href="@Url.Action("Delete", new { id = item.Id })" 
@@ -135,6 +135,11 @@
         margin-bottom: 0;
     }
 
+    .table th {
+        background-color: #BBFA8C;
+        color: #000;
+    }
+
     .btn-group .btn {
         margin: 0 2px;
     }
@@ -146,11 +151,13 @@
     }
 
     h2 {
-        color: #2c3e50;
+        color: #333;
         margin-bottom: 20px;
     }
 
     h2 i {
-        color: #3498db;
+        color: #93A597;
     }
+
+    .mb-4 { margin-bottom: 20px; }
 </style>

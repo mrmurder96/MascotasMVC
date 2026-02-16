@@ -1,4 +1,4 @@
-@model Integrador.Models.MascotaPerdida
+@model Integrador.Models.MascotasPerdidas
 @{
     ViewBag.Title = "Eliminar Reporte";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -9,11 +9,11 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header bg-danger">
-                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar EliminaciÃ³n</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning">
-                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente reporte:
+                        <strong>Â¡AtenciÃ³n!</strong> EstÃ¡ a punto de eliminar el siguiente reporte:
                     </div>
 
                     <div class="row">
@@ -50,7 +50,7 @@
                                 <dt>Fecha</dt>
                                 <dd>@Model.FechaReporte.ToString("dd/MM/yyyy")</dd>
 
-                                <dt>Ubicación</dt>
+                                <dt>UbicaciÃ³n</dt>
                                 <dd>@Model.Ubicacion</dd>
 
                                 <dt>Contacto</dt>
@@ -84,7 +84,7 @@
 
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-danger btn-lg">
-                                <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Reporte
+                                <i class="glyphicon glyphicon-trash"></i> SÃ­, Eliminar Reporte
                             </button>
                             <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
                                 <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
@@ -100,7 +100,7 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
     .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header.bg-danger { background-color: #d9534f; color: white; }
+    .card-header.bg-danger { background-color: #FA8C99; color: #000; }
     .card-header h3 { margin: 0; }
     .card-body { padding: 30px; }
     .dl-horizontal dt { width: 120px; font-weight: 600; }

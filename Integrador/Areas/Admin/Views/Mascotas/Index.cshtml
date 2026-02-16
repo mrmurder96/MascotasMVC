@@ -1,13 +1,13 @@
 @model IEnumerable<Integrador.Models.Mascotas>
 @{
-    ViewBag.Title = "Gestión de Mascotas (Admin)";
+    ViewBag.Title = "GestiÃ³n de Mascotas (Admin)";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="glyphicon glyphicon-paw"></i> Gestión de Mascotas</h2>
+            <h2><i class="glyphicon glyphicon-paw"></i> GestiÃ³n de Mascotas</h2>
         </div>
         <div class="col-md-6 text-right">
             <a href="@Url.Action("Create")" class="btn btn-success btn-lg">
@@ -20,7 +20,7 @@
     {
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>?</strong> @TempData["SuccessMessage"]
+            <i class="glyphicon glyphicon-ok-sign"></i> @TempData["SuccessMessage"]
         </div>
     }
 
@@ -29,7 +29,7 @@
             <!-- Filtros -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>Filtros de Búsqueda</h4>
+                    <h4>Filtros de BÃºsqueda</h4>
                 </div>
                 <div class="panel-body">
                     @using (Html.BeginForm("Index", "Mascotas", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
@@ -98,12 +98,12 @@
                                 </div>
                                 <div class="mascota-info">
                                     <h4>@mascota.Nombre</h4>
-                                    <p><strong>@mascota.IconoTipo @mascota.Tipo</strong> • @mascota.Raza</p>
-                                    <p><strong>Edad:</strong> @mascota.Edad años</p>
+                                    <p><strong>@mascota.IconoTipo @mascota.Tipo</strong> - @mascota.Raza</p>
+                                    <p><strong>Edad:</strong> @mascota.Edad aÃ±os</p>
                                     <p><strong>Sexo:</strong> @mascota.Sexo</p>
                                     @if (mascota.CategoriaId.HasValue)
                                     {
-                                        <p><strong>Categoría:</strong> @(mascota.Categoria != null ? mascota.Categoria.Nombre : "N/A")</p>
+                                        <p><strong>CategorÃ­a:</strong> @(mascota.Categoria != null ? mascota.Categoria.Nombre : "N/A")</p>
                                     }
                                 </div>
                                 <div class="mascota-acciones">
@@ -123,7 +123,7 @@
                                         }
                                         <a href="@Url.Action("Delete", new { id = mascota.Id })" 
                                            class="btn btn-danger btn-sm"
-                                           onclick="return confirm('¿Eliminar mascota?')">
+                                           onclick="return confirm('Â¿Eliminar mascota?')">
                                             <i class="glyphicon glyphicon-trash"></i> Eliminar
                                         </a>
                                     </div>
@@ -146,13 +146,16 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .card-body { padding: 20px; }
-    .mascota-card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
+    .mascota-card { background: white; border: 2px solid #8CFAA4; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
     .mascota-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .mascota-imagen { position: relative; height: 250px; overflow: hidden; background: #f8f9fa; }
     .mascota-imagen img { width: 100%; height: 100%; object-fit: cover; }
     .mascota-estado { position: absolute; top: 10px; right: 10px; }
     .mascota-info { padding: 15px; }
-    .mascota-info h4 { margin: 0 0 10px 0; color: #2c3e50; }
+    .mascota-info h4 { margin: 0 0 10px 0; color: #333; }
     .mascota-info p { margin: 5px 0; font-size: 14px; }
     .mascota-acciones { padding: 10px; background: #f8f9fa; }
+    .panel-heading h4 { margin: 0; color: #333; }
+    .mb-4 { margin-bottom: 20px; }
+    .mt-4 { margin-top: 20px; }
 </style>

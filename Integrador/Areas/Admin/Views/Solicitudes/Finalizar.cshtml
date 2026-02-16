@@ -1,6 +1,6 @@
 @model Integrador.Models.Adopciones
 @{
-    ViewBag.Title = "Finalizar AdopciÛn";
+    ViewBag.Title = "Finalizar Adopci√≥n";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
@@ -9,42 +9,42 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="card">
                 <div class="card-header bg-primary">
-                    <h3><i class="glyphicon glyphicon-check"></i> Finalizar Proceso de AdopciÛn</h3>
+                    <h3><i class="glyphicon glyphicon-check"></i> Finalizar Proceso de Adopci√≥n</h3>
                 </div>
                 <div class="card-body">
                     @Html.Partial("_AlertMessages")
 
                     <div class="alert alert-success">
-                        <strong>Solicitud #@Model.Id</strong> - AdopciÛn de <strong>@Model.Mascota?.Nombre</strong> por <strong>@Model.Usuario?.Nombre</strong>
+                        <strong>Solicitud #@Model.Id</strong> - Adopci√≥n de <strong>@Model.Mascota?.Nombre</strong> por <strong>@Model.Usuario?.Nombre</strong>
                     </div>
 
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h4>ConfirmaciÛn de FinalizaciÛn</h4>
+                            <h4>Confirmaci√≥n de Finalizaci√≥n</h4>
                         </div>
                         <div class="panel-body">
-                            <p><strong>Al finalizar esta adopciÛn:</strong></p>
+                            <p><strong>Al finalizar esta adopci√≥n:</strong></p>
                             <ul>
-                                <li>? La solicitud quedar· marcada como <span class="label label-info">Finalizada</span></li>
-                                <li>? El estado de la mascota cambiar· a <span class="label label-info">Adoptado</span></li>
-                                <li>? Se cerrar· el proceso de adopciÛn exitosamente</li>
-                                <li>? Se enviar· notificaciÛn de finalizaciÛn al adoptante</li>
+                                <li><i class="glyphicon glyphicon-ok text-success"></i> La solicitud quedar√° marcada como <span class="label label-info">Finalizada</span></li>
+                                <li><i class="glyphicon glyphicon-ok text-success"></i> El estado de la mascota cambiar√° a <span class="label label-info">Adoptado</span></li>
+                                <li><i class="glyphicon glyphicon-ok text-success"></i> Se cerrar√° el proceso de adopci√≥n exitosamente</li>
+                                <li><i class="glyphicon glyphicon-ok text-success"></i> Se enviar√° notificaci√≥n de finalizaci√≥n al adoptante</li>
                             </ul>
 
                             <div class="row mt-3">
                                 <div class="col-md-6">
-                                    <h5>InformaciÛn del Adoptante</h5>
+                                    <h5>Informaci√≥n del Adoptante</h5>
                                     <dl>
                                         <dt>Nombre</dt>
                                         <dd>@Model.Usuario?.Nombre</dd>
                                         <dt>Email</dt>
                                         <dd>@Model.Usuario?.Email</dd>
-                                        <dt>TelÈfono</dt>
+                                        <dt>Tel√©fono</dt>
                                         <dd>@Model.Usuario?.Telefono</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5>InformaciÛn de la Mascota</h5>
+                                    <h5>Informaci√≥n de la Mascota</h5>
                                     @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
                                     {
                                         <div class="text-center mb-3">
@@ -60,7 +60,7 @@
                                         <dt>Tipo/Raza</dt>
                                         <dd>@Model.Mascota?.Tipo - @Model.Mascota?.Raza</dd>
                                         <dt>Edad</dt>
-                                        <dd>@Model.Mascota?.Edad aÒos</dd>
+                                        <dd>@Model.Mascota?.Edad a√±os</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
 
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="glyphicon glyphicon-check"></i> Finalizar AdopciÛn
+                                <i class="glyphicon glyphicon-check"></i> Finalizar Adopci√≥n
                             </button>
                             <a href="@Url.Action("Details", new { id = Model.Id })" class="btn btn-default btn-lg">
                                 <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
@@ -90,7 +90,7 @@
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
     .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header.bg-primary { background-color: #337ab7; color: white; }
+    .card-header.bg-primary { background-color: #8CFAA4; color: #000; }
     .card-header h3 { margin: 0; }
     .card-body { padding: 30px; }
     .mt-3 { margin-top: 15px; }

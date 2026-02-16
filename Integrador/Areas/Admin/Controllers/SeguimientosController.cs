@@ -70,9 +70,7 @@ namespace Integrador.Areas.Admin.Controllers
                 return HttpNotFound();
             }
 
-            // Nota: Como Seguimiento es un modelo nuevo no en BD, simulamos con una lista vacía
-            // En producción se obtendrían de: db.Seguimientos.Where(s => s.AdopcionId == id)
-            ViewBag.Seguimientos = new System.Collections.Generic.List<Seguimiento>();
+            ViewBag.Seguimientos = db.Seguimientos.Where(s => s.AdopcionId == id).OrderByDescending(s => s.FechaSeguimiento).ToList();
 
             return View(adopcion);
         }
@@ -96,7 +94,7 @@ namespace Integrador.Areas.Admin.Controllers
             ViewBag.TiposSeguimiento = new SelectList(new[] { "Visita Domiciliaria", "Llamada Telefónica", "Videollamada", "Email" });
             ViewBag.EstadosMascota = new SelectList(new[] { "Excelente", "Bueno", "Regular", "Requiere Atención", "Crítico" });
 
-            var seguimiento = new Seguimiento
+            var seguimiento = new Seguimientos
             {
                 AdopcionId = adopcionId.Value,
                 FechaSeguimiento = DateTime.Now
@@ -109,7 +107,7 @@ namespace Integrador.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Crear")]
-        public ActionResult Create(Seguimiento seguimiento)
+        public ActionResult Create(Seguimientos seguimiento)
         {
             if (ModelState.IsValid)
             {
@@ -121,12 +119,9 @@ namespace Integrador.Areas.Admin.Controllers
                     seguimiento.UsuarioRealizaSeguimientoId = Convert.ToInt32(Session["UsuarioId"]);
                 }
 
-                // NOTA: Como el modelo Seguimiento no está en la BD actual, 
-                // aquí habría que agregarlo a un DbSet cuando se cree la tabla
-                // db.Seguimientos.Add(seguimiento);
-                // db.SaveChanges();
+                db.Seguimientos.Add(seguimiento);
+                db.SaveChanges();
 
-                // Por ahora simulamos éxito
                 TempData["Success"] = "Seguimiento registrado exitosamente";
                 return RedirectToAction("Details", new { id = seguimiento.AdopcionId });
             }
@@ -148,23 +143,86 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // NOTA: En producción se obtendría de BD
-            // var seguimiento = db.Seguimientos.Find(id);
+            var seguimiento = db.Seguimientos.Find(id);
+            if (seguimiento == null)
+            {
+                return HttpNotFound();
+            }
 
-            // Por ahora retornamos error
-            TempData["Warning"] = "Función no disponible hasta migrar base de datos";
-            return RedirectToAction("Index");
+            var adopcion = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == seguimiento.AdopcionId);
+            ViewBag.Adopcion = adopcion;
+            ViewBag.TiposSeguimiento = new SelectList(new[] { "Visita Domiciliaria", "Llamada Telefónica", "Videollamada", "Email" }, seguimiento.TipoSeguimiento);
+            ViewBag.EstadosMascota = new SelectList(new[] { "Excelente", "Bueno", "Regular", "Requiere Atención", "Crítico" }, seguimiento.EstadoMascota);
+
+            return View(seguimiento);
+        }
+
+        // POST: Admin/Seguimientos/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Actualizar")]
+        public ActionResult Edit(Seguimientos seguimiento)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(seguimiento).State = EntityState.Modified;
+                db.SaveChanges();
+
+                TempData["Success"] = "Seguimiento actualizado exitosamente";
+                return RedirectToAction("Details", new { id = seguimiento.AdopcionId });
+            }
+
+            var adopcion = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == seguimiento.AdopcionId);
+            ViewBag.Adopcion = adopcion;
+            ViewBag.TiposSeguimiento = new SelectList(new[] { "Visita Domiciliaria", "Llamada Telefónica", "Videollamada", "Email" }, seguimiento.TipoSeguimiento);
+            ViewBag.EstadosMascota = new SelectList(new[] { "Excelente", "Bueno", "Regular", "Requiere Atención", "Crítico" }, seguimiento.EstadoMascota);
+
+            return View(seguimiento);
         }
 
         // Método auxiliar para verificar si hay seguimiento reciente
         private bool TieneSeguimientoReciente(int adopcionId, int dias)
         {
-            // NOTA: En producción:
-            // return db.Seguimientos.Any(s => s.AdopcionId == adopcionId && 
-            //     DbFunctions.DiffDays(s.FechaSeguimiento, DateTime.Now) <= dias);
+            var fechaLimite = DateTime.Now.AddDays(-dias);
+            return db.Seguimientos.Any(s => s.AdopcionId == adopcionId && s.FechaSeguimiento >= fechaLimite);
+        }
 
-            // Por ahora retornamos false para mostrar todos como pendientes
-            return false;
+        // GET: Admin/Seguimientos/Delete/5
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Eliminar")]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var seguimiento = db.Seguimientos.Include("Adopciones").Include("Adopciones.Mascotas").FirstOrDefault(s => s.Id == id);
+            if (seguimiento == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(seguimiento);
+        }
+
+        // POST: Admin/Seguimientos/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "Seguimientos", Operacion = "Eliminar")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var seguimiento = db.Seguimientos.Find(id);
+            if (seguimiento == null)
+            {
+                return HttpNotFound();
+            }
+
+            var adopcionId = seguimiento.AdopcionId;
+            db.Seguimientos.Remove(seguimiento);
+            db.SaveChanges();
+
+            TempData["Success"] = "Seguimiento eliminado exitosamente";
+            return RedirectToAction("Details", new { id = adopcionId });
         }
 
         protected override void Dispose(bool disposing)

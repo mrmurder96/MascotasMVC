@@ -22,19 +22,7 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidarPermisoCrud(ControllerName = "Categorias", Operacion = "Leer")]
         public ActionResult Index()
         {
-            // NOTA: Categoría no está en BD actual
-            // En producción: return View(db.Categorias.OrderBy(c => c.Orden).ToList());
-            
-            var categorias = new System.Collections.Generic.List<Categoria>
-            {
-                new Categoria { Id = 1, Nombre = "Perros", Icono = "??", Descripcion = "Todas las razas de perros", EstaActiva = true, Orden = 1 },
-                new Categoria { Id = 2, Nombre = "Gatos", Icono = "??", Descripcion = "Todas las razas de gatos", EstaActiva = true, Orden = 2 },
-                new Categoria { Id = 3, Nombre = "Aves", Icono = "??", Descripcion = "Pájaros y aves exóticas", EstaActiva = true, Orden = 3 },
-                new Categoria { Id = 4, Nombre = "Roedores", Icono = "??", Descripcion = "Conejos, hamsters, etc.", EstaActiva = true, Orden = 4 },
-                new Categoria { Id = 5, Nombre = "Otros", Icono = "??", Descripcion = "Otras mascotas", EstaActiva = true, Orden = 5 }
-            };
-
-            ViewBag.Info = "Vista de demostración. Migrar BD para funcionalidad completa.";
+            var categorias = db.Categorias.Include("Mascotas").OrderBy(c => c.Orden).ToList();
             return View(categorias);
         }
 
@@ -47,8 +35,13 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            var categoria = db.Categorias.Find(id);
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(categoria);
         }
 
         // GET: Admin/Categorias/Create
@@ -62,18 +55,15 @@ namespace Integrador.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Categorias", Operacion = "Crear")]
-        public ActionResult Create([Bind(Include = "Nombre,Descripcion,Icono,EstaActiva,Orden")] Categoria categoria)
+        public ActionResult Create([Bind(Include = "Nombre,Descripcion,Icono,EstaActiva,Orden")] Categorias categoria)
         {
             if (ModelState.IsValid)
             {
                 categoria.FechaCreacion = DateTime.Now;
-
-                // NOTA: Guardar en BD cuando se migre
-                // db.Categorias.Add(categoria);
-                // db.SaveChanges();
+                db.Categorias.Add(categoria);
+                db.SaveChanges();
 
                 TempData["Success"] = "Categoría creada exitosamente";
-                TempData["Info"] = "Función completa después de migración de BD";
                 return RedirectToAction("Index");
             }
 
@@ -89,20 +79,25 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            var categoria = db.Categorias.Find(id);
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(categoria);
         }
 
         // POST: Admin/Categorias/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Categorias", Operacion = "Actualizar")]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,Descripcion,Icono,EstaActiva,Orden")] Categoria categoria)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Descripcion,Icono,EstaActiva,Orden")] Categorias categoria)
         {
             if (ModelState.IsValid)
             {
-                // db.Entry(categoria).State = EntityState.Modified;
-                // db.SaveChanges();
+                db.Entry(categoria).State = EntityState.Modified;
+                db.SaveChanges();
 
                 TempData["Success"] = "Categoría actualizada";
                 return RedirectToAction("Index");
@@ -118,10 +113,12 @@ namespace Integrador.Areas.Admin.Controllers
         {
             try
             {
-                // En producción:
-                // var categoria = db.Categorias.Find(id);
-                // categoria.EstaActiva = !categoria.EstaActiva;
-                // db.SaveChanges();
+                var categoria = db.Categorias.Find(id);
+                if (categoria == null)
+                    return Json(new { success = false, message = "Categoría no encontrada" });
+
+                categoria.EstaActiva = !categoria.EstaActiva;
+                db.SaveChanges();
 
                 return Json(new { success = true, message = "Estado actualizado" });
             }
@@ -140,8 +137,14 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TempData["Warning"] = "Función disponible después de migración de BD";
-            return RedirectToAction("Index");
+            var categoria = db.Categorias.Find(id);
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.TieneMascotas = db.Mascotas.Any(m => m.CategoriaId == id);
+            return View(categoria);
         }
 
         // POST: Admin/Categorias/Delete/5
@@ -150,16 +153,21 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidarPermisoCrud(ControllerName = "Categorias", Operacion = "Eliminar")]
         public ActionResult DeleteConfirmed(int id)
         {
-            // Verificar que no tenga mascotas asociadas
-            // var tieneMascotas = db.Mascotas.Any(m => m.CategoriaId == id);
-            // if (tieneMascotas)
-            // {
-            //     TempData["Error"] = "No se puede eliminar la categoría porque tiene mascotas asociadas";
-            //     return RedirectToAction("Index");
-            // }
+            var tieneMascotas = db.Mascotas.Any(m => m.CategoriaId == id);
+            if (tieneMascotas)
+            {
+                TempData["Error"] = "No se puede eliminar la categoría porque tiene mascotas asociadas";
+                return RedirectToAction("Index");
+            }
 
-            // db.Categorias.Remove(db.Categorias.Find(id));
-            // db.SaveChanges();
+            var categoria = db.Categorias.Find(id);
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Categorias.Remove(categoria);
+            db.SaveChanges();
 
             TempData["Success"] = "Categoría eliminada";
             return RedirectToAction("Index");

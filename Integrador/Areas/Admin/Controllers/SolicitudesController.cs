@@ -23,14 +23,20 @@ namespace Integrador.Areas.Admin.Controllers
 
         // GET: Admin/Solicitudes
         [ValidarPermisoCrud(ControllerName = "Solicitudes", Operacion = "Leer")]
-        public ActionResult Index(string filtroEstado, string buscar, DateTime? fechaDesde, DateTime? fechaHasta)
+        public ActionResult Index(string estado, string buscar, DateTime? fechaDesde, DateTime? fechaHasta)
         {
+            // Si no se especifica estado, por defecto mostrar Pendientes
+            if (string.IsNullOrEmpty(estado))
+            {
+                estado = "Pendiente";
+            }
+
             var solicitudes = db.Adopciones.Include(a => a.Mascotas).AsQueryable();
 
-            // Filtro por estado
-            if (!string.IsNullOrEmpty(filtroEstado) && filtroEstado != "Todos")
+            // Filtro por estado (tabs)
+            if (estado != "Todos")
             {
-                solicitudes = solicitudes.Where(s => s.Estado == filtroEstado);
+                solicitudes = solicitudes.Where(s => s.Estado == estado);
             }
 
             // Filtro por búsqueda
@@ -56,16 +62,17 @@ namespace Integrador.Areas.Admin.Controllers
             }
 
             // ViewBags para filtros
-            ViewBag.Estados = new SelectList(new[] { "Todos", "Pendiente", "En Revisión", "Aprobada", "Rechazada", "Completada", "Cancelada" });
-            ViewBag.EstadoSeleccionado = filtroEstado;
+            ViewBag.Estados = new SelectList(new[] { "Todos", "Pendiente", "Aprobada", "Rechazada", "Finalizada" });
+            ViewBag.EstadoSeleccionado = estado;
             ViewBag.Buscar = buscar;
             ViewBag.FechaDesde = fechaDesde;
             ViewBag.FechaHasta = fechaHasta;
 
-            // Estadísticas
-            ViewBag.TotalPendientes = db.Adopciones.Count(a => a.Estado == "Pendiente" || a.Estado == "En Revisión");
-            ViewBag.TotalAprobadas = db.Adopciones.Count(a => a.Estado == "Aprobada" || a.Estado == "Completada");
-            ViewBag.TotalRechazadas = db.Adopciones.Count(a => a.Estado == "Rechazada");
+            // Estadísticas para badges de los tabs
+            ViewBag.PendientesCount = db.Adopciones.Count(a => a.Estado == "Pendiente");
+            ViewBag.AprobadasCount = db.Adopciones.Count(a => a.Estado == "Aprobada");
+            ViewBag.RechazadasCount = db.Adopciones.Count(a => a.Estado == "Rechazada");
+            ViewBag.FinalizadasCount = db.Adopciones.Count(a => a.Estado == "Finalizada");
 
             return View(solicitudes.OrderByDescending(s => s.FechaSolicitud).ToList());
         }
