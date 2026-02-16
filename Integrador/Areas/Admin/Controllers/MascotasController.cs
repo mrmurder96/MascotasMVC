@@ -92,7 +92,7 @@ namespace Integrador.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Mascotas", Operacion = "Crear")]
-        public ActionResult Create([Bind(Include = "Nombre,Tipo,Edad,Ubicacion,Descripcion,Estado")] Mascotas mascota, HttpPostedFileBase foto)
+        public ActionResult Create([Bind(Include = "Nombre,Tipo,Raza,Sexo,Tamano,Edad,Ubicacion,Descripcion,Estado,CategoriaId,RefugioId")] Mascotas mascota, HttpPostedFileBase foto)
         {
             if (ModelState.IsValid)
             {
@@ -178,7 +178,7 @@ namespace Integrador.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidarPermisoCrud(ControllerName = "Mascotas", Operacion = "Actualizar")]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,Tipo,Edad,Ubicacion,Descripcion,Estado,FotoUrl")] Mascotas mascota, HttpPostedFileBase foto)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Tipo,Raza,Sexo,Tamano,Edad,Ubicacion,Descripcion,Estado,FotoUrl,CategoriaId,RefugioId")] Mascotas mascota, HttpPostedFileBase foto)
         {
             if (ModelState.IsValid)
             {

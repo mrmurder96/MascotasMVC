@@ -59,7 +59,7 @@ namespace Integrador.Models
         }
 
         /// <summary>
-        /// Propiedad para manejar la imagen de la mascota
+        /// Propiedad para manejar la imagen de la mascota (alias)
         /// </summary>
         [NotMapped]
         public string Imagen
@@ -68,26 +68,8 @@ namespace Integrador.Models
             set => FotoUrl = value;
         }
 
-        /// <summary>
-        /// Propiedad Raza
-        /// </summary>
-        [NotMapped]
-        [StringLength(100)]
-        public string Raza { get; set; }
-
-        /// <summary>
-        /// Sexo de la mascota
-        /// </summary>
-        [NotMapped]
-        [StringLength(10)]
-        public string Sexo { get; set; }
-
-        /// <summary>
-        /// Tamaño de la mascota
-        /// </summary>
-        [NotMapped]
-        [StringLength(20)]
-        public string Tamano { get; set; }
+        // Nota: Las propiedades Raza, Sexo, Tamano, FechaCreacion están definidas en el EDMX
+        // y se generan automáticamente en Mascotas.cs
 
         /// <summary>
         /// Navegación a Categoría (alias para compatibilidad)

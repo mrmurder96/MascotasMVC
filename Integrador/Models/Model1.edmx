@@ -67,6 +67,10 @@
           <Property Name="Estado" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CategoriaId" Type="int" />
           <Property Name="RefugioId" Type="int" />
+          <Property Name="Raza" Type="nvarchar" MaxLength="100" />
+          <Property Name="Sexo" Type="nvarchar" MaxLength="20" />
+          <Property Name="Tamano" Type="nvarchar" MaxLength="20" />
+          <Property Name="FechaCreacion" Type="datetime" />
         </EntityType>
         <EntityType Name="MascotasPerdidas">
           <Key>
@@ -384,6 +388,10 @@
           <Property Name="RefugioId" Type="Int32" />
           <NavigationProperty Name="Categorias" Relationship="adopModel.FK_Mascotas_Categorias" FromRole="Mascotas" ToRole="Categorias" />
           <NavigationProperty Name="Refugios" Relationship="adopModel.FK_Mascotas_Refugios" FromRole="Mascotas" ToRole="Refugios" />
+          <Property Name="Raza" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Sexo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Tamano" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Notificaciones">
           <Key>
@@ -721,6 +729,10 @@
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="FotoUrl" ColumnName="FotoUrl" />
                 <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Raza" ColumnName="Raza" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="Tamano" ColumnName="Tamano" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -18,9 +18,12 @@
                         <!-- Imagen de la mascota -->
                         <div class="col-md-4">
                             <div class="mascota-imagen-detail">
-                                @if (!string.IsNullOrEmpty(Model.Imagen))
+                                @if (!string.IsNullOrEmpty(Model.FotoUrl))
                                 {
-                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Imagen)" 
+                                    var imgSrc = Model.FotoUrl.StartsWith("/") || Model.FotoUrl.StartsWith("~") 
+                                        ? Url.Content(Model.FotoUrl) 
+                                        : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
+                                    <img src="@imgSrc" 
                                          alt="Foto de @Model.Nombre, @Model.Tipo @Model.Raza" 
                                          class="img-responsive img-thumbnail" 
                                          aria-describedby="mascotaImagenDesc" />
@@ -28,7 +31,7 @@
                                 }
                                 else
                                 {
-                                    <img src="@Url.Content("~/Content/images/no-image.png")" 
+                                    <img src="https://via.placeholder.com/300x250?text=Sin+Imagen" 
                                          alt="Sin imagen disponible" 
                                          class="img-responsive img-thumbnail" />
                                 }

@@ -45,7 +45,7 @@
                         {
                             <tr>
                                 <td>@item.Id</td>
-                                <td>@item.Usuarios.Nombres @item.Usuarios.Apellidos</td>
+                                <td>@(item.Usuarios != null ? item.Usuarios.Nombres + " " + item.Usuarios.Apellidos : "Usuario no encontrado")</td>
                                 <td><strong>@item.Titulo</strong></td>
                                 <td>@(item.Mensaje.Length > 50 ? item.Mensaje.Substring(0, 50) + "..." : item.Mensaje)</td>
                                 <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>

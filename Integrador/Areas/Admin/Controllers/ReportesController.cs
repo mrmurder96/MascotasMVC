@@ -26,8 +26,8 @@ namespace Integrador.Areas.Admin.Controllers
             ViewBag.TotalMascotas = db.Mascotas.Count();
             ViewBag.MascotasDisponibles = db.Mascotas.Count(m => m.Estado == "Disponible");
             ViewBag.MascotasAdoptadas = db.Mascotas.Count(m => m.Estado == "Adoptado");
-            ViewBag.TotalAdopciones = db.Adopciones.Count();
-            ViewBag.AdopcionesPendientes = db.Adopciones.Count(a => a.Estado == "Pendiente" || a.Estado == "En Revisión");
+            ViewBag.TotalAdopciones = db.Adopciones.Count(a => a.Estado == "Aprobada" || a.Estado == "Completada" || a.Estado == "Finalizada");
+            ViewBag.SolicitudesPendientes = db.Adopciones.Count(a => a.Estado == "Pendiente" || a.Estado == "En Revisión" || a.Estado == "En Proceso");
             ViewBag.AdopcionesAprobadas = db.Adopciones.Count(a => a.Estado == "Aprobada" || a.Estado == "Completada");
             ViewBag.TotalUsuarios = db.Usuarios.Count(u => u.EstaActivo);
             ViewBag.UsuariosNuevosEsteMes = db.Usuarios.Count(u => u.EstaActivo && 

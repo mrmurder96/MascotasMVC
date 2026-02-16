@@ -31,23 +31,20 @@ namespace Integrador.Models
 
         /// <summary>
         /// Valida si el usuario es mayor de edad (RF-20)
-        /// Nota: Requiere que el campo FechaNacimiento exista en la BD
-        /// Descomentarcuando se ejecute el script CrearTablasNuevas.sql
         /// </summary>
         [NotMapped]
         public int Edad
         {
             get
             {
-                // Descomentar cuando FechaNacimiento esté en BD:
-                // if (FechaNacimiento.HasValue)
-                // {
-                //     var hoy = DateTime.Today;
-                //     var edad = hoy.Year - FechaNacimiento.Value.Year;
-                //     if (FechaNacimiento.Value.Date > hoy.AddYears(-edad)) edad--;
-                //     return edad;
-                // }
-                return 18; // Por defecto mayor de edad hasta migrar BD
+                if (FechaNacimiento.HasValue)
+                {
+                    var hoy = DateTime.Today;
+                    var edad = hoy.Year - FechaNacimiento.Value.Year;
+                    if (FechaNacimiento.Value.Date > hoy.AddYears(-edad)) edad--;
+                    return edad;
+                }
+                return 18; // Por defecto mayor de edad si no tiene fecha
             }
         }
 

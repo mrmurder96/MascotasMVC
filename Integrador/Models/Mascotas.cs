@@ -11,7 +11,7 @@ namespace Integrador.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Mascotas
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,7 +19,7 @@ namespace Integrador.Models
         {
             this.Adopciones = new HashSet<Adopciones>();
         }
-    
+
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Tipo { get; set; }
@@ -30,7 +30,11 @@ namespace Integrador.Models
         public string Estado { get; set; }
         public Nullable<int> CategoriaId { get; set; }
         public Nullable<int> RefugioId { get; set; }
-    
+        public string Raza { get; set; }
+        public string Sexo { get; set; }
+        public string Tamano { get; set; }
+        public Nullable<System.DateTime> FechaCreacion { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Adopciones> Adopciones { get; set; }
         public virtual Categorias Categorias { get; set; }

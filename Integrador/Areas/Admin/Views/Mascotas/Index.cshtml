@@ -73,13 +73,20 @@
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="mascota-card">
                                 <div class="mascota-imagen">
-                                    @if (!string.IsNullOrEmpty(mascota.Imagen))
+                                    @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                                     {
-                                        <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.Imagen)" alt="@mascota.Nombre" />
+                                        if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
+                                        {
+                                            <img src="@Url.Content(mascota.FotoUrl)" alt="@mascota.Nombre" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="@mascota.Nombre" />
+                                        }
                                     }
                                     else
                                     {
-                                        <img src="@Url.Content("~/Content/images/no-image.png")" alt="Sin imagen" />
+                                        <img src="https://via.placeholder.com/300x250?text=Sin+Imagen" alt="Sin imagen" />
                                     }
                                     <div class="mascota-estado">
                                         @if (mascota.Estado == "Disponible")
