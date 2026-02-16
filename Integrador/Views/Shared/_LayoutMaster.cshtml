@@ -570,6 +570,42 @@
         hr { border-color: #eef1f3; }
 
         /* --- RESPONSIVE --- */
+        /* Para pantallas de 1366x768 (laptops comunes) */
+        @@media (max-width: 1400px) {
+            .sidebar { width: 220px; }
+            .main-content { margin-left: 220px; }
+            .sidebar-header { padding: 18px 16px; }
+            .sidebar-header h3 { font-size: 17px; }
+            .menu-item { padding: 10px 14px; font-size: 13px; gap: 10px; }
+            .menu-item i { font-size: 15px; min-width: 20px; }
+            .navbar-master { padding: 12px 20px; }
+            .navbar-left h2 { font-size: 18px; }
+            .content-area { padding: 20px 24px; }
+            .user-avatar { width: 36px; height: 36px; font-size: 14px; }
+            .logout-btn { padding: 7px 16px; font-size: 12px; }
+        }
+
+        @@media (max-width: 1280px) {
+            .sidebar { width: 200px; }
+            .main-content { margin-left: 200px; }
+            .sidebar-header { padding: 16px 14px; }
+            .sidebar-header h3 { font-size: 16px; }
+            .menu-item { padding: 9px 12px; font-size: 12px; }
+            .content-area { padding: 18px 20px; }
+            .navbar-left h2 { font-size: 16px; }
+        }
+
+        @@media (max-width: 1024px) {
+            .sidebar { width: 180px; }
+            .main-content { margin-left: 180px; }
+            .sidebar-header h3 { font-size: 15px; }
+            .menu-item { padding: 8px 10px; font-size: 12px; }
+            .menu-item i { font-size: 14px; }
+            .content-area { padding: 16px 18px; }
+            .navbar-left h2 { font-size: 15px; }
+            .user-info strong { font-size: 12px; }
+        }
+
         @@media (max-width: 768px) {
             .sidebar { width: 0; overflow: hidden; }
             .sidebar.show-mobile { width: 260px; }

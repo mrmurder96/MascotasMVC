@@ -102,13 +102,55 @@
         white-space: nowrap;
         border: 0;
     }
-    
+
     .card:focus-within {
         box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5) !important;
     }
-    
+
     .card-title:focus {
         outline: 2px solid #28a745;
         outline-offset: 2px;
+    }
+
+    /* Responsive para 1366x768 */
+    .container.py-4 {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    @@media (max-width: 1400px) {
+        .container.py-4 { padding: 16px 20px; }
+        .container.py-4 h1 { font-size: 28px; }
+        .container.py-4 .lead { font-size: 15px; }
+        .col-md-4 { width: 33.333%; }
+        .card { margin-bottom: 16px; }
+        .card-img-top { height: 180px !important; }
+        .card-body { padding: 16px; }
+        .card-title { font-size: 16px; }
+        .card-text { font-size: 13px; }
+        .btn { font-size: 13px; padding: 8px 14px; }
+    }
+
+    @@media (max-width: 1280px) {
+        .container.py-4 h1 { font-size: 24px; margin-bottom: 12px !important; }
+        .container.py-4 .lead { font-size: 14px; }
+        .card-img-top { height: 160px !important; }
+        .card-body { padding: 14px; }
+        .card-title { font-size: 15px; }
+        .btn { font-size: 12px; padding: 7px 12px; }
+        .btn-block { padding: 8px 10px; }
+    }
+
+    @@media (max-width: 1024px) {
+        .col-md-4 { width: 50%; }
+        .container.py-4 h1 { font-size: 22px; }
+        .card-img-top { height: 150px !important; }
+        .card-body { padding: 12px; }
+    }
+
+    @@media (max-width: 768px) {
+        .col-md-4 { width: 100%; }
+        .container.py-4 { padding: 12px; }
+        .card-img-top { height: 180px !important; }
     }
 </style>

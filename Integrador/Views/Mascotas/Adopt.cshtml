@@ -197,17 +197,53 @@
         margin-right: 8px;
     }
 
+    /* Responsive para 1366x768 */
+    @@media (max-width: 1400px) {
+        .adopt-container { max-width: 800px; padding: 16px; }
+        .adopt-header { padding: 24px; margin-bottom: 24px; }
+        .adopt-header h2 { font-size: 24px; }
+        .adopt-header p { font-size: 14px; }
+        .pet-preview { padding: 16px; gap: 16px; margin-bottom: 20px; }
+        .pet-preview img { width: 100px; height: 100px; }
+        .pet-preview-info h4 { font-size: 16px; }
+        .pet-preview-info p { font-size: 13px; }
+        .form-section { padding: 20px; margin-bottom: 16px; }
+        .form-section h4 { font-size: 16px; margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { font-size: 13px; margin-bottom: 6px; }
+        .form-control { padding: 10px 12px; font-size: 13px; }
+        .form-row { gap: 16px; }
+        .btn-submit { padding: 12px 30px; font-size: 14px; }
+    }
+
+    @@media (max-width: 1280px) {
+        .adopt-container { max-width: 720px; }
+        .adopt-header { padding: 20px; }
+        .adopt-header h2 { font-size: 22px; }
+        .pet-preview img { width: 90px; height: 90px; }
+        .form-section { padding: 18px; }
+        .form-section h4 { font-size: 15px; }
+        .form-control { padding: 9px 11px; font-size: 12px; }
+        .checkbox-item, .radio-item { font-size: 13px; }
+        .checkbox-item input[type="checkbox"], 
+        .radio-item input[type="radio"] { width: 16px; height: 16px; }
+    }
+
+    @@media (max-width: 1024px) {
+        .adopt-container { max-width: 650px; }
+        .adopt-header h2 { font-size: 20px; }
+        .form-row { grid-template-columns: 1fr; gap: 14px; }
+        .checkbox-group { grid-template-columns: 1fr; }
+        .pet-preview { flex-direction: column; text-align: center; }
+    }
+
     @@media (max-width: 768px) {
-        .form-row {
-            grid-template-columns: 1fr;
-        }
-        .checkbox-group {
-            grid-template-columns: 1fr;
-        }
-        .pet-preview {
-            flex-direction: column;
-            text-align: center;
-        }
+        .adopt-container { padding: 12px; }
+        .adopt-header { padding: 16px; border-radius: 10px; }
+        .form-row { grid-template-columns: 1fr; }
+        .checkbox-group { grid-template-columns: 1fr; }
+        .pet-preview { flex-direction: column; text-align: center; }
+        .form-section { padding: 16px; }
     }
 </style>
 
