@@ -71,7 +71,7 @@
             padding: 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             position: relative;
             box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
         }
@@ -80,7 +80,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            margin-left: 77px;
+            margin-left: 0;
             color: #000;
         }
 
@@ -288,10 +288,6 @@
         </div>
         <ul class="nav-links" role="menubar">
             <li role="none"><a href="@Url.Action("Index", "Mascotas")" role="menuitem">Mascotas</a></li>
-            @if (Session["Nombre"] != null)
-            {
-                <li role="none"><a href="@Url.Action("Centros", "Ciudadano")" role="menuitem">Refugios</a></li>
-            }
             <li role="none"><a href="@Url.Action("Soporte", "Home")" role="menuitem">Contacto</a></li>
         </ul>
         @if (Session["Nombre"] != null)
