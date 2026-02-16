@@ -1,40 +1,509 @@
 
 @{
     ViewBag.Title = "Formulario de adopción";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
-<div class="container py-4">
-    <div class="card p-4 shadow" style="max-width:720px;margin:auto;">
-        <h3 class="text-success">Formulario de adopción: @Model.Nombre</h3>
+<style>
+    .adopt-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">@Html.ValidationSummary()</div>
+    .adopt-header {
+        background: linear-gradient(135deg, #8CFAA4 0%, #BBFA8C 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        color: #000;
+    }
+
+    .adopt-header h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .adopt-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.85;
+    }
+
+    .pet-preview {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .pet-preview img {
+        width: 120px;
+        height: 120px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .pet-preview-info h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+    }
+
+    .pet-preview-info p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .form-section h4 {
+        color: #333;
+        margin: 0 0 20px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #8CFAA4;
+        font-size: 18px;
+    }
+
+    .form-section h4 i {
+        color: #8CFAA4;
+        margin-right: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group label .required {
+        color: #FA8C99;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #8CFAA4;
+        box-shadow: 0 0 0 3px rgba(140, 250, 164, 0.2);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #8CFAA4;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .radio-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .radio-item input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #8CFAA4;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #8CFAA4 0%, #BBFA8C 100%);
+        color: #000;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(140, 250, 164, 0.4);
+    }
+
+    .terms-section {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .terms-section p {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .alert-info-custom {
+        background: #e8f4fd;
+        border-left: 4px solid #8CFAA4;
+        padding: 15px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 20px;
+    }
+
+    .alert-info-custom i {
+        color: #8CFAA4;
+        margin-right: 8px;
+    }
+
+    @@media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
         }
-
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            <div class="mb-3">
-                <label class="form-label">Tu nombre</label>
-                <input type="text" name="nombreSolicitante" class="form-control" required />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Telófono</label>
-                <input type="text" name="telefono" class="form-control" />
-            </div>
-
-            <div class="d-grid">
-                <button class="btn btn-success" type="submit">Enviar solicitud</button>
-            </div>
+        .checkbox-group {
+            grid-template-columns: 1fr;
         }
+        .pet-preview {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
 
-        <div class="text-center mt-3">
-            <a href="@Url.Action("Details","Mascotas", new { id = Model.Id })" class="text-muted">Volver</a>
+<div class="adopt-container">
+    <div class="adopt-header">
+        <h2><i class="fas fa-heart"></i> Solicitud de Adopcion</h2>
+        <p>Completa el formulario para iniciar el proceso de adopcion</p>
+    </div>
+
+    <!-- Vista previa de la mascota -->
+    <div class="pet-preview">
+        <img src="@(string.IsNullOrEmpty(Model.FotoUrl) ? "/Content/images/mascota-default.png" : Model.FotoUrl)" alt="@Model.Nombre" />
+        <div class="pet-preview-info">
+            <h4><i class="fas fa-paw" style="color:#8CFAA4;"></i> @Model.Nombre</h4>
+            <p><strong>Tipo:</strong> @Model.Tipo | <strong>Edad:</strong> @Model.Edad anios | <strong>Ubicacion:</strong> @Model.Ubicacion</p>
         </div>
+    </div>
+
+    <div class="alert-info-custom">
+        <i class="fas fa-info-circle"></i>
+        <strong>Importante:</strong> Por favor completa todos los campos requeridos. Nuestro equipo revisara tu solicitud y te contactara en un plazo de 24-48 horas.
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" style="border-radius: 8px;">
+            @Html.ValidationSummary()
+        </div>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- Seccion 1: Datos Personales -->
+        <div class="form-section">
+            <h4><i class="fas fa-user"></i> Datos Personales</h4>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre completo <span class="required">*</span></label>
+                    <input type="text" name="nombreSolicitante" class="form-control" placeholder="Ej: Maria Garcia Lopez" required />
+                </div>
+                <div class="form-group">
+                    <label>Documento de identidad <span class="required">*</span></label>
+                    <input type="text" name="documento" class="form-control" placeholder="Ej: 12345678" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Correo electronico <span class="required">*</span></label>
+                    <input type="email" name="email" class="form-control" placeholder="Ej: maria@email.com" required />
+                </div>
+                <div class="form-group">
+                    <label>Telefono de contacto <span class="required">*</span></label>
+                    <input type="tel" name="telefono" class="form-control" placeholder="Ej: 999-888-777" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Direccion completa <span class="required">*</span></label>
+                <input type="text" name="direccion" class="form-control" placeholder="Ej: Av. Principal 123, Colonia Centro" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ciudad <span class="required">*</span></label>
+                    <input type="text" name="ciudad" class="form-control" placeholder="Ej: Ciudad de Mexico" required />
+                </div>
+                <div class="form-group">
+                    <label>Codigo postal</label>
+                    <input type="text" name="codigoPostal" class="form-control" placeholder="Ej: 12345" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Seccion 2: Informacion del Hogar -->
+        <div class="form-section">
+            <h4><i class="fas fa-home"></i> Informacion del Hogar</h4>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipo de vivienda <span class="required">*</span></label>
+                    <select name="tipoVivienda" class="form-control" required>
+                        <option value="">Selecciona una opcion</option>
+                        <option value="casa">Casa</option>
+                        <option value="departamento">Departamento/Apartamento</option>
+                        <option value="condominio">Condominio</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Es propietario o inquilino? <span class="required">*</span></label>
+                    <select name="propietarioInquilino" class="form-control" required>
+                        <option value="">Selecciona una opcion</option>
+                        <option value="propietario">Propietario</option>
+                        <option value="inquilino">Inquilino</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Si es inquilino, su arrendador permite mascotas?</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="permiteMascotas" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="permiteMascotas" value="no" /> No
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="permiteMascotas" value="na" checked /> No aplica
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cuenta con patio o area exterior?</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="tienePatio" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="tienePatio" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cuantas personas viven en el hogar? <span class="required">*</span></label>
+                <select name="personasHogar" class="form-control" required>
+                    <option value="">Selecciona una opcion</option>
+                    <option value="1">1 persona</option>
+                    <option value="2">2 personas</option>
+                    <option value="3">3 personas</option>
+                    <option value="4">4 personas</option>
+                    <option value="5+">5 o mas personas</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hay ninos en el hogar?</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="hayNinos" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="hayNinos" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Si hay ninos, que edades tienen?</label>
+                <input type="text" name="edadesNinos" class="form-control" placeholder="Ej: 5 y 10 anios" />
+            </div>
+        </div>
+
+        <!-- Seccion 3: Experiencia con Mascotas -->
+        <div class="form-section">
+            <h4><i class="fas fa-paw"></i> Experiencia con Mascotas</h4>
+
+            <div class="form-group">
+                <label>Ha tenido mascotas anteriormente? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="experienciaMascotas" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="experienciaMascotas" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Si tuvo mascotas, que paso con ellas?</label>
+                <textarea name="quepasoMascotas" class="form-control" rows="2" placeholder="Ej: Fallecio de vejez, la tengo actualmente, etc."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Actualmente tiene otras mascotas en casa?</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="otrasMascotas" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="otrasMascotas" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Si tiene otras mascotas, describalas</label>
+                <textarea name="descripcionOtrasMascotas" class="form-control" rows="2" placeholder="Ej: Un perro labrador de 3 anios, muy sociable"></textarea>
+            </div>
+        </div>
+
+        <!-- Seccion 4: Plan de Cuidado -->
+        <div class="form-section">
+            <h4><i class="fas fa-clipboard-check"></i> Plan de Cuidado</h4>
+
+            <div class="form-group">
+                <label>Cuantas horas al dia estara sola la mascota? <span class="required">*</span></label>
+                <select name="horasSola" class="form-control" required>
+                    <option value="">Selecciona una opcion</option>
+                    <option value="0-2">0-2 horas</option>
+                    <option value="2-4">2-4 horas</option>
+                    <option value="4-6">4-6 horas</option>
+                    <option value="6-8">6-8 horas</option>
+                    <option value="8+">Mas de 8 horas</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Donde dormira la mascota?</label>
+                <input type="text" name="lugardormir" class="form-control" placeholder="Ej: En su cama en la sala, en el patio, etc." />
+            </div>
+
+            <div class="form-group">
+                <label>Tiene acceso a un veterinario?</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="accesoVeterinario" value="si" /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="accesoVeterinario" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Esta dispuesto a cubrir gastos veterinarios (vacunas, esterilizacion, emergencias)? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="gastosVeterinarios" value="si" required /> Si
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="gastosVeterinarios" value="no" /> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Que haria si tiene que mudarse y no puede llevar a la mascota?</label>
+                <textarea name="planMudanza" class="form-control" rows="2" placeholder="Describa su plan"></textarea>
+            </div>
+        </div>
+
+        <!-- Seccion 5: Motivacion -->
+        <div class="form-section">
+            <h4><i class="fas fa-heart"></i> Motivacion</h4>
+
+            <div class="form-group">
+                <label>Por que desea adoptar a @Model.Nombre? <span class="required">*</span></label>
+                <textarea name="motivacion" class="form-control" rows="4" placeholder="Cuentenos por que quiere adoptar y por que cree que seria un buen hogar para esta mascota..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Como se entero de nosotros?</label>
+                <select name="comoSeEntero" class="form-control">
+                    <option value="">Selecciona una opcion</option>
+                    <option value="redes">Redes sociales</option>
+                    <option value="amigo">Recomendacion de amigo/familiar</option>
+                    <option value="internet">Busqueda en internet</option>
+                    <option value="evento">Evento de adopcion</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Terminos y Condiciones -->
+        <div class="terms-section">
+            <p>
+                <strong>Compromiso de adopcion:</strong> Al enviar esta solicitud, me comprometo a proporcionar un hogar amoroso y responsable, 
+                atender las necesidades medicas y emocionales de la mascota, y no abandonarla bajo ninguna circunstancia. 
+                Entiendo que el refugio puede realizar visitas de seguimiento.
+            </p>
+            <div class="checkbox-item">
+                <input type="checkbox" name="aceptaTerminos" id="aceptaTerminos" required />
+                <label for="aceptaTerminos">Acepto los terminos y condiciones de adopcion <span class="required">*</span></label>
+            </div>
+            <div class="checkbox-item" style="margin-top: 10px;">
+                <input type="checkbox" name="aceptaVisitas" id="aceptaVisitas" />
+                <label for="aceptaVisitas">Acepto recibir visitas de seguimiento del refugio</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-paper-plane"></i> Enviar Solicitud de Adopcion
+        </button>
+    }
+
+    <div class="text-center" style="margin-top: 20px;">
+        <a href="@Url.Action("Index", "Mascotas")" class="text-muted">
+            <i class="fas fa-arrow-left"></i> Volver a mascotas disponibles
+        </a>
     </div>
 </div>
