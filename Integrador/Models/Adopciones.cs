@@ -28,6 +28,30 @@ namespace Integrador.Models
         public string Telefono { get; set; }
         public System.DateTime FechaSolicitud { get; set; }
         public string Estado { get; set; }
+        public string Documento { get; set; }
+        public string Direccion { get; set; }
+        public string Ciudad { get; set; }
+        public string CodigoPostal { get; set; }
+        public string TipoVivienda { get; set; }
+        public string PropietarioInquilino { get; set; }
+        public string PermiteMascotas { get; set; }
+        public string TienePatio { get; set; }
+        public string PersonasHogar { get; set; }
+        public string HayNinos { get; set; }
+        public string EdadesNinos { get; set; }
+        public string ExperienciaMascotas { get; set; }
+        public string QuePasoMascotas { get; set; }
+        public string OtrasMascotas { get; set; }
+        public string DescripcionOtrasMascotas { get; set; }
+        public string HorasSola { get; set; }
+        public string LugarDormir { get; set; }
+        public string AccesoVeterinario { get; set; }
+        public string GastosVeterinarios { get; set; }
+        public string PlanMudanza { get; set; }
+        public string Motivacion { get; set; }
+        public string ComoSeEntero { get; set; }
+        public bool AceptaTerminos { get; set; }
+        public bool AceptaVisitas { get; set; }
     
         public virtual Mascotas Mascotas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
