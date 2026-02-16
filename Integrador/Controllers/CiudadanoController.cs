@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
@@ -18,7 +19,49 @@ namespace Integrador.Controllers
 
         public ActionResult Index()
         {
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            // Cargar mascotas disponibles
+            ViewBag.MascotasDisponibles = db.Mascotas
+                .Where(m => m.Estado == "Disponible")
+                .OrderBy(m => m.Nombre)
+                .Take(6)
+                .ToList();
+
+            // Cargar mis adopciones recientes
+            ViewBag.MisAdopciones = db.Adopciones
+                .Include("Mascotas")
+                .Where(a => a.UsuarioId == usuarioId)
+                .OrderByDescending(a => a.FechaSolicitud)
+                .Take(5)
+                .ToList();
+
             return View();
+        }
+
+        // GET: /Ciudadano/MisAdopciones
+        public ActionResult MisAdopciones()
+        {
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            var adopciones = db.Adopciones
+                .Include("Mascotas")
+                .Where(a => a.UsuarioId == usuarioId)
+                .OrderByDescending(a => a.FechaSolicitud)
+                .ToList();
+
+            return View(adopciones);
+        }
+
+        // GET: /Ciudadano/MascotasDisponibles
+        public ActionResult MascotasDisponibles()
+        {
+            var mascotas = db.Mascotas
+                .Where(m => m.Estado == "Disponible")
+                .OrderBy(m => m.Nombre)
+                .ToList();
+
+            return View(mascotas);
         }
 
         // GET: /Ciudadano/Perfil
@@ -246,22 +289,6 @@ namespace Integrador.Controllers
             }
 
             return RedirectToAction("Centros");
-        }
-
-        // GET: /Ciudadano/MisAdopciones
-        public ActionResult MisAdopciones()
-        {
-            if (Session["UsuarioId"] == null)
-                return RedirectToAction("Login", "Account");
-
-            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
-            
-            var adopciones = db.Adopciones
-                .Where(a => a.UsuarioId == usuarioId)
-                .OrderByDescending(a => a.FechaSolicitud)
-                .ToList();
-
-            return View(adopciones);
         }
 
         // GET: /Ciudadano/Notificaciones

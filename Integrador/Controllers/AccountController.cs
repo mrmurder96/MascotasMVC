@@ -71,6 +71,7 @@ namespace Integrador.Controllers
             db.SaveChanges();
 
             // IMPORTANTE: Limpiar caché de permisos antiguos
+            var returnUrl = Session["ReturnUrl"] as string;
             Session.Clear();
 
             Session["UsuarioId"] = usuario.Id;
@@ -79,10 +80,16 @@ namespace Integrador.Controllers
             // NO establecer Session["PermisosUsuario"] aquí
             // Se cargará automáticamente en el primer request por CargarPermisosAttribute
 
+            // Si hay una URL de retorno (ej: adoptar mascota), ir ahí
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             // Redirigir según el rol
             if (usuario.Rol == "Administrador")
                 return RedirectToAction("Index", "Admin", new { area = "Admin" });
-            
+
             // Para ciudadanos o cualquier otro rol, ir al área de Ciudadano
             return RedirectToAction("Index", "Ciudadano");
         }

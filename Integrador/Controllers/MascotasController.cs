@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.EntityClient;
 using System.Linq;
 using System.Web.Mvc;
 using Integrador.Models;
@@ -13,129 +10,104 @@ namespace Integrador.Controllers
     [CargarPermisos]
     public class MascotasController : Controller
     {
-        private string GetProviderConnectionString()
-        {
-            var efConnString = ConfigurationManager.ConnectionStrings["AdopcionMascotasEntities"].ConnectionString;
-            var builder = new EntityConnectionStringBuilder(efConnString);
-            return builder.ProviderConnectionString;
-        }
+        private adopEntities db = new adopEntities();
 
+        // GET: /Mascotas - Página pública de mascotas disponibles
         public ActionResult Index()
         {
-            var lista = new List<Mascota>();
-            try
+            var mascotas = db.Mascotas
+                .Where(m => m.Estado == "Disponible")
+                .OrderBy(m => m.Nombre)
+                .ToList();
+
+            var lista = mascotas.Select(m => new Mascota
             {
-                var connStr = GetProviderConnectionString();
-                using (var conn = new SqlConnection(connStr))
-                using (var cmd = new SqlCommand("SELECT Id, Nombre, Tipo, Edad, Ubicacion, Descripcion, FotoUrl, Estado FROM Mascotas WHERE Estado = 'Disponible' ORDER BY Nombre", conn))
-                {
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            lista.Add(new Mascota
-                            {
-                                Id = (int)rdr["Id"],
-                                Nombre = rdr["Nombre"] as string,
-                                Tipo = rdr["Tipo"] as string,
-                                Edad = rdr["Edad"] as int? ?? 0,
-                                Ubicacion = rdr["Ubicacion"] as string,
-                                Descripcion = rdr["Descripcion"] as string,
-                                FotoUrl = rdr["FotoUrl"] as string,
-                                Estado = rdr["Estado"] as string
-                            });
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // ignorar errores por rapidez; en producción loguear
-            }
+                Id = m.Id,
+                Nombre = m.Nombre,
+                Tipo = m.Tipo,
+                Edad = m.Edad ?? 0,
+                Ubicacion = m.Ubicacion,
+                Descripcion = m.Descripcion,
+                FotoUrl = m.FotoUrl,
+                Estado = m.Estado,
+                Raza = m.Raza,
+                Sexo = m.Sexo,
+                Tamano = m.Tamano
+            }).ToList();
+
             return View(lista);
         }
 
+        // GET: /Mascotas/Details/5
         public ActionResult Details(int id)
         {
-            Mascota m = null;
-            try
-            {
-                var connStr = GetProviderConnectionString();
-                using (var conn = new SqlConnection(connStr))
-                using (var cmd = new SqlCommand("SELECT Id, Nombre, Tipo, Edad, Ubicacion, Descripcion, FotoUrl, Estado FROM Mascotas WHERE Id = @Id", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    conn.Open();
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        if (rdr.Read())
-                        {
-                            m = new Mascota
-                            {
-                                Id = (int)rdr["Id"],
-                                Nombre = rdr["Nombre"] as string,
-                                Tipo = rdr["Tipo"] as string,
-                                Edad = rdr["Edad"] as int? ?? 0,
-                                Ubicacion = rdr["Ubicacion"] as string,
-                                Descripcion = rdr["Descripcion"] as string,
-                                FotoUrl = rdr["FotoUrl"] as string,
-                                Estado = rdr["Estado"] as string
-                            };
-                        }
-                    }
-                }
-            }
-            catch
-            {
-            }
-
-            if (m == null)
+            var mascotaDb = db.Mascotas.Find(id);
+            if (mascotaDb == null)
                 return HttpNotFound();
+
+            var m = new Mascota
+            {
+                Id = mascotaDb.Id,
+                Nombre = mascotaDb.Nombre,
+                Tipo = mascotaDb.Tipo,
+                Edad = mascotaDb.Edad ?? 0,
+                Ubicacion = mascotaDb.Ubicacion,
+                Descripcion = mascotaDb.Descripcion,
+                FotoUrl = mascotaDb.FotoUrl,
+                Estado = mascotaDb.Estado,
+                Raza = mascotaDb.Raza,
+                Sexo = mascotaDb.Sexo,
+                Tamano = mascotaDb.Tamano
+            };
 
             return View(m);
         }
 
+        // GET: /Mascotas/Adopt/5 - Redirige a login si no está autenticado
         [HttpGet]
         public ActionResult Adopt(int id)
         {
-            // Requiere sesión para iniciar adopción
+            // Si no está logueado, guardar la URL de retorno y redirigir al login
             if (Session["UsuarioId"] == null)
-                return RedirectToAction("Login", "Account");
-
-            // Cargar mascota para mostrar en el formulario
-            var mascota = new Mascota();
-            var connStr = GetProviderConnectionString();
-            using (var conn = new SqlConnection(connStr))
-            using (var cmd = new SqlCommand("SELECT Id, Nombre, Tipo, Edad, Ubicacion, Descripcion, FotoUrl, Estado FROM Mascotas WHERE Id = @Id", conn))
             {
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    if (rdr.Read())
-                    {
-                        mascota = new Mascota
-                        {
-                            Id = (int)rdr["Id"],
-                            Nombre = rdr["Nombre"] as string,
-                            Tipo = rdr["Tipo"] as string,
-                            Edad = rdr["Edad"] as int? ?? 0,
-                            Ubicacion = rdr["Ubicacion"] as string,
-                            Descripcion = rdr["Descripcion"] as string,
-                            FotoUrl = rdr["FotoUrl"] as string,
-                            Estado = rdr["Estado"] as string
-                        };
-                    }
-                }
+                Session["ReturnUrl"] = Url.Action("Adopt", "Mascotas", new { id = id });
+                return RedirectToAction("Login", "Account");
             }
 
-            if (mascota == null || mascota.Id == 0)
-                return HttpNotFound();
+            var mascotaDb = db.Mascotas.Find(id);
+            if (mascotaDb == null || mascotaDb.Estado != "Disponible")
+            {
+                TempData["Error"] = "La mascota no está disponible para adopción.";
+                return RedirectToAction("Index");
+            }
+
+            // Prellenar datos del usuario
+            var usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+            var usuario = db.Usuarios.Find(usuarioId);
+
+            var mascota = new Mascota
+            {
+                Id = mascotaDb.Id,
+                Nombre = mascotaDb.Nombre,
+                Tipo = mascotaDb.Tipo,
+                Edad = mascotaDb.Edad ?? 0,
+                Ubicacion = mascotaDb.Ubicacion,
+                Descripcion = mascotaDb.Descripcion,
+                FotoUrl = mascotaDb.FotoUrl,
+                Estado = mascotaDb.Estado
+            };
+
+            if (usuario != null)
+            {
+                ViewBag.NombreSolicitante = usuario.Nombres + " " + usuario.Apellidos;
+                ViewBag.Email = usuario.Email;
+                ViewBag.Telefono = usuario.Telefono;
+            }
 
             return View(mascota);
         }
 
+        // POST: /Mascotas/Adopt/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Adopt(int id, string nombreSolicitante, string email, string telefono)
@@ -146,52 +118,53 @@ namespace Integrador.Controllers
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(nombreSolicitante))
             {
                 ModelState.AddModelError("", "Nombre y email son obligatorios.");
-                var m = new Mascota { Id = id };
-                return View(m);
+                var mascotaDb = db.Mascotas.Find(id);
+                return View(new Mascota { Id = id, Nombre = mascotaDb?.Nombre });
             }
 
             var usuarioId = Convert.ToInt32(Session["UsuarioId"]);
-            var connStr = GetProviderConnectionString();
 
             try
             {
-                using (var conn = new SqlConnection(connStr))
+                // Crear solicitud de adopción
+                var adopcion = new Adopciones
                 {
-                    conn.Open();
-                    using (var tran = conn.BeginTransaction())
-                    {
-                        // Insert solicitud de adopción
-                        using (var cmd = new SqlCommand("INSERT INTO Adopciones (MascotaId, UsuarioId, NombreSolicitante, Email, Telefono, FechaSolicitud, Estado) VALUES (@MascotaId,@UsuarioId,@NombreSolicitante,@Email,@Telefono,GETDATE(),'En proceso'); SELECT SCOPE_IDENTITY();", conn, tran))
-                        {
-                            cmd.Parameters.AddWithValue("@MascotaId", id);
-                            cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
-                            cmd.Parameters.AddWithValue("@NombreSolicitante", nombreSolicitante);
-                            cmd.Parameters.AddWithValue("@Email", email);
-                            cmd.Parameters.AddWithValue("@Telefono", telefono ?? (object)DBNull.Value);
+                    MascotaId = id,
+                    UsuarioId = usuarioId,
+                    NombreSolicitante = nombreSolicitante,
+                    Email = email,
+                    Telefono = telefono,
+                    FechaSolicitud = DateTime.Now,
+                    Estado = "Pendiente"
+                };
+                db.Adopciones.Add(adopcion);
 
-                            var inserted = cmd.ExecuteScalar();
-                        }
-
-                        // Actualizar estado de mascota
-                        using (var cmd2 = new SqlCommand("UPDATE Mascotas SET Estado = 'En proceso' WHERE Id = @Id", conn, tran))
-                        {
-                            cmd2.Parameters.AddWithValue("@Id", id);
-                            cmd2.ExecuteNonQuery();
-                        }
-
-                        tran.Commit();
-                    }
+                // Actualizar estado de mascota
+                var mascota = db.Mascotas.Find(id);
+                if (mascota != null)
+                {
+                    mascota.Estado = "En proceso";
                 }
 
-                TempData["AdoptInfo"] = "Solicitud enviada. La mascota queda en estado 'En proceso de adopción'.";
-                return RedirectToAction("Details", new { id });
+                db.SaveChanges();
+
+                TempData["Success"] = "¡Solicitud de adopción enviada exitosamente! Nos pondremos en contacto contigo pronto.";
+                return RedirectToAction("MisAdopciones", "Ciudadano");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Error al procesar la solicitud: " + ex.Message);
-                var m = new Mascota { Id = id };
-                return View(m);
+                return View(new Mascota { Id = id });
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

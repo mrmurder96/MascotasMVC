@@ -11,6 +11,9 @@ namespace Integrador.Models
         public string Ubicacion { get; set; }
         public string Descripcion { get; set; }
         public string FotoUrl { get; set; }
-        public string Estado { get; set; } // e.g. "Disponible", "En proceso", "Adoptado"
+        public string Estado { get; set; }
+        public string Raza { get; set; }
+        public string Sexo { get; set; }
+        public string Tamano { get; set; }
     }
 }

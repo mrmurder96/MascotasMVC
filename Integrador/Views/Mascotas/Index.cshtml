@@ -63,12 +63,20 @@
                                     <span aria-label="Ubicación: @pet.Ubicacion">@pet.Ubicacion</span>
                                 </dd>
                             </dl>
-                            
-                            <a class="mt-auto btn btn-outline-success" 
-                               href="@Url.Action("Details","Mascotas", new { id = pet.Id })"
-                               aria-label="Ver información detallada de @pet.Nombre">
-                                Ver más detalles
-                            </a>
+
+                            <div class="mt-auto">
+                                <a class="btn btn-success btn-block mb-2" 
+                                   href="@Url.Action("Adopt", "Mascotas", new { id = pet.Id })"
+                                   style="background-color: #8CFAA4; border-color: #8CFAA4; color: #000;"
+                                   aria-label="Adoptar a @pet.Nombre">
+                                    <i class="glyphicon glyphicon-heart"></i> ¡Quiero Adoptarlo!
+                                </a>
+                                <a class="btn btn-outline-secondary btn-block" 
+                                   href="@Url.Action("Details","Mascotas", new { id = pet.Id })"
+                                   aria-label="Ver información detallada de @pet.Nombre">
+                                    Ver más detalles
+                                </a>
+                            </div>
                         </div>
                     </article>
                 </div>
