@@ -316,10 +316,22 @@
         </div>
     </nav>
 
-    @RenderBody()
+    <div class="public-scale">
+        @RenderBody()
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <style>
+        /* Escalar vistas públicas al 80% */
+        .public-scale {
+            transform-origin: top left;
+            transform: scale(0.80);
+            width: 125%; /* compensar el scale para que ocupe todo el ancho */
+        }
+        /* Ajustar imágenes y fuentes dentro del contenido escalado */
+        .public-scale img { max-width: 100%; height: auto; }
+    </style>
 </body>
 </html>
