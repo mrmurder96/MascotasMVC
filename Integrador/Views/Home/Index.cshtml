@@ -7,7 +7,7 @@
         /* Hero Section */
         .hero {
             background: url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1920') center/cover;
-            height: 1079px;
+            height: 600px;
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
@@ -18,49 +18,49 @@
 
         .hero-content {
             position: absolute;
-            top: 536px;
-            left: 172px;
+            top: 50%;
+            left: 80px;
+            transform: translateY(-50%);
             z-index: 10;
+            max-width: 800px;
         }
 
         .hero h1 {
             font-family: 'Nunito', sans-serif;
             font-weight: 900;
-            font-size: 32px;
-            line-height: 1.1;
+            font-size: 48px;
+            line-height: 1.2;
             color: #FFFFFF;
-            margin: 0 0 24px 0;
+            margin: 0 0 16px 0;
             padding: 0;
         }
 
         .hero p {
-            width: 917px;
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 32px;
-            line-height: 1.2;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 1.4;
             color: #FFFFFF;
-            margin: 0 0 44px 0;
+            margin: 0 0 32px 0;
             padding: 0;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 49px;
+            gap: 20px;
         }
 
         .btn-primary {
             background: #FFFFFF;
             color: #000;
-            width: 233px;
-            height: 90px;
-            border-radius: 30px;
-            padding: 20px 34px;
+            height: 50px;
+            border-radius: 25px;
+            padding: 0 32px;
             text-decoration: none;
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 32px;
-            line-height: 100%;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 50px;
             transition: transform 0.2s, box-shadow 0.3s;
             display: inline-flex;
             align-items: center;
@@ -78,15 +78,14 @@
         .btn-secondary {
             background: #FAA88C;
             color: #000;
-            width: 240px;
-            height: 90px;
-            border-radius: 30px;
-            padding: 20px 34px;
+            height: 50px;
+            border-radius: 25px;
+            padding: 0 32px;
             text-decoration: none;
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 28px;
-            line-height: 100%;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 50px;
             transition: transform 0.2s, box-shadow 0.3s;
             display: inline-flex;
             align-items: center;
@@ -106,7 +105,7 @@
         /* Como Funciona Section */
         .como-funciona {
             background-color: #FFFFFF;
-            padding: 117px 0 150px;
+            padding: 80px 20px;
             text-align: center;
         }
 
@@ -114,43 +113,43 @@
             font-family: 'Nunito', sans-serif;
             font-size: 36px;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             color: #000;
         }
 
         .como-funciona .subtitle {
             font-family: 'Nunito', sans-serif;
-            font-size: 36px;
-            font-weight: 200;
-            color: #000;
-            margin-bottom: 154px;
+            font-size: 18px;
+            font-weight: 400;
+            color: #666;
+            margin-bottom: 60px;
         }
 
         .steps {
             display: flex;
             justify-content: center;
-            gap: 50px;
-            max-width: 1677px;
+            gap: 40px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 121px;
+            padding: 0 20px;
         }
 
         .step {
             flex: 1;
-            max-width: 574px;
+            max-width: 350px;
             text-align: center;
         }
 
         .step-icon {
-            width: 104px;
-            height: 106px;
+            width: 80px;
+            height: 80px;
             background-color: #E8D4FF;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 48px;
+            margin: 0 auto 24px;
+            font-size: 36px;
         }
 
         .step:nth-child(2) .step-icon {
@@ -163,90 +162,89 @@
 
         .step h3 {
             font-family: 'Nunito', sans-serif;
-            font-size: 32px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             color: #000;
         }
 
         .step p {
             font-family: 'Nunito', sans-serif;
-            color: #000;
-            font-size: 32px;
-            font-weight: 200;
-            line-height: 1.4;
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
         }
 
 
         /* Mascotas Destacadas Section */
         .mascotas-destacadas {
-            background-color: rgba(0, 0, 0, 0.1);
-            padding: 68px 0 145px;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 80px 20px;
             text-align: center;
         }
 
         .mascotas-destacadas h2 {
             font-family: 'Nunito', sans-serif;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             color: #000;
         }
 
         .mascotas-destacadas .subtitle {
             font-family: 'Nunito', sans-serif;
-            font-size: 32px;
+            font-size: 18px;
             font-weight: 600;
-            color: #000;
-            margin-bottom: 128px;
+            color: #666;
+            margin-bottom: 60px;
         }
 
         .mascotas-grid {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            max-width: 1689px;
-            margin: 0 auto 120px;
-            padding: 0 121px;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            flex-wrap: wrap;
         }
 
         .mascota-card {
             background-color: white;
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: visible;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
-            width: 484px;
+            width: 100%;
+            max-width: 360px;
             display: flex;
             flex-direction: column;
-            margin-bottom: 35px;
-        }
-
-        .mascota-card:hover {
-            /* Hover removido de la card completa */
+            margin-bottom: 30px;
         }
 
         .mascota-image {
             width: 100%;
-            height: 563px;
+            height: 400px;
             object-fit: cover;
+            border-radius: 16px 16px 0 0;
         }
 
         .like-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background-color: white;
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            font-size: 24px;
+            font-size: 20px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
         }
@@ -273,23 +271,23 @@
         }
 
         .mascota-info {
-            padding: 30px;
+            padding: 20px;
             text-align: left;
             position: relative;
             background-color: white;
-            border-radius: 0 0 20px 20px;
+            border-radius: 0 0 16px 16px;
         }
 
         .mascota-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .mascota-header h3 {
             font-family: 'Nunito', sans-serif;
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
             color: #000;
         }
@@ -297,9 +295,9 @@
         .mascota-tag {
             background-color: #FFD4E5;
             color: #C25B8A;
-            padding: 6px 16px;
-            border-radius: 16px;
-            font-size: 16px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -315,51 +313,50 @@
 
         .mascota-raza {
             color: #666;
-            font-size: 18px;
-            margin-bottom: 8px;
+            font-size: 16px;
+            margin-bottom: 6px;
         }
 
         .mascota-edad {
             color: #999;
-            font-size: 16px;
-            margin-bottom: 15px;
+            font-size: 14px;
+            margin-bottom: 12px;
         }
 
         .mascota-descripcion {
             color: #666;
-            font-size: 16px;
+            font-size: 14px;
             font-style: italic;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             line-height: 1.5;
         }
 
         .mascota-ubicacion {
             color: #999;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .btn-ver-mas {
             background-color: #B8FF9C;
             color: #000;
-            padding: 12px 34px;
-            border-radius: 30px;
+            padding: 10px 24px;
+            border-radius: 20px;
             text-decoration: none;
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 24px;
+            font-weight: 700;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            transition: background-color 0.3s;
-            width: 300px;
-            height: auto;
+            transition: all 0.3s;
+            width: 200px;
             position: absolute;
-            bottom: -50px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -373,20 +370,20 @@
         .btn-ver-todas {
             background-color: #FAA88C;
             color: #000;
-            padding: 20px 60px;
-            border-radius: 20px;
+            padding: 14px 40px;
+            border-radius: 25px;
             text-decoration: none;
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 32px;
+            font-weight: 700;
+            font-size: 18px;
             display: inline-block;
             transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0px 4px 4px 5px rgba(0,0,0,0.25);
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
         }
 
         .btn-ver-todas:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
             background-color: #FA8C99;
         }
 
@@ -394,65 +391,66 @@
         /* CTA Section */
         .cta-section {
             background-color: rgba(187, 250, 140, 0.8);
-            padding: 88px 0;
+            padding: 60px 20px;
             text-align: center;
         }
 
         .cta-section h2 {
             font-family: 'Inter', sans-serif;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
-            margin-bottom: 67px;
+            margin-bottom: 20px;
             color: rgba(0, 0, 0, 0.95);
         }
 
         .cta-section p {
             font-family: 'Inter', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: rgba(0, 0, 0, 0.95);
-            max-width: 900px;
+            font-size: 18px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+            max-width: 800px;
             margin: 0 auto;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         /* Footer */
         .footer {
             background: #000000;
             color: white;
-            padding: 80px 0 40px;
+            padding: 60px 20px 30px;
             position: relative;
         }
 
         .footer-content {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 80px;
-            margin-bottom: 60px;
-            padding: 0 121px;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
         .footer-section h3 {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-family: 'Nunito', sans-serif;
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .footer-section ul {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .footer-section ul li {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .footer-section a {
             color: #ccc;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 14px;
             transition: color 0.3s;
         }
 
@@ -461,81 +459,58 @@
         }
 
         .footer-about {
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .footer-about p {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.6;
             color: #ccc;
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid #555;
+            padding-top: 30px;
+            border-top: 1px solid #333;
             color: #999;
-            font-size: 14px;
-            margin: 0 121px;
+            font-size: 13px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         /* Responsive */
-        @@media (max-width: 1440px) {
-            .steps,
-            .mascotas-grid,
-            .footer-content {
-                padding: 0 60px;
-            }
-
-            .hero-content {
-                left: 60px;
-            }
-        }
-
         @@media (max-width: 1200px) {
             .steps {
-                padding: 0 60px;
-            }
-
-            .step h3,
-            .step p {
-                font-size: 28px;
+                gap: 30px;
             }
 
             .mascotas-grid {
-                padding: 0 60px;
+                gap: 25px;
             }
         }
 
         @@media (max-width: 992px) {
             .hero {
-                height: 700px;
+                height: 500px;
             }
 
             .hero-content {
                 left: 40px;
-                top: 300px;
+                max-width: 600px;
             }
 
             .hero h1 {
-                font-size: 28px;
+                font-size: 36px;
             }
 
             .hero p {
-                font-size: 26px;
-                width: calc(100% - 80px);
-                max-width: 800px;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                font-size: 28px;
+                font-size: 18px;
             }
 
             .steps {
                 flex-direction: column;
-                gap: 80px;
-                padding: 0 40px;
+                gap: 50px;
+                max-width: 500px;
             }
 
             .step {
@@ -543,58 +518,44 @@
             }
 
             .mascotas-grid {
-                flex-direction: column;
-                align-items: center;
-                padding: 0 40px;
-                gap: 60px;
-            }
-
-            .mascota-card {
-                width: 100%;
-                max-width: 484px;
+                gap: 40px;
             }
 
             .footer-content {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 40px;
-                padding: 0 40px;
             }
         }
 
         @@media (max-width: 768px) {
             .hero {
-                height: 600px;
+                height: 450px;
             }
 
             .hero-content {
                 left: 30px;
-                top: 200px;
                 right: 30px;
             }
 
             .hero h1 {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .hero p {
-                font-size: 20px;
-                width: calc(100% - 60px);
+                font-size: 16px;
             }
 
             .hero-buttons {
                 flex-direction: column;
-                gap: 20px;
+                gap: 12px;
             }
 
             .btn-primary,
             .btn-secondary {
                 width: 200px;
-                height: 70px;
-                font-size: 24px;
             }
 
             .como-funciona {
-                padding: 60px 0 80px;
+                padding: 60px 20px;
             }
 
             .como-funciona h2 {
@@ -602,33 +563,29 @@
             }
 
             .como-funciona .subtitle {
-                font-size: 22px;
-                margin-bottom: 80px;
-                padding: 0 20px;
+                font-size: 16px;
             }
 
             .steps {
-                flex-direction: column;
-                padding: 0 30px;
-                gap: 60px;
+                gap: 40px;
             }
 
             .step-icon {
-                width: 80px;
-                height: 80px;
-                font-size: 36px;
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
             }
 
             .step h3 {
-                font-size: 24px;
-            }
-
-            .step p {
                 font-size: 20px;
             }
 
+            .step p {
+                font-size: 15px;
+            }
+
             .mascotas-destacadas {
-                padding: 50px 0 80px;
+                padding: 60px 20px;
             }
 
             .mascotas-destacadas h2 {
@@ -636,91 +593,68 @@
             }
 
             .mascotas-destacadas .subtitle {
-                font-size: 22px;
-                margin-bottom: 60px;
-                padding: 0 20px;
+                font-size: 16px;
             }
 
             .mascotas-grid {
-                flex-direction: column;
-                align-items: center;
-                padding: 0 30px;
-                margin-bottom: 80px;
-                gap: 70px;
-            }
-
-            .mascota-card {
-                width: 100%;
-                max-width: 400px;
+                margin-bottom: 50px;
             }
 
             .mascota-image {
-                height: 400px;
+                height: 350px;
             }
 
             .btn-ver-mas {
-                width: 300px;
-                font-size: 20px;
+                width: 180px;
+                font-size: 15px;
             }
 
             .btn-ver-todas {
-                font-size: 24px;
-                padding: 15px 40px;
+                font-size: 16px;
+                padding: 12px 32px;
             }
 
             .cta-section {
-                padding: 60px 20px;
+                padding: 50px 20px;
             }
 
             .cta-section h2 {
-                font-size: 20px;
-                margin-bottom: 40px;
+                font-size: 24px;
             }
 
             .cta-section p {
-                font-size: 24px;
-                padding: 0 20px;
+                font-size: 16px;
             }
 
             .footer-content {
                 grid-template-columns: 1fr;
-                padding: 0 30px;
-                gap: 40px;
+                gap: 30px;
             }
 
             .footer {
-                padding: 60px 0 30px;
-            }
-
-            .footer-bottom {
-                margin: 0 30px;
+                padding: 50px 20px 25px;
             }
         }
 
         @@media (max-width: 480px) {
             .hero {
-                height: 500px;
-            }
-
-            .hero-content {
-                top: 150px;
+                height: 400px;
             }
 
             .hero h1 {
-                font-size: 20px;
+                font-size: 24px;
             }
 
             .hero p {
-                font-size: 16px;
-                line-height: 1.4;
+                font-size: 14px;
             }
 
             .btn-primary,
             .btn-secondary {
                 width: 160px;
-                height: 60px;
-                font-size: 20px;
-                padding: 15px 20px;
+                height: 44px;
+                font-size: 14px;
+                line-height: 44px;
             }
 
             .como-funciona h2 {
@@ -728,15 +662,15 @@
             }
 
             .como-funciona .subtitle {
-                font-size: 18px;
+                font-size: 14px;
             }
 
             .step h3 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .step p {
-                font-size: 18px;
+                font-size: 14px;
             }
 
             .mascotas-destacadas h2 {
@@ -744,32 +678,36 @@
             }
 
             .mascotas-destacadas .subtitle {
-                font-size: 18px;
+                font-size: 14px;
             }
 
             .mascota-header h3 {
-                font-size: 22px;
+                font-size: 20px;
+            }
+
+            .mascota-image {
+                height: 300px;
             }
 
             .btn-ver-mas {
-                width: 250px;
-                font-size: 18px;
+                width: 160px;
+                font-size: 14px;
             }
 
             .btn-ver-todas {
-                font-size: 20px;
-                padding: 12px 30px;
+                font-size: 15px;
+                padding: 10px 28px;
             }
 
             .cta-section h2 {
-                font-size: 18px;
+                font-size: 20px;
             }
 
             .cta-section p {
-                font-size: 20px;
+                font-size: 15px;
             }
         }
-    </style>
+</style>
 
 <!-- Hero Section -->
 <section class="hero" role="banner" aria-label="Sección principal de bienvenida">
