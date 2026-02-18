@@ -26,32 +26,33 @@
             align-items: center;
             justify-content: center;
             overflow-x: hidden;
+            padding: 20px;
         }
 
         .verify-container {
             width: 100%;
-            max-width: 680px;
-            margin: 40px 20px;
+            max-width: 500px;
+            margin: 20px auto;
             position: relative;
         }
 
         /* Botón Regresar */
         .btn-back {
             position: absolute;
-            top: -60px;
+            top: -50px;
             left: 0;
             background: transparent;
             border: none;
             color: #3D2817;
             font-family: 'Nunito Sans', sans-serif;
             font-weight: 900;
-            font-size: 24px;
+            font-size: 16px;
             cursor: pointer;
             text-decoration: none;
             transition: opacity 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             z-index: 100;
         }
 
@@ -63,63 +64,64 @@
         .confirmation-message {
             background: rgba(217, 217, 217, 0.8);
             backdrop-filter: blur(10px);
-            border: 4px solid rgba(255, 255, 255, 0.9);
-            border-radius: 40px;
-            padding: 40px 50px;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 30px 35px;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
         .confirmation-message h1 {
             font-family: 'Nunito', sans-serif;
             font-weight: 900;
-            font-size: 48px;
+            font-size: 32px;
             color: rgba(0, 0, 0, 0.95);
-            margin-bottom: 20px;
-            line-height: 1.2;
+            margin-bottom: 16px;
+            line-height: 1.3;
         }
 
         .confirmation-message p {
             font-family: 'Nunito', sans-serif;
             font-weight: 400;
-            font-size: 28px;
+            font-size: 16px;
             font-style: italic;
-            color: rgba(0, 0, 0, 0.95);
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 1.5;
         }
 
         /* Panel de Formulario */
         .form-panel {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 40px 50px 50px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 35px 40px 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
 
         .form-header {
             background: #FA8C99;
-            border-radius: 30px;
-            padding: 10px 40px;
+            border-radius: 20px;
+            padding: 12px 30px;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .form-header h2 {
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
-            font-size: 32px;
+            font-size: 22px;
             color: rgba(0, 0, 0, 0.95);
             margin: 0;
         }
 
         /* Alertas de Validación */
         .alert {
-            padding: 15px 20px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 14px;
             animation: slideDown 0.3s ease;
         }
 
@@ -148,7 +150,7 @@
 
         /* Campo de Código */
         .form-group {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .form-label {
@@ -157,17 +159,17 @@
 
         .code-input {
             width: 100%;
-            height: 80px;
+            height: 60px;
             background: rgba(217, 217, 217, 0.7);
             border: none;
-            border-radius: 41px;
-            padding: 0 28px;
+            border-radius: 30px;
+            padding: 0 20px;
             font-family: 'Nunito', sans-serif;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             color: rgba(0, 0, 0, 0.9);
             text-align: center;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             transition: all 0.3s;
         }
 
@@ -177,25 +179,25 @@
         }
 
         .code-input:focus {
-            outline: 3px solid #FA8C99;
+            outline: 2px solid #FA8C99;
             outline-offset: 2px;
             background: rgba(217, 217, 217, 0.9);
         }
 
         /* Botón de Verificar */
         .btn-submit {
-            width: 221px;
-            height: 71px;
+            width: 180px;
+            height: 50px;
             background: #B8FF9C;
             border: 2px solid rgba(0, 0, 0, 0.8);
-            border-radius: 30px;
+            border-radius: 25px;
             color: rgba(0, 0, 0, 0.9);
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 32px;
+            font-weight: 700;
+            font-size: 17px;
             cursor: pointer;
             transition: all 0.3s;
-            margin: 30px auto;
+            margin: 25px auto;
             display: block;
         }
 
@@ -212,12 +214,12 @@
         /* Acciones Secundarias */
         .secondary-actions {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .secondary-actions form {
             display: inline-block;
-            margin: 0 10px;
+            margin: 0 8px;
         }
 
         .btn-link {
@@ -225,8 +227,8 @@
             border: none;
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
-            font-size: 20px;
-            color: rgba(0, 0, 0, 0.95);
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.85);
             text-decoration: none;
             cursor: pointer;
             transition: opacity 0.3s;
@@ -240,69 +242,23 @@
 
         /* Responsive Design */
         @@media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
             .verify-container {
-                margin: 20px 15px;
+                margin: 15px auto;
             }
 
             .btn-back {
-                top: 15px;
-                left: 15px;
-                font-size: 22px;
-            }
-
-            .confirmation-message {
-                padding: 30px 25px;
-                border-radius: 30px;
-            }
-
-            .confirmation-message h1 {
-                font-size: 36px;
-            }
-
-            .confirmation-message p {
-                font-size: 22px;
-            }
-
-            .form-panel {
-                padding: 30px 25px 40px;
-            }
-
-            .form-header {
-                padding: 10px 20px;
-                margin-bottom: 30px;
-            }
-
-            .form-header h2 {
-                font-size: 28px;
-            }
-
-            .code-input {
-                height: 70px;
-                font-size: 28px;
-                letter-spacing: 6px;
-            }
-
-            .btn-submit {
-                width: 200px;
-                height: 60px;
-                font-size: 28px;
-            }
-
-            .btn-link {
-                font-size: 18px;
-            }
-        }
-
-        @@media (max-width: 480px) {
-            .btn-back {
-                top: 10px;
+                top: -40px;
                 left: 10px;
-                font-size: 18px;
+                font-size: 15px;
             }
 
             .confirmation-message {
-                padding: 25px 20px;
-                border-radius: 25px;
+                padding: 25px 30px;
+                border-radius: 20px;
                 margin-bottom: 20px;
             }
 
@@ -311,37 +267,104 @@
             }
 
             .confirmation-message p {
-                font-size: 18px;
+                font-size: 15px;
             }
 
             .form-panel {
-                padding: 25px 20px 30px;
+                padding: 30px 30px 35px;
+            }
+
+            .form-header {
+                padding: 12px 25px;
+                margin-bottom: 25px;
             }
 
             .form-header h2 {
-                font-size: 24px;
+                font-size: 20px;
             }
 
             .code-input {
-                height: 60px;
+                height: 56px;
+                font-size: 22px;
+                letter-spacing: 5px;
+            }
+
+            .btn-submit {
+                width: 160px;
+                height: 48px;
+                font-size: 16px;
+            }
+
+            .btn-link {
+                font-size: 13px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .btn-back {
+                top: -35px;
+                left: 10px;
+                font-size: 14px;
+            }
+
+            .confirmation-message {
+                padding: 20px 25px;
+                border-radius: 16px;
+                margin-bottom: 20px;
+                border-width: 2px;
+            }
+
+            .confirmation-message h1 {
                 font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            .confirmation-message p {
+                font-size: 14px;
+            }
+
+            .form-panel {
+                padding: 25px 25px 30px;
+            }
+
+            .form-header {
+                padding: 10px 20px;
+                margin-bottom: 20px;
+            }
+
+            .form-header h2 {
+                font-size: 18px;
+            }
+
+            .code-input {
+                height: 52px;
+                font-size: 20px;
                 letter-spacing: 4px;
             }
 
             .btn-submit {
-                width: 180px;
-                height: 55px;
-                font-size: 24px;
+                width: 150px;
+                height: 46px;
+                font-size: 15px;
             }
 
             .btn-link {
-                font-size: 16px;
+                font-size: 13px;
+            }
+
+            .alert {
+                padding: 10px 12px;
+                font-size: 13px;
             }
         }
 
         /* Accesibilidad */
         *:focus-visible {
-            outline: 3px solid #FA8C99;
+            outline: 2px solid #FA8C99;
             outline-offset: 2px;
         }
     </style>
@@ -354,7 +377,7 @@
 
         <!-- Mensaje de Confirmación -->
         <div class="confirmation-message" role="status" aria-live="polite">
-            <h1>Código de<br/>verificación<br/>enviado</h1>
+            <h1>Código de<br />verificación<br />enviado</h1>
             <p>Se envió exitosamente a tu correo el código para verificar tu identidad</p>
         </div>
 
@@ -385,12 +408,12 @@
 
                 <div class="form-group">
                     <label class="form-label" for="codeInput">Código de verificación</label>
-                    <input type="text" 
-                           name="code" 
+                    <input type="text"
+                           name="code"
                            id="codeInput"
-                           class="code-input" 
-                           placeholder="••••••" 
-                           required 
+                           class="code-input"
+                           placeholder="••••••"
+                           required
                            maxlength="10"
                            autocomplete="off"
                            aria-label="Código de verificación de 6 dígitos"
@@ -413,7 +436,7 @@
                         Reenviar código
                     </button>
                 }
-                <span style="color: rgba(0, 0, 0, 0.5); margin: 0 10px;">|</span>
+                <span style="color: rgba(0, 0, 0, 0.5); margin: 0 8px;">|</span>
                 <a href="@Url.Action("Login", "Account")" class="btn-link">Cancelar y volver</a>
             </div>
         </div>
@@ -421,7 +444,7 @@
 
     <script>
         // Auto-focus en el campo de código al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const codeInput = document.getElementById('codeInput');
             if (codeInput) {
                 codeInput.focus();

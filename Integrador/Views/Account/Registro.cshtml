@@ -27,34 +27,35 @@
             align-items: center;
             justify-content: center;
             overflow-x: hidden;
+            padding: 20px;
         }
 
         .registro-container {
             width: 100%;
-            max-width: 1500px;
-            margin: 40px 20px;
+            max-width: 1100px;
+            margin: 20px auto;
             display: flex;
-            gap: 20px;
+            gap: 30px;
             position: relative;
         }
 
         /* Botón Regresar */
         .btn-back {
             position: absolute;
-            top: -60px;
+            top: -50px;
             left: 0;
             background: transparent;
             border: none;
             color: #3D2817;
             font-family: 'Nunito Sans', sans-serif;
             font-weight: 900;
-            font-size: 24px;
+            font-size: 16px;
             cursor: pointer;
             text-decoration: none;
             transition: opacity 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             z-index: 100;
         }
 
@@ -68,25 +69,25 @@
             background: url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=891&h=773&fit=crop') center/cover;
             border-radius: 12px;
             position: relative;
-            min-height: 773px;
+            min-height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
         /* Cuadro interno con borde blanco */
         .welcome-box {
             position: relative;
-            width: 110%;
-            height: 102%;
-            border: 4px solid rgba(255, 255, 255, 0.8);
-            border-radius: 40px;
+            width: 95%;
+            height: 90%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            padding-top: 50px;
+            padding: 30px;
             z-index: 2;
         }
 
@@ -98,56 +99,56 @@
         .welcome-content h1 {
             font-family: 'Nunito', sans-serif;
             font-weight: 900;
-            font-size: 48px;
+            font-size: 40px;
             color: rgba(0, 0, 0, 0.95);
-            margin-bottom: 10px;
+            margin-bottom: 16px;
             line-height: 1.2;
         }
 
         .welcome-content p {
             font-family: 'Nunito', sans-serif;
             font-weight: 400;
-            font-size: 32px;
+            font-size: 20px;
             font-style: italic;
-            color: rgba(0, 0, 0, 0.95);
-            margin-top: 15px;
+            color: rgba(0, 0, 0, 0.9);
+            margin-top: 12px;
         }
 
         /* Panel Derecho - Formulario */
         .form-panel {
-            width: 680px;
-            background: rgba(255, 255, 255, 0.7);
+            width: 500px;
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             border: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 40px 50px 50px;
+            padding: 35px 40px 40px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             max-height: 90vh;
             overflow-y: auto;
         }
 
         .form-header {
             background: rgba(255, 150, 150, 0.6);
-            border-radius: 30px;
-            padding: 10px 40px;
+            border-radius: 20px;
+            padding: 12px 30px;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .form-header h2 {
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
-            font-size: 32px;
+            font-size: 24px;
             color: rgba(0, 0, 0, 0.95);
             margin: 0;
         }
 
         /* Alertas de Validación */
         .alert {
-            padding: 15px 20px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
             animation: slideDown 0.3s ease;
@@ -161,7 +162,7 @@
 
         .text-danger {
             color: #c62828;
-            font-size: 14px;
+            font-size: 13px;
             margin-top: 5px;
             display: block;
         }
@@ -181,12 +182,12 @@
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-group.full-width {
@@ -199,13 +200,13 @@
 
         .form-control {
             width: 100%;
-            height: 56px;
+            height: 48px;
             background: rgba(217, 217, 217, 0.7);
             border: none;
-            border-radius: 41px;
-            padding: 0 28px;
+            border-radius: 24px;
+            padding: 0 20px;
             font-family: 'Nunito', sans-serif;
-            font-size: 20px;
+            font-size: 15px;
             color: rgba(0, 0, 0, 0.9);
             transition: all 0.3s;
         }
@@ -215,7 +216,7 @@
         }
 
         .form-control:focus {
-            outline: 3px solid #FA8C99;
+            outline: 2px solid #FA8C99;
             outline-offset: 2px;
             background: rgba(217, 217, 217, 0.9);
         }
@@ -224,14 +225,14 @@
         .file-input-wrapper {
             position: relative;
             width: 100%;
-            height: 56px;
+            height: 48px;
             background: rgba(217, 217, 217, 0.7);
-            border-radius: 41px;
+            border-radius: 24px;
             overflow: hidden;
             cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 0 28px;
+            padding: 0 20px;
             transition: all 0.3s;
         }
 
@@ -249,32 +250,32 @@
 
         .file-input-label {
             font-family: 'Nunito', sans-serif;
-            font-size: 20px;
+            font-size: 15px;
             color: rgba(0, 0, 0, 0.5);
             pointer-events: none;
         }
 
         .file-note {
-            font-size: 14px;
+            font-size: 12px;
             color: rgba(0, 0, 0, 0.6);
-            margin-top: 8px;
-            margin-left: 28px;
+            margin-top: 6px;
+            margin-left: 20px;
         }
 
         /* Botón de Registro */
         .btn-submit {
-            width: 221px;
-            height: 71px;
+            width: 180px;
+            height: 50px;
             background: #B8FF9C;
             border: 2px solid rgba(0, 0, 0, 0.8);
-            border-radius: 30px;
+            border-radius: 25px;
             color: rgba(0, 0, 0, 0.9);
             font-family: 'Nunito', sans-serif;
-            font-weight: 900;
-            font-size: 32px;
+            font-weight: 700;
+            font-size: 17px;
             cursor: pointer;
             transition: all 0.3s;
-            margin: 30px auto 30px;
+            margin: 25px auto 25px;
             display: block;
         }
 
@@ -295,16 +296,16 @@
 
         .login-section p {
             font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 24px;
-            color: rgba(0, 0, 0, 0.95);
-            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 15px;
+            color: rgba(0, 0, 0, 0.9);
+            margin-bottom: 6px;
         }
 
         .login-section a {
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
-            font-size: 24px;
+            font-size: 15px;
             color: rgba(0, 0, 0, 0.95);
             text-decoration: none;
             transition: opacity 0.3s;
@@ -316,38 +317,15 @@
         }
 
         /* Responsive Design */
-        @@media (max-width: 1400px) {
+        @@media (max-width: 1200px) {
             .registro-container {
-                max-width: 1200px;
+                max-width: 950px;
+                gap: 25px;
             }
 
             .form-panel {
-                width: 600px;
-            }
-
-            .welcome-content h1 {
-                font-size: 40px;
-            }
-
-            .welcome-content p {
-                font-size: 28px;
-            }
-        }
-
-        @@media (max-width: 1024px) {
-            .registro-container {
-                flex-direction: column;
-                max-width: 680px;
-            }
-
-            .welcome-panel {
-                min-height: 450px;
-            }
-
-            .welcome-box {
-                width: 90%;
-                height: 85%;
-                padding-top: 40px;
+                width: 460px;
+                padding: 30px 35px 35px;
             }
 
             .welcome-content h1 {
@@ -355,28 +333,26 @@
             }
 
             .welcome-content p {
-                font-size: 24px;
-            }
-
-            .form-panel {
-                width: 100%;
-            }
-
-            .btn-back {
-                top: 20px;
-                left: 20px;
+                font-size: 18px;
             }
         }
 
-        @@media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
+        @@media (max-width: 992px) {
+            .registro-container {
+                flex-direction: column;
+                max-width: 550px;
+                gap: 20px;
             }
 
             .welcome-panel {
                 min-height: 400px;
-                padding: 30px;
+                padding: 25px;
+            }
+
+            .welcome-box {
+                width: 90%;
+                height: 85%;
+                padding: 25px;
             }
 
             .welcome-content h1 {
@@ -384,89 +360,183 @@
             }
 
             .welcome-content p {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .form-panel {
-                padding: 40px 30px;
-            }
-
-            .form-control {
-                font-size: 18px;
-                height: 50px;
-            }
-
-            .btn-submit {
-                width: 200px;
-                font-size: 24px;
-                height: 60px;
-            }
-
-            .login-section p,
-            .login-section a {
-                font-size: 20px;
+                width: 100%;
             }
 
             .btn-back {
-                top: 15px;
-                left: 15px;
-                font-size: 22px;
+                top: -40px;
+                left: 10px;
             }
         }
 
-        @@media (max-width: 480px) {
+        @@media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .registro-container {
+                margin: 15px auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .welcome-panel {
+                min-height: 350px;
+                padding: 20px;
+            }
+
+            .welcome-box {
+                border-radius: 20px;
+            }
+
             .welcome-content h1 {
                 font-size: 28px;
             }
 
             .welcome-content p {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .form-panel {
-                padding: 30px 20px;
+                padding: 30px 25px;
+            }
+
+            .form-header {
+                padding: 12px 25px;
+                margin-bottom: 25px;
+            }
+
+            .form-header h2 {
+                font-size: 20px;
+            }
+
+            .form-control,
+            .file-input-wrapper {
+                font-size: 14px;
+                height: 46px;
+            }
+
+            .btn-submit {
+                width: 160px;
+                font-size: 16px;
+                height: 48px;
+            }
+
+            .login-section p,
+            .login-section a {
+                font-size: 14px;
+            }
+
+            .btn-back {
+                top: -35px;
+                left: 10px;
+                font-size: 15px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .welcome-panel {
+                min-height: 300px;
+            }
+
+            .welcome-box {
+                border-radius: 16px;
+                border-width: 2px;
+                padding: 20px;
+            }
+
+            .welcome-content h1 {
+                font-size: 24px;
+            }
+
+            .welcome-content p {
+                font-size: 15px;
+            }
+
+            .form-panel {
+                padding: 25px 20px;
             }
 
             .form-header {
                 padding: 10px 20px;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
             }
 
             .form-header h2 {
-                font-size: 24px;
+                font-size: 18px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+
+            .form-control,
+            .file-input-wrapper {
+                height: 44px;
+                font-size: 14px;
+                padding: 0 16px;
+            }
+
+            .file-input-label {
+                font-size: 14px;
+            }
+
+            .file-note {
+                font-size: 11px;
             }
 
             .btn-submit {
-                width: 180px;
-                font-size: 20px;
+                width: 150px;
+                font-size: 15px;
+                height: 46px;
+            }
+
+            .login-section p,
+            .login-section a {
+                font-size: 13px;
             }
 
             .btn-back {
-                top: 10px;
-                left: 10px;
-                font-size: 18px;
+                top: -30px;
+                font-size: 14px;
+            }
+
+            .alert {
+                padding: 10px 12px;
+                font-size: 13px;
             }
         }
 
         /* Accesibilidad */
         *:focus-visible {
-            outline: 3px solid #FA8C99;
+            outline: 2px solid #FA8C99;
             outline-offset: 2px;
         }
 
         /* Scrollbar personalizado para el panel del formulario */
         .form-panel::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         .form-panel::-webkit-scrollbar-track {
             background: rgba(217, 217, 217, 0.3);
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .form-panel::-webkit-scrollbar-thumb {
             background: rgba(250, 140, 153, 0.5);
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .form-panel::-webkit-scrollbar-thumb:hover {
@@ -484,7 +554,7 @@
         <div class="welcome-panel" role="complementary" aria-label="Información de registro">
             <div class="welcome-box">
                 <div class="welcome-content">
-                    <h1>¿Eres nuevo?<br/>Regístrate aquí</h1>
+                    <h1>¿Eres nuevo?<br />Regístrate aquí</h1>
                     <p>Adopta, conecta, ama</p>
                 </div>
             </div>
@@ -542,16 +612,16 @@
 
                 <div class="form-group">
                     <div class="file-input-wrapper">
-                        <input type="file" 
-                               name="Fotos" 
-                               accept="image/*" 
-                               multiple 
+                        <input type="file"
+                               name="Fotos"
+                               accept="image/*"
+                               multiple
                                id="fileInput"
                                aria-label="Seleccionar fotos de perfil" />
                         <span class="file-input-label" id="fileLabel">📷 Seleccionar fotos</span>
                     </div>
                     <small class="file-note">Máx 2 MB por imagen. Puedes subir varias imágenes</small>
-                    <span class="text-danger" id="fileError" style="display: none; margin-left: 28px;"></span>
+                    <span class="text-danger" id="fileError" style="display: none; margin-left: 20px;"></span>
                     @Html.ValidationMessage("Fotos", "", new { @class = "text-danger" })
                 </div>
 
@@ -572,14 +642,14 @@
 
     <script>
         // Validación de archivos y mostrar nombre de archivo seleccionado
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('fileInput');
             const fileLabel = document.getElementById('fileLabel');
             const fileError = document.getElementById('fileError');
             const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
 
             if (fileInput && fileLabel) {
-                fileInput.addEventListener('change', function() {
+                fileInput.addEventListener('change', function () {
                     const files = this.files;
                     let hasError = false;
                     let errorMessage = '';
@@ -588,14 +658,14 @@
                     // Validar cada archivo
                     for (let i = 0; i < files.length; i++) {
                         const file = files[i];
-                        
+
                         // Validar que sea una imagen
                         if (!file.type.startsWith('image/')) {
                             hasError = true;
                             errorMessage = `El archivo "${file.name}" no es una imagen válida.`;
                             break;
                         }
-                        
+
                         // Validar tamaño (máximo 2MB)
                         if (file.size > MAX_FILE_SIZE) {
                             hasError = true;
@@ -603,7 +673,7 @@
                             errorMessage = `El archivo "${file.name}" (${sizeMB} MB) excede el tamaño máximo de 2 MB.`;
                             break;
                         }
-                        
+
                         validFiles.push(file);
                     }
 
