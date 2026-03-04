@@ -1,64 +1,386 @@
 @model IEnumerable<Integrador.Models.Notificacion>
-
 @{
-    ViewBag.Title = "Notificaciones";
+    ViewBag.Title = "Mis Notificaciones";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var noLeidas = Model?.Count(n => !n.Leido) ?? 0;
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="list-group">
-                <a href="@Url.Action("Index", "Ciudadano")" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="@Url.Action("Perfil", "Ciudadano")" class="list-group-item list-group-item-action">Mi Perfil</a>
-                <a href="@Url.Action("Notificaciones", "Ciudadano")" class="list-group-item list-group-item-action active" style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Notificaciones</a>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header-card">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><i class="fas fa-bell"></i> Mis Notificaciones</h2>
+                <p class="lead">
+                    @if (noLeidas > 0)
+                    {
+                        <span>Tienes <strong>@noLeidas</strong> notificación@(noLeidas > 1 ? "es" : "") sin leer</span>
+                    }
+                    else
+                    {
+                        <span>Estás al día con todas tus notificaciones</span>
+                    }
+                </p>
+            </div>
+            <div class="col-md-4 text-right" style="padding-top: 15px;">
+                <a href="@Url.Action("Index", "Ciudadano")" class="btn btn-default btn-lg">
+                    <i class="fas fa-arrow-left"></i> Volver al Inicio
+                </a>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-9">
-            <h3><i class="glyphicon glyphicon-bell" aria-hidden="true"></i> Notificaciones</h3>
+    @* Mensajes de alerta *@
+    @if (TempData["NotificacionesSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fas fa-check-circle"></i> @TempData["NotificacionesSuccess"]
+        </div>
+    }
+    @if (TempData["NotificacionesError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fas fa-exclamation-circle"></i> @TempData["NotificacionesError"]
+        </div>
+    }
+    @if (TempData["NotificacionesInfo"] != null)
+    {
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fas fa-info-circle"></i> @TempData["NotificacionesInfo"]
+        </div>
+    }
 
-            @if (TempData["NotificacionesError"] != null)
+    @if (Model == null || !Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="card">
+            <div class="card-body">
+                <div class="empty-state">
+                    <div class="empty-icon">🔔</div>
+                    <h3>No tienes notificaciones</h3>
+                    <p>Cuando recibas actualizaciones sobre tus adopciones o novedades importantes, aparecerán aquí.</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var n in Model)
             {
-                <div class="alert alert-danger">@TempData["NotificacionesError"]</div>
-            }
-
-            @if (Model == null || !Model.Any())
-            {
-                <div class="alert alert-info">No tienes notificaciones.</div>
-            }
-            else
-            {
-                <div class="list-group">
-                    @foreach (var n in Model)
-                    {
-                        var itemClass = n.Leido ? "list-group-item" : "list-group-item list-group-item-action list-group-item-warning";
-                        <div class="@itemClass mb-2">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">@n.Titulo</h5>
-                                <small>@n.Fecha.ToString("g")</small>
-                            </div>
-                            <p class="mb-1">@n.Mensaje</p>
-
-                            <div>
-                                @using (Html.BeginForm("MarcarLeida", "Ciudadano", FormMethod.Post, new { @style = "display:inline;" }))
+                var cardClass = n.Leido ? "notification-card read" : "notification-card unread";
+                <div class="col-md-6">
+                    <div class="@cardClass">
+                        <div class="notification-indicator @(n.Leido ? "read" : "unread")"></div>
+                        <div class="notification-content">
+                            <div class="notification-header">
+                                <div class="notification-icon">
+                                    @if (n.Titulo?.Contains("Adopción") == true || n.Titulo?.Contains("adopción") == true)
+                                    {
+                                        <i class="fas fa-heart"></i>
+                                    }
+                                    else if (n.Titulo?.Contains("Aprobad") == true)
+                                    {
+                                        <i class="fas fa-check-circle"></i>
+                                    }
+                                    else if (n.Titulo?.Contains("Rechazad") == true)
+                                    {
+                                        <i class="fas fa-times-circle"></i>
+                                    }
+                                    else if (n.Titulo?.Contains("Seguimiento") == true)
+                                    {
+                                        <i class="fas fa-clipboard-check"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-bell"></i>
+                                    }
+                                </div>
+                                <div class="notification-title-area">
+                                    <h5 class="notification-title">@n.Titulo</h5>
+                                    <span class="notification-date">
+                                        <i class="fas fa-clock"></i> @n.Fecha.ToString("dd/MM/yyyy HH:mm")
+                                    </span>
+                                </div>
+                                @if (!n.Leido)
                                 {
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-success" type="submit" @(n.Leido ? "disabled" : "") style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Marcar como leída</button>
+                                    <span class="badge-new">Nuevo</span>
                                 }
-
-                                @using (Html.BeginForm("EliminarNotificacion", "Ciudadano", FormMethod.Post, new { @style = "display:inline; margin-left:8px;" }))
+                            </div>
+                            <div class="notification-body">
+                                <p>@n.Mensaje</p>
+                            </div>
+                            <div class="notification-actions">
+                                @if (!n.Leido)
+                                {
+                                    using (Html.BeginForm("MarcarLeida", "Ciudadano", FormMethod.Post, new { @class = "action-form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@n.Id" />
+                                        <button type="submit" class="btn btn-sm btn-marcar">
+                                            <i class="fas fa-check"></i> Marcar como leída
+                                        </button>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="leida-label">
+                                        <i class="fas fa-check-double"></i> Leída
+                                    </span>
+                                }
+                                @using (Html.BeginForm("EliminarNotificacion", "Ciudadano", FormMethod.Post, new { @class = "action-form" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@n.Id" />
-                                    <button class="btn btn-sm btn-danger" type="submit" style="background-color:#FA8C99; border-color:#FA8C99; color:#000;" onclick="return confirm('¿Eliminar notificación?');">Eliminar</button>
+                                    <button type="submit" class="btn btn-sm btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar esta notificación?');">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
                                 }
                             </div>
                         </div>
-                    }
+                    </div>
                 </div>
             }
         </div>
-    </div>
+    }
 </div>
+
+<style>
+    /* Header */
+    .page-header-card {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .page-header-card h2 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .page-header-card .lead {
+        margin: 0;
+        color: #34495e;
+        font-size: 15px;
+    }
+
+    /* Cards */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Notification Cards */
+    .notification-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 20px;
+        display: flex;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .notification-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .notification-card.unread {
+        border-color: #8CFAA4;
+        background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
+    }
+    .notification-card.read {
+        opacity: 0.85;
+    }
+
+    /* Indicator */
+    .notification-indicator {
+        width: 6px;
+        flex-shrink: 0;
+    }
+    .notification-indicator.unread {
+        background: linear-gradient(180deg, #8CFAA4 0%, #BBFA8C 100%);
+    }
+    .notification-indicator.read {
+        background: #e0e0e0;
+    }
+
+    /* Content */
+    .notification-content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .notification-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .notification-icon {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .notification-icon i {
+        font-size: 20px;
+        color: #2c3e50;
+    }
+
+    .notification-title-area {
+        flex: 1;
+    }
+    .notification-title {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 16px;
+    }
+    .notification-date {
+        font-size: 12px;
+        color: #888;
+    }
+    .notification-date i {
+        margin-right: 4px;
+    }
+
+    .badge-new {
+        background: linear-gradient(135deg, #FA8C99 0%, #e74c3c 100%);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+    }
+
+    .notification-body {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    .notification-body p {
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .action-form {
+        display: inline;
+    }
+
+    .btn-marcar {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        color: #2c3e50;
+        border: none;
+        font-weight: 600;
+    }
+    .btn-marcar:hover {
+        background: linear-gradient(135deg, #a8f590 0%, #7af09e 100%);
+        color: #2c3e50;
+    }
+
+    .btn-eliminar {
+        background: transparent;
+        color: #e74c3c;
+        border: 2px solid #fce4e4;
+        font-weight: 600;
+    }
+    .btn-eliminar:hover {
+        background: #fce4e4;
+        color: #c0392b;
+        border-color: #f5c6cb;
+    }
+
+    .leida-label {
+        color: #27ae60;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .leida-label i {
+        margin-right: 5px;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    .empty-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+    }
+    .empty-state h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    .empty-state p {
+        color: #888;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Alerts */
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+    .alert i {
+        margin-right: 8px;
+    }
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+    .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .notification-header {
+            flex-wrap: wrap;
+        }
+        .badge-new {
+            order: -1;
+            margin-bottom: 10px;
+        }
+        .notification-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .notification-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

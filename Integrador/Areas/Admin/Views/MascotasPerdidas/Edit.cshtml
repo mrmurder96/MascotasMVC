@@ -168,6 +168,48 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var hoy = new Date().toISOString().split('T')[0];
+            var fechaMinima = new Date();
+            fechaMinima.setFullYear(fechaMinima.getFullYear() - 1); // Max 1 año atrás
+            var fechaMinimaStr = fechaMinima.toISOString().split('T')[0];
+
+            // Establecer límites para fecha de reporte
+            $('#FechaReporte').attr('max', hoy);
+            $('#FechaReporte').attr('min', fechaMinimaStr);
+
+            // Establecer límites para fecha de resolución
+            $('#FechaResolucion').attr('max', hoy);
+
+            // Validación adicional para FechaReporte
+            $('#FechaReporte').on('change', function () {
+                var fechaReporte = new Date($(this).val());
+                var hoyDate = new Date();
+                var fechaMinimaDate = new Date();
+                fechaMinimaDate.setFullYear(fechaMinimaDate.getFullYear() - 1);
+
+                if (fechaReporte > hoyDate) {
+                    alert('La fecha de reporte no puede ser posterior a hoy');
+                    $(this).val(hoy);
+                } else if (fechaReporte < fechaMinimaDate) {
+                    alert('La fecha de reporte no puede ser mayor a 1 año atrás');
+                    $(this).val(fechaMinimaStr);
+                }
+            });
+
+            // Validación adicional para FechaResolucion
+            $('#FechaResolucion').on('change', function () {
+                var fechaResolucion = new Date($(this).val());
+                var hoyDate = new Date();
+
+                if (fechaResolucion > hoyDate) {
+                    alert('La fecha de resolución no puede ser posterior a hoy');
+                    $(this).val('');
+                }
+            });
+        });
+    </script>
 }
 
 <style>

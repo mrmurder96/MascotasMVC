@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Integrador.Validations;
 
 namespace Integrador.Models
 {
@@ -123,5 +124,14 @@ namespace Integrador.Models
 
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
         public string EmailContacto { get; set; }
+
+        [Required(ErrorMessage = "La fecha de reporte es requerida")]
+        [ReportDate(MaxDaysAgo = 365, ErrorMessage = "La fecha de reporte no puede ser futura ni mayor a 1 año atrás")]
+        [Display(Name = "Fecha de Reporte")]
+        public DateTime FechaReporte { get; set; }
+
+        [NotFutureDate(ErrorMessage = "La fecha de resolución no puede ser futura")]
+        [Display(Name = "Fecha de Resolución")]
+        public DateTime? FechaResolucion { get; set; }
     }
 }

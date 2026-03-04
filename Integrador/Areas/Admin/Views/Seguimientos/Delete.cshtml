@@ -4,70 +4,152 @@
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="card">
-                <div class="card-header bg-danger">
-                    <h3><i class="glyphicon glyphicon-warning-sign"></i> Confirmar Eliminación</h3>
+            <!-- Header -->
+            <div class="page-header-card delete-header">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2><i class="glyphicon glyphicon-warning-sign"></i> Eliminar Seguimiento</h2>
+                        <p class="lead">¿Está seguro que desea eliminar este registro de seguimiento?</p>
+                    </div>
+                    <div class="col-md-4 text-right" style="padding-top: 15px;">
+                        <a href="@Url.Action("Details", new { id = Model.AdopcionId })" class="btn btn-default btn-lg">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @Html.Partial("_AlertMessages")
+
+            <!-- Warning Alert -->
+            <div class="alert-box">
+                <div class="alert-icon">
+                    <i class="glyphicon glyphicon-exclamation-sign"></i>
+                </div>
+                <div class="alert-content">
+                    <h4>¡Esta acción no se puede deshacer!</h4>
+                    <p>Una vez eliminado, el seguimiento será removido permanentemente del historial de la adopción.</p>
+                </div>
+            </div>
+
+            <!-- Seguimiento Info Card -->
+            <div class="card delete-card">
+                <div class="card-header">
+                    <h4><i class="glyphicon glyphicon-file"></i> Información del Seguimiento a Eliminar</h4>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-warning">
-                        <strong>¡Atención!</strong> Está a punto de eliminar el siguiente seguimiento:
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <div class="info-label">
+                                    <i class="glyphicon glyphicon-tag"></i> ID del Seguimiento
+                                </div>
+                                <div class="info-value">#@Model.Id</div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">
+                                    <i class="glyphicon glyphicon-calendar"></i> Fecha del Seguimiento
+                                </div>
+                                <div class="info-value">@Model.FechaSeguimiento.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))</div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">
+                                    <i class="glyphicon glyphicon-phone-alt"></i> Tipo de Seguimiento
+                                </div>
+                                <div class="info-value">@(Model.TipoSeguimiento ?? "No especificado")</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <div class="info-label">
+                                    <i class="glyphicon glyphicon-heart"></i> Estado de la Mascota
+                                </div>
+                                <div class="info-value">
+                                    @{
+                                        var estadoClass = "estado-bueno";
+                                        var estadoIcon = "✅";
+                                        switch (Model.EstadoMascota)
+                                        {
+                                            case "Excelente":
+                                                estadoClass = "estado-excelente";
+                                                estadoIcon = "⭐";
+                                                break;
+                                            case "Bueno":
+                                                estadoClass = "estado-bueno";
+                                                estadoIcon = "✅";
+                                                break;
+                                            case "Regular":
+                                                estadoClass = "estado-regular";
+                                                estadoIcon = "⚠️";
+                                                break;
+                                            case "Requiere Atención":
+                                                estadoClass = "estado-atencion";
+                                                estadoIcon = "🔶";
+                                                break;
+                                            case "Crítico":
+                                                estadoClass = "estado-critico";
+                                                estadoIcon = "🔴";
+                                                break;
+                                        }
+                                    }
+                                    <span class="estado-badge @estadoClass">
+                                        <span class="estado-emoji">@estadoIcon</span> @Model.EstadoMascota
+                                    </span>
+                                </div>
+                            </div>
+
+                            @if (Model.Adopciones != null)
+                            {
+                                <div class="info-group">
+                                    <div class="info-label">
+                                        <i class="glyphicon glyphicon-paw"></i> Mascota
+                                    </div>
+                                    <div class="info-value">@(Model.Adopciones.Mascotas != null ? Model.Adopciones.Mascotas.Nombre : "N/A")</div>
+                                </div>
+
+                                <div class="info-group">
+                                    <div class="info-label">
+                                        <i class="glyphicon glyphicon-user"></i> Adoptante
+                                    </div>
+                                    <div class="info-value">@Model.Adopciones.NombreSolicitante</div>
+                                </div>
+                            }
+                        </div>
                     </div>
 
-                    <dl class="dl-horizontal">
-                        <dt>ID</dt>
-                        <dd><strong>#@Model.Id</strong></dd>
+                    @if (!string.IsNullOrEmpty(Model.Observaciones))
+                    {
+                        <div class="observaciones-section">
+                            <div class="info-label">
+                                <i class="glyphicon glyphicon-comment"></i> Observaciones
+                            </div>
+                            <div class="observaciones-content">
+                                @Model.Observaciones
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
 
-                        <dt>Fecha</dt>
-                        <dd>@Model.FechaSeguimiento.ToString("dd/MM/yyyy")</dd>
-
-                        <dt>Adopción</dt>
-                        <dd>#@Model.AdopcionId</dd>
-
-                        <dt>Estado Mascota</dt>
-                        <dd>
-                            @if (Model.EstadoMascota == "Excelente" || Model.EstadoMascota == "Bueno")
-                            {
-                                <span class="label label-success">@Model.EstadoMascota</span>
-                            }
-                            else if (Model.EstadoMascota == "Regular")
-                            {
-                                <span class="label label-warning">@Model.EstadoMascota</span>
-                            }
-                            else
-                            {
-                                <span class="label label-danger">@Model.EstadoMascota</span>
-                            }
-                        </dd>
-
-                        @if (Model.Adopciones != null)
-                        {
-                            <dt>Mascota</dt>
-                            <dd>@(Model.Adopciones.Mascotas != null ? Model.Adopciones.Mascotas.Nombre : "N/A")</dd>
-
-                            <dt>Adoptante</dt>
-                            <dd>@Model.Adopciones.NombreSolicitante</dd>
-                        }
-
-                        <dt>Observaciones</dt>
-                        <dd>@(Model.Observaciones ?? "Sin observaciones")</dd>
-                    </dl>
-
-                    <hr />
-
+            <!-- Action Buttons -->
+            <div class="card action-card">
+                <div class="card-body">
                     @using (Html.BeginForm("Delete", "Seguimientos", new { area = "Admin" }, FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.Id)
 
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-danger btn-lg">
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-eliminar btn-lg">
                                 <i class="glyphicon glyphicon-trash"></i> Sí, Eliminar Seguimiento
                             </button>
-                            <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
-                                <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                            <a href="@Url.Action("Details", new { id = Model.AdopcionId })" class="btn btn-cancelar btn-lg">
+                                <i class="glyphicon glyphicon-remove"></i> No, Cancelar
                             </a>
                         </div>
                     }
@@ -78,11 +160,217 @@
 </div>
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { padding: 15px 20px; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0; }
-    .card-header.bg-danger { background-color: #FA8C99; color: #000; }
-    .card-header h3 { margin: 0; }
-    .card-body { padding: 30px; }
-    .dl-horizontal dt { width: 150px; font-weight: 600; }
-    .dl-horizontal dd { margin-left: 170px; }
+    /* Header */
+    .page-header-card {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .page-header-card.delete-header {
+        background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+    }
+    .page-header-card h2 {
+        margin: 0 0 10px 0;
+        color: white;
+        font-weight: 600;
+    }
+    .page-header-card .lead {
+        margin: 0;
+        color: rgba(255,255,255,0.9);
+        font-size: 15px;
+    }
+
+    /* Alert Box */
+    .alert-box {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(253,203,110,0.3);
+    }
+    .alert-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
+    .alert-icon i {
+        font-size: 28px;
+        color: #d63031;
+    }
+    .alert-content h4 {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+    .alert-content p {
+        margin: 0;
+        color: #444;
+    }
+
+    /* Cards */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #BBFA8C 0%, #a8f590 100%);
+        padding: 15px 20px;
+        border-bottom: 1px solid #93A597;
+    }
+    .card-header h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .card-body {
+        padding: 25px;
+    }
+
+    .delete-card .card-header {
+        background: linear-gradient(135deg, #fab1a0 0%, #ff7675 100%);
+    }
+    .delete-card .card-header h4 {
+        color: white;
+    }
+
+    /* Info Groups */
+    .info-group {
+        margin-bottom: 20px;
+    }
+    .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #888;
+        margin-bottom: 5px;
+    }
+    .info-label i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+    .info-value {
+        font-size: 16px;
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    /* Estado Badge */
+    .estado-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .estado-emoji {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+    .estado-excelente {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        color: #2c3e50;
+    }
+    .estado-bueno {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        color: #2c3e50;
+    }
+    .estado-regular {
+        background: linear-gradient(135deg, #ffeaa7 0%, #f39c12 100%);
+        color: #2c3e50;
+    }
+    .estado-atencion {
+        background: linear-gradient(135deg, #ffeaa7 0%, #e67e22 100%);
+        color: #2c3e50;
+    }
+    .estado-critico {
+        background: linear-gradient(135deg, #fab1a0 0%, #e74c3c 100%);
+        color: white;
+    }
+
+    /* Observaciones */
+    .observaciones-section {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px dashed #e8f5e9;
+    }
+    .observaciones-content {
+        background: #f8fdf9;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border-left: 4px solid #8CFAA4;
+        color: #555;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    /* Action Card */
+    .action-card .card-body {
+        padding: 30px;
+        background: #fafafa;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .btn-eliminar {
+        background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 15px 35px;
+        transition: all 0.3s ease;
+    }
+    .btn-eliminar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
+        color: white;
+    }
+    .btn-cancelar {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border: none;
+        color: #2c3e50;
+        font-weight: 600;
+        padding: 15px 35px;
+        transition: all 0.3s ease;
+    }
+    .btn-cancelar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(140, 250, 164, 0.4);
+        color: #2c3e50;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .alert-box {
+            flex-direction: column;
+            text-align: center;
+        }
+        .alert-icon {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .action-buttons .btn {
+            width: 100%;
+        }
+    }
 </style>

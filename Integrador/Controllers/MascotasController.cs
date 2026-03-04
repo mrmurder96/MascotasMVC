@@ -13,54 +13,47 @@ namespace Integrador.Controllers
         private adopEntities db = new adopEntities();
 
         // GET: /Mascotas - Página pública de mascotas disponibles
-        public ActionResult Index()
+        public ActionResult Index(string buscar, string tipo, string tamano)
         {
-            var mascotas = db.Mascotas
-                .Where(m => m.Estado == "Disponible")
-                .OrderBy(m => m.Nombre)
-                .ToList();
+            var mascotas = db.Mascotas.Where(m => m.Estado == "Disponible").AsQueryable();
 
-            var lista = mascotas.Select(m => new Mascota
+            // Filtro por búsqueda
+            if (!string.IsNullOrEmpty(buscar))
             {
-                Id = m.Id,
-                Nombre = m.Nombre,
-                Tipo = m.Tipo,
-                Edad = m.Edad ?? 0,
-                Ubicacion = m.Ubicacion,
-                Descripcion = m.Descripcion,
-                FotoUrl = m.FotoUrl,
-                Estado = m.Estado,
-                Raza = m.Raza,
-                Sexo = m.Sexo,
-                Tamano = m.Tamano
-            }).ToList();
+                mascotas = mascotas.Where(m => 
+                    m.Nombre.Contains(buscar) || 
+                    m.Descripcion.Contains(buscar) ||
+                    m.Raza.Contains(buscar));
+            }
 
-            return View(lista);
+            // Filtro por tipo
+            if (!string.IsNullOrEmpty(tipo))
+            {
+                mascotas = mascotas.Where(m => m.Tipo == tipo);
+            }
+
+            // Filtro por tamaño
+            if (!string.IsNullOrEmpty(tamano))
+            {
+                mascotas = mascotas.Where(m => m.Tamano == tamano);
+            }
+
+            // ViewBags para mantener filtros
+            ViewBag.Buscar = buscar;
+            ViewBag.TipoSeleccionado = tipo;
+            ViewBag.TamanoSeleccionado = tamano;
+
+            return View(mascotas.OrderBy(m => m.Nombre).ToList());
         }
 
         // GET: /Mascotas/Details/5
         public ActionResult Details(int id)
         {
-            var mascotaDb = db.Mascotas.Find(id);
-            if (mascotaDb == null)
+            var mascota = db.Mascotas.Find(id);
+            if (mascota == null)
                 return HttpNotFound();
 
-            var m = new Mascota
-            {
-                Id = mascotaDb.Id,
-                Nombre = mascotaDb.Nombre,
-                Tipo = mascotaDb.Tipo,
-                Edad = mascotaDb.Edad ?? 0,
-                Ubicacion = mascotaDb.Ubicacion,
-                Descripcion = mascotaDb.Descripcion,
-                FotoUrl = mascotaDb.FotoUrl,
-                Estado = mascotaDb.Estado,
-                Raza = mascotaDb.Raza,
-                Sexo = mascotaDb.Sexo,
-                Tamano = mascotaDb.Tamano
-            };
-
-            return View(m);
+            return View(mascota);
         }
 
         // GET: /Mascotas/Adopt/5 - Redirige a login si no está autenticado

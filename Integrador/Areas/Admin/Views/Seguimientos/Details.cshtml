@@ -1,150 +1,558 @@
 @model Integrador.Models.Adopciones
 @{
-    ViewBag.Title = "Seguimientos de Adopción";
+    ViewBag.Title = "Seguimientos de Adopción #" + Model.Id;
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var seguimientos = ViewBag.Seguimientos as List<Integrador.Models.Seguimientos>;
+    var ultimoSeguimiento = seguimientos?.FirstOrDefault();
 }
 
 <div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h2><i class="glyphicon glyphicon-list-alt"></i> Seguimientos Post-Adopción</h2>
-        </div>
-        <div class="col-md-4 text-right">
-            <a href="@Url.Action("Create", new { adopcionId = Model.Id })" class="btn btn-success">
-                <i class="glyphicon glyphicon-plus"></i> Nuevo Seguimiento
-            </a>
+    <!-- Header -->
+    <div class="page-header-card">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><i class="glyphicon glyphicon-heart"></i> Seguimiento de Adopción #@Model.Id</h2>
+                <p class="lead">
+                    <strong>@Model.NombreSolicitante</strong> adoptó a 
+                    <strong>@(Model.Mascotas != null ? Model.Mascotas.Nombre : "Mascota")</strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-right" style="padding-top: 15px;">
+                <a href="@Url.Action("Create", new { adopcionId = Model.Id })" class="btn btn-success btn-lg">
+                    <i class="glyphicon glyphicon-plus"></i> Nuevo Seguimiento
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Volver
+                </a>
+            </div>
         </div>
     </div>
 
     @Html.Partial("_AlertMessages")
 
-    <!-- Información de la Adopción -->
     <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>Información de la Adopción #@Model.Id</h4>
+        <!-- Columna Izquierda: Info de Mascota y Adoptante -->
+        <div class="col-md-4">
+            <!-- Card Mascota -->
+            <div class="card info-card">
+                <div class="card-header">
+                    <h4><i class="glyphicon glyphicon-paw"></i> Mascota Adoptada</h4>
                 </div>
-                <div class="panel-body">
-                    <dl class="dl-horizontal">
-                        <dt>Solicitante</dt>
-                        <dd><strong>@Model.NombreSolicitante</strong></dd>
-                        <dt>Email</dt>
-                        <dd>@Model.Email</dd>
-                        <dt>Teléfono</dt>
-                        <dd>@Model.Telefono</dd>
-                        <dt>Fecha Solicitud</dt>
-                        <dd>@Model.FechaSolicitud.ToString("dd/MM/yyyy")</dd>
-                        <dt>Estado</dt>
-                        <dd><span class="label label-success">@Model.Estado</span></dd>
-                    </dl>
+                <div class="card-body">
+                    @if (Model.Mascotas != null)
+                    {
+                        <div class="mascota-preview">
+                            @if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
+                            {
+                                if (Model.Mascotas.FotoUrl.StartsWith("/") || Model.Mascotas.FotoUrl.StartsWith("~"))
+                                {
+                                    <img src="@Url.Content(Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" />
+                                }
+                            }
+                            else
+                            {
+                                <div class="no-image">
+                                    <i class="glyphicon glyphicon-picture"></i>
+                                </div>
+                            }
+                        </div>
+                        <h4 class="mascota-nombre">@Model.Mascotas.Nombre</h4>
+                        <div class="mascota-detalles">
+                            <div class="detalle-item">
+                                <i class="glyphicon glyphicon-tag"></i>
+                                <span>@Model.Mascotas.Tipo @(!string.IsNullOrEmpty(Model.Mascotas.Raza) ? "- " + Model.Mascotas.Raza : "")</span>
+                            </div>
+                            <div class="detalle-item">
+                                <i class="glyphicon glyphicon-time"></i>
+                                <span>@(Model.Mascotas.Edad.HasValue ? Model.Mascotas.Edad + " años" : "Edad no especificada")</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.Mascotas.Sexo))
+                            {
+                                <div class="detalle-item">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    <span>@Model.Mascotas.Sexo</span>
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            @if (Model.Mascotas != null)
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4>Mascota: @Model.Mascotas.Nombre</h4>
+
+            <!-- Card Adoptante -->
+            <div class="card info-card">
+                <div class="card-header">
+                    <h4><i class="glyphicon glyphicon-user"></i> Adoptante</h4>
+                </div>
+                <div class="card-body">
+                    <div class="adoptante-profile">
+                        <div class="adoptante-avatar-lg">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </div>
+                        <h4>@Model.NombreSolicitante</h4>
                     </div>
-                    <div class="panel-body">
-                        <dl class="dl-horizontal">
-                            <dt>Tipo</dt>
-                            <dd>@Model.Mascotas.Tipo</dd>
-                            <dt>Edad</dt>
-                            <dd>@(Model.Mascotas.Edad.HasValue ? Model.Mascotas.Edad + " años" : "No especificada")</dd>
-                            <dt>Ubicación</dt>
-                            <dd>@Model.Mascotas.Ubicacion</dd>
-                        </dl>
-                        @if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
+                    <div class="adoptante-contacto">
+                        <div class="contacto-item">
+                            <i class="glyphicon glyphicon-envelope"></i>
+                            <a href="mailto:@Model.Email">@Model.Email</a>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Telefono))
                         {
-                            <div class="text-center">
-                                <img src="@Url.Content(Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" class="img-thumbnail" style="max-width: 150px;" />
+                            <div class="contacto-item">
+                                <i class="glyphicon glyphicon-phone"></i>
+                                <a href="tel:@Model.Telefono">@Model.Telefono</a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Direccion))
+                        {
+                            <div class="contacto-item">
+                                <i class="glyphicon glyphicon-map-marker"></i>
+                                <span>@Model.Direccion</span>
                             </div>
                         }
                     </div>
+                    <div class="adopcion-fecha">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        Adoptado el <strong>@Model.FechaSolicitud.ToString("dd/MM/yyyy")</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado Actual -->
+            @if (ultimoSeguimiento != null)
+            {
+                <div class="card estado-actual-card @GetEstadoClass(ultimoSeguimiento.EstadoMascota)">
+                    <div class="estado-icon">
+                        @GetEstadoIcon(ultimoSeguimiento.EstadoMascota)
+                    </div>
+                    <div class="estado-info">
+                        <h5>Estado Actual de @Model.Mascotas?.Nombre</h5>
+                        <h3>@ultimoSeguimiento.EstadoMascota</h3>
+                        <small>Último seguimiento: @ultimoSeguimiento.FechaSeguimiento.ToString("dd/MM/yyyy")</small>
+                    </div>
                 </div>
             }
         </div>
-    </div>
 
-    <!-- Lista de Seguimientos -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4>Historial de Seguimientos</h4>
-        </div>
-        <div class="panel-body">
-            @{
-                var seguimientos = ViewBag.Seguimientos as List<Integrador.Models.Seguimientos>;
-            }
-            @if (seguimientos != null && seguimientos.Any())
-            {
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Estado Mascota</th>
-                            <th>Observaciones</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var seg in seguimientos)
-                        {
-                            var estadoClass = "default";
-                            switch (seg.EstadoMascota)
+        <!-- Columna Derecha: Timeline de Seguimientos -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="glyphicon glyphicon-time"></i> Historial de Seguimientos (@(seguimientos?.Count ?? 0))</h4>
+                </div>
+                <div class="card-body">
+                    @if (seguimientos != null && seguimientos.Any())
+                    {
+                        <div class="timeline">
+                            @foreach (var seg in seguimientos)
                             {
-                                case "Excelente": estadoClass = "success"; break;
-                                case "Bueno": estadoClass = "info"; break;
-                                case "Regular": estadoClass = "warning"; break;
-                                default: estadoClass = "danger"; break;
-                            }
-                            <tr>
-                                <td>@seg.Id</td>
-                                <td>@seg.FechaSeguimiento.ToString("dd/MM/yyyy")</td>
-                                <td>@seg.TipoSeguimiento</td>
-                                <td><span class="label label-@estadoClass">@seg.EstadoMascota</span></td>
-                                <td>@(seg.Observaciones != null && seg.Observaciones.Length > 80 ? seg.Observaciones.Substring(0, 77) + "..." : seg.Observaciones)</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="@Url.Action("Edit", new { id = seg.Id })" class="btn btn-warning btn-xs" title="Editar">
-                                            <i class="glyphicon glyphicon-edit"></i>
-                                        </a>
-                                        <a href="@Url.Action("Delete", new { id = seg.Id })" class="btn btn-danger btn-xs" title="Eliminar"
-                                           onclick="return confirm('¿Eliminar seguimiento?')">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </a>
+                                var estadoClass = GetEstadoColorClass(seg.EstadoMascota);
+                                <div class="timeline-item">
+                                    <div class="timeline-marker @estadoClass"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <div class="timeline-fecha">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                @seg.FechaSeguimiento.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                                            </div>
+                                            <div class="timeline-tipo">
+                                                <span class="label label-default">
+                                                    @GetTipoIcon(seg.TipoSeguimiento) @seg.TipoSeguimiento
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-estado">
+                                            <span class="estado-badge @estadoClass">
+                                                @GetEstadoIcon(seg.EstadoMascota) @seg.EstadoMascota
+                                            </span>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(seg.Observaciones))
+                                        {
+                                            <div class="timeline-observaciones">
+                                                <p>@seg.Observaciones</p>
+                                            </div>
+                                        }
+                                        <div class="timeline-actions">
+                                            <a href="@Url.Action("Edit", new { id = seg.Id })" class="btn btn-sm btn-warning">
+                                                <i class="glyphicon glyphicon-edit"></i> Editar
+                                            </a>
+                                            <a href="@Url.Action("Delete", new { id = seg.Id })" class="btn btn-sm btn-danger"
+                                               onclick="return confirm('¿Está seguro de eliminar este seguimiento?')">
+                                                <i class="glyphicon glyphicon-trash"></i> Eliminar
+                                            </a>
+                                        </div>
                                     </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="alert alert-info text-center">
-                    <h4>No hay seguimientos registrados para esta adopción</h4>
-                    <p>Haga clic en "Nuevo Seguimiento" para registrar el primero.</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-timeline">
+                            <div class="empty-icon">📋</div>
+                            <h4>No hay seguimientos registrados</h4>
+                            <p>Comienza a monitorear el bienestar de @(Model.Mascotas?.Nombre ?? "la mascota") registrando el primer seguimiento.</p>
+                            <a href="@Url.Action("Create", new { adopcionId = Model.Id })" class="btn btn-success btn-lg">
+                                <i class="glyphicon glyphicon-plus"></i> Registrar Primer Seguimiento
+                            </a>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <a href="@Url.Action("Index")" class="btn btn-default">
-                <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
-            </a>
+            </div>
         </div>
     </div>
 </div>
 
+@functions {
+    public string GetEstadoClass(string estado)
+    {
+        switch (estado)
+        {
+            case "Excelente": return "estado-excelente";
+            case "Bueno": return "estado-bueno";
+            case "Regular": return "estado-regular";
+            case "Requiere Atención": return "estado-atencion";
+            case "Crítico": return "estado-critico";
+            default: return "estado-default";
+        }
+    }
+
+    public string GetEstadoColorClass(string estado)
+    {
+        switch (estado)
+        {
+            case "Excelente": return "color-excelente";
+            case "Bueno": return "color-bueno";
+            case "Regular": return "color-regular";
+            case "Requiere Atención": return "color-atencion";
+            case "Crítico": return "color-critico";
+            default: return "color-default";
+        }
+    }
+
+    public string GetEstadoIcon(string estado)
+    {
+        switch (estado)
+        {
+            case "Excelente": return "⭐";
+            case "Bueno": return "✅";
+            case "Regular": return "⚠️";
+            case "Requiere Atención": return "🔶";
+            case "Crítico": return "🔴";
+            default: return "📋";
+        }
+    }
+
+    public string GetTipoIcon(string tipo)
+    {
+        switch (tipo)
+        {
+            case "Visita Domiciliaria": return "🏠";
+            case "Llamada Telefónica": return "📞";
+            case "Videollamada": return "📹";
+            case "Email": return "📧";
+            default: return "📋";
+        }
+    }
+}
+
 <style>
-    .mb-4 { margin-bottom: 20px; }
-    .table th { background-color: #BBFA8C; color: #000; font-weight: 600; }
-    .panel-info > .panel-heading { background-color: #8CFAA4; color: #000; border-color: #93A597; }
+    /* Header */
+    .page-header-card {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .page-header-card h2 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .page-header-card .lead {
+        margin: 0;
+        color: #34495e;
+        font-size: 16px;
+    }
+
+    /* Card */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #BBFA8C 0%, #a8f590 100%);
+        padding: 15px 20px;
+        border-bottom: 1px solid #93A597;
+    }
+    .card-header h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Info Card */
+    .info-card .card-body {
+        padding: 0;
+    }
+
+    /* Mascota Preview */
+    .mascota-preview {
+        height: 180px;
+        overflow: hidden;
+        background: #f5f5f5;
+    }
+    .mascota-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .mascota-preview .no-image {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .mascota-preview .no-image i {
+        font-size: 50px;
+        color: rgba(255,255,255,0.5);
+    }
+    .mascota-nombre {
+        margin: 15px 20px 10px;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+    .mascota-detalles {
+        padding: 0 20px 20px;
+    }
+    .detalle-item {
+        padding: 8px 0;
+        border-bottom: 1px dashed #e8f5e9;
+        display: flex;
+        align-items: center;
+    }
+    .detalle-item:last-child {
+        border-bottom: none;
+    }
+    .detalle-item i {
+        color: #8CFAA4;
+        margin-right: 10px;
+        width: 20px;
+    }
+
+    /* Adoptante */
+    .adoptante-profile {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 1px solid #e8f5e9;
+    }
+    .adoptante-avatar-lg {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+    }
+    .adoptante-avatar-lg i {
+        font-size: 30px;
+        color: #2c3e50;
+    }
+    .adoptante-profile h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .adoptante-contacto {
+        padding: 15px 20px;
+    }
+    .contacto-item {
+        padding: 10px 0;
+        border-bottom: 1px dashed #e8f5e9;
+        display: flex;
+        align-items: center;
+    }
+    .contacto-item:last-child {
+        border-bottom: none;
+    }
+    .contacto-item i {
+        color: #8CFAA4;
+        margin-right: 12px;
+        width: 20px;
+    }
+    .contacto-item a {
+        color: #3498db;
+        text-decoration: none;
+    }
+    .contacto-item a:hover {
+        text-decoration: underline;
+    }
+    .adopcion-fecha {
+        padding: 15px 20px;
+        background: #f8fdf9;
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+    }
+    .adopcion-fecha i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+
+    /* Estado Actual Card */
+    .estado-actual-card {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        border-left: 5px solid;
+    }
+    .estado-actual-card.estado-excelente { border-left-color: #27ae60; background: #f0fff4; }
+    .estado-actual-card.estado-bueno { border-left-color: #3498db; background: #f0f9ff; }
+    .estado-actual-card.estado-regular { border-left-color: #f39c12; background: #fffcf0; }
+    .estado-actual-card.estado-atencion { border-left-color: #e67e22; background: #fff8f0; }
+    .estado-actual-card.estado-critico { border-left-color: #e74c3c; background: #fff5f5; }
+
+    .estado-icon {
+        font-size: 40px;
+        margin-right: 15px;
+    }
+    .estado-info h5 {
+        margin: 0;
+        font-size: 12px;
+        color: #888;
+        text-transform: uppercase;
+    }
+    .estado-info h3 {
+        margin: 5px 0;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+    .estado-info small {
+        color: #888;
+    }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #e8f5e9;
+        border-radius: 3px;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 25px;
+    }
+    .timeline-marker {
+        position: absolute;
+        left: -26px;
+        top: 5px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .timeline-marker.color-excelente { background: #27ae60; }
+    .timeline-marker.color-bueno { background: #3498db; }
+    .timeline-marker.color-regular { background: #f39c12; }
+    .timeline-marker.color-atencion { background: #e67e22; }
+    .timeline-marker.color-critico { background: #e74c3c; }
+    .timeline-marker.color-default { background: #95a5a6; }
+
+    .timeline-content {
+        background: #f8fdf9;
+        border: 2px solid #e8f5e9;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+    .timeline-content:hover {
+        border-color: #8CFAA4;
+        box-shadow: 0 4px 15px rgba(140, 250, 164, 0.2);
+    }
+    .timeline-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .timeline-fecha {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    .timeline-fecha i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+    .timeline-estado {
+        margin-bottom: 12px;
+    }
+    .estado-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .estado-badge.color-excelente { background: #d4edda; color: #155724; }
+    .estado-badge.color-bueno { background: #d1ecf1; color: #0c5460; }
+    .estado-badge.color-regular { background: #fff3cd; color: #856404; }
+    .estado-badge.color-atencion { background: #ffeaa7; color: #856404; }
+    .estado-badge.color-critico { background: #f8d7da; color: #721c24; }
+
+    .timeline-observaciones {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 3px solid #8CFAA4;
+    }
+    .timeline-observaciones p {
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+    }
+    .timeline-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Empty State */
+    .empty-timeline {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    .empty-icon {
+        font-size: 70px;
+        margin-bottom: 20px;
+    }
+    .empty-timeline h4 {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    .empty-timeline p {
+        color: #888;
+        margin-bottom: 25px;
+    }
 </style>

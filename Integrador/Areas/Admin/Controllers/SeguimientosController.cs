@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using Integrador.Controllers;
 using Integrador.Filters;
+using Integrador.Helpers;
 using Integrador.Models;
 
 namespace Integrador.Areas.Admin.Controllers
@@ -121,6 +122,18 @@ namespace Integrador.Areas.Admin.Controllers
 
                 db.Seguimientos.Add(seguimiento);
                 db.SaveChanges();
+
+                // Notificar al adoptante sobre el seguimiento
+                var adopcionNotif = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == seguimiento.AdopcionId);
+                if (adopcionNotif != null && adopcionNotif.UsuarioId.HasValue)
+                {
+                    NotificacionHelper.NotificarNuevoSeguimiento(
+                        db, 
+                        adopcionNotif.UsuarioId.Value, 
+                        adopcionNotif.Mascotas?.Nombre ?? "tu mascota",
+                        seguimiento.EstadoMascota,
+                        seguimiento.TipoSeguimiento);
+                }
 
                 TempData["Success"] = "Seguimiento registrado exitosamente";
                 return RedirectToAction("Details", new { id = seguimiento.AdopcionId });

@@ -119,18 +119,39 @@ namespace Integrador.Controllers
 
             if (anyFile)
             {
+                // Validación de imágenes: solo JPG/PNG, máximo 4MB, máximo 5 archivos
                 var allowedExts = new[] { ".jpg", ".jpeg", ".png" };
                 var allowedContentTypes = new[] { "image/jpeg", "image/png" };
-                const int maxBytes = 2 * 1024 * 1024; // 2 MB
+                const int maxBytes = 4 * 1024 * 1024; // 4 MB
+                const int maxFiles = 5;
+
+                int fileCount = files.Count(f => f != null && f.ContentLength > 0);
+                if (fileCount > maxFiles)
+                {
+                    ModelState.AddModelError("NuevasFotos", $"Máximo {maxFiles} imágenes permitidas.");
+                    return View(model);
+                }
 
                 foreach (var file in files)
                 {
                     if (file == null || file.ContentLength == 0) continue;
 
                     var ext = System.IO.Path.GetExtension(file.FileName ?? "").ToLowerInvariant();
-                    if (!allowedExts.Contains(ext) || !allowedContentTypes.Contains(file.ContentType) || file.ContentLength > maxBytes)
+                    if (!allowedExts.Contains(ext))
                     {
-                        ModelState.AddModelError("NuevasFotos", "Solo imágenes JPG/PNG y ≤ 2MB.");
+                        ModelState.AddModelError("NuevasFotos", $"El archivo '{file.FileName}' no es válido. Solo JPG o PNG.");
+                        return View(model);
+                    }
+
+                    if (!allowedContentTypes.Contains(file.ContentType))
+                    {
+                        ModelState.AddModelError("NuevasFotos", $"El archivo '{file.FileName}' no es una imagen válida.");
+                        return View(model);
+                    }
+
+                    if (file.ContentLength > maxBytes)
+                    {
+                        ModelState.AddModelError("NuevasFotos", $"El archivo '{file.FileName}' excede el tamaño máximo de 4 MB.");
                         return View(model);
                     }
                 }
@@ -347,6 +368,132 @@ namespace Integrador.Controllers
             }
 
             return View(lista);
+        }
+
+        // POST: /Ciudadano/MarcarLeida
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MarcarLeida(int id)
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            try
+            {
+                var connSetting = ConfigurationManager.ConnectionStrings["adopEntities"];
+                if (connSetting == null)
+                {
+                    TempData["NotificacionesError"] = "Error de configuración.";
+                    return RedirectToAction("Notificaciones");
+                }
+
+                var efConnString = connSetting.ConnectionString;
+                var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand("UPDATE Notificaciones SET Leido = 1 WHERE Id = @Id AND UsuarioId = @UsuarioId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                TempData["NotificacionesSuccess"] = "Notificación marcada como leída.";
+            }
+            catch (Exception ex)
+            {
+                TempData["NotificacionesError"] = "Error al marcar notificación: " + ex.Message;
+            }
+
+            return RedirectToAction("Notificaciones");
+        }
+
+        // POST: /Ciudadano/EliminarNotificacion
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EliminarNotificacion(int id)
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            try
+            {
+                var connSetting = ConfigurationManager.ConnectionStrings["adopEntities"];
+                if (connSetting == null)
+                {
+                    TempData["NotificacionesError"] = "Error de configuración.";
+                    return RedirectToAction("Notificaciones");
+                }
+
+                var efConnString = connSetting.ConnectionString;
+                var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand("DELETE FROM Notificaciones WHERE Id = @Id AND UsuarioId = @UsuarioId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                TempData["NotificacionesSuccess"] = "Notificación eliminada correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["NotificacionesError"] = "Error al eliminar notificación: " + ex.Message;
+            }
+
+            return RedirectToAction("Notificaciones");
+        }
+
+        // GET: /Ciudadano/ContarNotificacionesNoLeidas (AJAX)
+        [HttpGet]
+        public JsonResult ContarNotificacionesNoLeidas()
+        {
+            if (Session["UsuarioId"] == null)
+                return Json(new { count = 0 }, JsonRequestBehavior.AllowGet);
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+            int count = 0;
+
+            try
+            {
+                var connSetting = ConfigurationManager.ConnectionStrings["adopEntities"];
+                if (connSetting != null)
+                {
+                    var efConnString = connSetting.ConnectionString;
+                    var builder = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(efConnString);
+                    var providerConnStr = builder.ProviderConnectionString;
+
+                    using (var conn = new SqlConnection(providerConnStr))
+                    {
+                        conn.Open();
+                        using (var cmd = new SqlCommand("SELECT COUNT(1) FROM Notificaciones WHERE UsuarioId = @UsuarioId AND Leido = 0", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+                            count = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                count = 0;
+            }
+
+            return Json(new { count = count }, JsonRequestBehavior.AllowGet);
         }
     }
 }

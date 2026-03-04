@@ -1,156 +1,529 @@
-@model List<Integrador.Models.Mascota>
-
-@using System.Linq
+@model IEnumerable<Integrador.Models.Mascotas>
 
 @{
-    ViewBag.Title = "Mascotas disponibles";
+    ViewBag.Title = "Mascotas Disponibles - Pura Compañía";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container py-4" role="main">
-    <header>
-        <h1 class="text-success mb-4" tabindex="0">Mascotas disponibles para adopción</h1>
-        <p class="lead" role="status" aria-live="polite">
-            Se encontraron <strong>@Model.Count</strong> mascotas disponibles para adopción
-        </p>
-    </header>
-
-    @if (Model != null && Model.Count > 0)
-    {
-        <div class="row" role="list" aria-label="Lista de mascotas disponibles">
-            @foreach (var pet in Model)
+<!-- Hero Section -->
+<section class="mascotas-hero">
+    <div class="hero-content">
+        <h1>🐾 Encuentra a tu compañero perfecto</h1>
+        <p class="subtitle">
+            @if (Model != null && Model.Any())
             {
-                <div class="col-md-4 mb-4" role="listitem">
-                    <article class="card h-100 shadow-sm" aria-labelledby="mascota-@pet.Id-titulo">
-                        @if (!string.IsNullOrEmpty(pet.FotoUrl))
+                <text>Tenemos <strong>@Model.Count()</strong> @(Model.Count() == 1 ? "mascota esperando" : "mascotas esperando") por un hogar lleno de amor</text>
+            }
+            else
+            {
+                <text>Descubre mascotas que buscan un hogar lleno de amor</text>
+            }
+        </p>
+    </div>
+</section>
+
+<!-- Filtros Section -->
+<section class="filtros-section">
+    <div class="filtros-container">
+        @using (Html.BeginForm("Index", "Mascotas", FormMethod.Get, new { @class = "filtros-form" }))
+        {
+            <div class="filtro-group">
+                <label>🔍 Buscar</label>
+                <input type="text" name="buscar" class="filtro-input" value="@ViewBag.Buscar" placeholder="Nombre de mascota..." />
+            </div>
+            <div class="filtro-group">
+                <label>🏷️ Tipo</label>
+                <select name="tipo" class="filtro-select">
+                    <option value="">Todos</option>
+                    <option value="Perro" @(ViewBag.TipoSeleccionado == "Perro" ? "selected" : "")>🐕 Perro</option>
+                    <option value="Gato" @(ViewBag.TipoSeleccionado == "Gato" ? "selected" : "")>🐱 Gato</option>
+                    <option value="Ave" @(ViewBag.TipoSeleccionado == "Ave" ? "selected" : "")>🐦 Ave</option>
+                    <option value="Conejo" @(ViewBag.TipoSeleccionado == "Conejo" ? "selected" : "")>🐰 Conejo</option>
+                    <option value="Otro" @(ViewBag.TipoSeleccionado == "Otro" ? "selected" : "")>🐾 Otro</option>
+                </select>
+            </div>
+            <div class="filtro-group">
+                <label>📏 Tamaño</label>
+                <select name="tamano" class="filtro-select">
+                    <option value="">Todos</option>
+                    <option value="Pequeño" @(ViewBag.TamanoSeleccionado == "Pequeño" ? "selected" : "")>Pequeño</option>
+                    <option value="Mediano" @(ViewBag.TamanoSeleccionado == "Mediano" ? "selected" : "")>Mediano</option>
+                    <option value="Grande" @(ViewBag.TamanoSeleccionado == "Grande" ? "selected" : "")>Grande</option>
+                </select>
+            </div>
+            <div class="filtro-buttons">
+                <button type="submit" class="btn-buscar">Buscar</button>
+                <a href="@Url.Action("Index")" class="btn-limpiar">Limpiar</a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Grid de Mascotas -->
+<section class="mascotas-section">
+    @if (Model != null && Model.Any())
+    {
+        <div class="mascotas-grid">
+            @foreach (var mascota in Model)
+            {
+                <div class="mascota-card">
+                    <div class="mascota-image-container">
+                        @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                         {
-                            <img src="@pet.FotoUrl" 
-                                 class="card-img-top" 
-                                 alt="Fotografóa de @pet.Nombre, @pet.Tipo de @pet.Edad aóos" 
-                                 style="height:200px;object-fit:cover;"
-                                 role="img" />
+                            if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
+                            {
+                                <img src="@Url.Content(mascota.FotoUrl)" alt="@mascota.Nombre" class="mascota-image" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="@mascota.Nombre" class="mascota-image" />
+                            }
                         }
                         else
                         {
-                            <img src="/Content/images/no-image.png" 
-                                 class="card-img-top" 
-                                 alt="Sin fotografóa disponible" 
-                                 style="height:200px;object-fit:cover;background:#f0f0f0;"
-                                 role="img" />
+                            <div class="mascota-image-placeholder">🐾</div>
                         }
-                        
-                        <div class="card-body d-flex flex-column">
-                            <h2 class="card-title h5" id="mascota-@pet.Id-titulo" tabindex="0">@pet.Nombre</h2>
-                            
-                            <dl class="mb-2">
-                                <dt class="sr-only">Tipo de animal</dt>
-                                <dd class="card-text mb-1">
-                                    <span aria-hidden="true"><strong>Tipo:</strong></span>
-                                    <span aria-label="Tipo de animal: @pet.Tipo">@pet.Tipo</span>
-                                </dd>
-                                
-                                <dt class="sr-only">Edad</dt>
-                                <dd class="card-text mb-1">
-                                    <span aria-hidden="true"><strong>Edad:</strong></span>
-                                    <span aria-label="Edad: @pet.Edad años">@pet.Edad años</span>
-                                </dd>
-                                
-                                <dt class="sr-only">Ubicación</dt>
-                                <dd class="card-text mb-2">
-                                    <span aria-hidden="true"><strong>Ubicación:</strong></span>
-                                    <span aria-label="Ubicación: @pet.Ubicacion">@pet.Ubicacion</span>
-                                </dd>
-                            </dl>
-
-                            <div class="mt-auto">
-                                <a class="btn btn-success btn-block mb-2" 
-                                   href="@Url.Action("Adopt", "Mascotas", new { id = pet.Id })"
-                                   style="background-color: #8CFAA4; border-color: #8CFAA4; color: #000;"
-                                   aria-label="Adoptar a @pet.Nombre">
-                                    <i class="glyphicon glyphicon-heart"></i> ¡Quiero Adoptarlo!
-                                </a>
-                                <a class="btn btn-outline-secondary btn-block" 
-                                   href="@Url.Action("Details","Mascotas", new { id = pet.Id })"
-                                   aria-label="Ver información detallada de @pet.Nombre">
-                                    Ver más detalles
-                                </a>
-                            </div>
+                        <span class="mascota-badge-disponible">Disponible</span>
+                    </div>
+                    <div class="mascota-info">
+                        <div class="mascota-header">
+                            <h3>@mascota.Nombre</h3>
+                            <span class="mascota-tag @(mascota.Tipo?.ToLower() == "gato" ? "gato" : mascota.Tipo?.ToLower() == "perro" ? "perro" : "otro")">
+                                @mascota.Tipo
+                            </span>
                         </div>
-                    </article>
+                        <p class="mascota-raza">@(string.IsNullOrEmpty(mascota.Raza) ? "Mestizo" : mascota.Raza)</p>
+                        <p class="mascota-edad">@(mascota.Edad.HasValue ? mascota.Edad + " años" : "Edad desconocida") @(!string.IsNullOrEmpty(mascota.Sexo) ? "• " + mascota.Sexo : "")</p>
+                        @if (!string.IsNullOrEmpty(mascota.Descripcion))
+                        {
+                            <p class="mascota-descripcion">
+                                @(mascota.Descripcion.Length > 80 ? mascota.Descripcion.Substring(0, 77) + "..." : mascota.Descripcion)
+                            </p>
+                        }
+                        <p class="mascota-ubicacion">📍 @(string.IsNullOrEmpty(mascota.Ubicacion) ? "Sin ubicación" : mascota.Ubicacion)</p>
+                        <div class="mascota-buttons">
+                            <a href="@Url.Action("Adopt", new { id = mascota.Id })" class="btn-adoptar">❤️ Adoptar</a>
+                            <a href="@Url.Action("Details", new { id = mascota.Id })" class="btn-ver-mas">Ver más</a>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     }
     else
     {
-        <div class="alert alert-info text-center" role="alert" aria-live="polite">
+        <div class="no-mascotas">
+            <div class="no-mascotas-icon">🐾</div>
             <h3>No hay mascotas disponibles en este momento</h3>
-            <p>Por favor, vuelve más tarde para ver nuevas mascotas en adopción.</p>
+            <p>Vuelve pronto, constantemente recibimos nuevas mascotas buscando un hogar.</p>
+            <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn-alternativo">Ver Mascotas Perdidas</a>
         </div>
     }
-</div>
+</section>
 
 <style>
-    .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
+    /* Hero Section */
+    .mascotas-hero {
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .mascotas-hero .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .mascotas-hero h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 42px;
+        color: #000;
+        margin: 0 0 16px 0;
+    }
+
+    .mascotas-hero .subtitle {
+        font-family: 'Nunito', sans-serif;
+        font-size: 20px;
+        color: #333;
+        margin: 0;
+    }
+
+    /* Filtros Section */
+    .filtros-section {
+        background: #FFFFFF;
+        padding: 30px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .filtros-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .filtros-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .filtro-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filtro-group label {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .filtro-input, .filtro-select {
+        height: 48px;
+        padding: 0 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 24px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        min-width: 180px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .filtro-input:focus, .filtro-select:focus {
+        outline: none;
+        border-color: #BBFA8C;
+        box-shadow: 0 0 0 3px rgba(187, 250, 140, 0.3);
+    }
+
+    .filtro-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-buscar {
+        background: #BBFA8C;
+        color: #000;
+        height: 48px;
+        padding: 0 28px;
+        border: none;
+        border-radius: 24px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-buscar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(187, 250, 140, 0.4);
+    }
+
+    .btn-limpiar {
+        background: transparent;
+        color: #666;
+        height: 48px;
+        padding: 0 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 24px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: border-color 0.3s;
+    }
+
+    .btn-limpiar:hover {
+        border-color: #999;
+        color: #333;
+        text-decoration: none;
+    }
+
+    /* Mascotas Section */
+    .mascotas-section {
+        background: rgba(0, 0, 0, 0.03);
+        padding: 60px 20px;
+    }
+
+    .mascotas-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Mascota Card */
+    .mascota-card {
+        background: white;
+        border-radius: 16px;
         overflow: hidden;
-        clip: rect(0,0,0,0);
-        white-space: nowrap;
-        border: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        max-width: 320px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .card:focus-within {
-        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5) !important;
+    .mascota-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
 
-    .card-title:focus {
-        outline: 2px solid #28a745;
-        outline-offset: 2px;
+    .mascota-image-container {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        background: #f5f5f5;
     }
 
-    /* Responsive para 1366x768 */
-    .container.py-4 {
-        max-width: 100%;
+    .mascota-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .mascota-card:hover .mascota-image {
+        transform: scale(1.05);
+    }
+
+    .mascota-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+    }
+
+    .mascota-badge-disponible {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .mascota-info {
         padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
-    @@media (max-width: 1400px) {
-        .container.py-4 { padding: 16px 20px; }
-        .container.py-4 h1 { font-size: 28px; }
-        .container.py-4 .lead { font-size: 15px; }
-        .col-md-4 { width: 33.333%; }
-        .card { margin-bottom: 16px; }
-        .card-img-top { height: 180px !important; }
-        .card-body { padding: 16px; }
-        .card-title { font-size: 16px; }
-        .card-text { font-size: 13px; }
-        .btn { font-size: 13px; padding: 8px 14px; }
+    .mascota-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
     }
 
-    @@media (max-width: 1280px) {
-        .container.py-4 h1 { font-size: 24px; margin-bottom: 12px !important; }
-        .container.py-4 .lead { font-size: 14px; }
-        .card-img-top { height: 160px !important; }
-        .card-body { padding: 14px; }
-        .card-title { font-size: 15px; }
-        .btn { font-size: 12px; padding: 7px 12px; }
-        .btn-block { padding: 8px 10px; }
+    .mascota-header h3 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #000;
+        margin: 0;
     }
 
-    @@media (max-width: 1024px) {
-        .col-md-4 { width: 50%; }
-        .container.py-4 h1 { font-size: 22px; }
-        .card-img-top { height: 150px !important; }
-        .card-body { padding: 12px; }
+    .mascota-tag {
+        background: #FFD4E5;
+        color: #C25B8A;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
     }
 
+    .mascota-tag.gato {
+        background: #E8D4FF;
+        color: #8A5BC2;
+    }
+
+    .mascota-tag.perro {
+        background: #D4E5FF;
+        color: #4A7BC2;
+    }
+
+    .mascota-tag.otro {
+        background: #FFF4D4;
+        color: #C2A35B;
+    }
+
+    .mascota-raza {
+        font-family: 'Nunito', sans-serif;
+        color: #666;
+        font-size: 15px;
+        margin: 0 0 4px 0;
+    }
+
+    .mascota-edad {
+        font-family: 'Nunito', sans-serif;
+        color: #999;
+        font-size: 14px;
+        margin: 0 0 12px 0;
+    }
+
+    .mascota-descripcion {
+        font-family: 'Nunito', sans-serif;
+        color: #666;
+        font-size: 14px;
+        font-style: italic;
+        line-height: 1.5;
+        margin: 0 0 12px 0;
+        flex: 1;
+    }
+
+    .mascota-ubicacion {
+        font-family: 'Nunito', sans-serif;
+        color: #999;
+        font-size: 13px;
+        margin: 0 0 16px 0;
+    }
+
+    .mascota-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-adoptar {
+        flex: 1;
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        color: #000;
+        padding: 12px 16px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-adoptar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(187, 250, 140, 0.4);
+        color: #000;
+        text-decoration: none;
+    }
+
+    .btn-ver-mas {
+        background: transparent;
+        color: #666;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-align: center;
+        transition: border-color 0.3s, color 0.3s;
+    }
+
+    .btn-ver-mas:hover {
+        border-color: #BBFA8C;
+        color: #333;
+        text-decoration: none;
+    }
+
+    /* No Mascotas */
+    .no-mascotas {
+        text-align: center;
+        padding: 80px 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .no-mascotas-icon {
+        font-size: 100px;
+        margin-bottom: 24px;
+    }
+
+    .no-mascotas h3 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 12px 0;
+    }
+
+    .no-mascotas p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        color: #666;
+        margin: 0 0 24px 0;
+    }
+
+    .btn-alternativo {
+        background: #FAA88C;
+        color: #000;
+        padding: 14px 32px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        display: inline-block;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-alternativo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(250, 168, 140, 0.4);
+        color: #000;
+        text-decoration: none;
+    }
+
+    /* Responsive */
     @@media (max-width: 768px) {
-        .col-md-4 { width: 100%; }
-        .container.py-4 { padding: 12px; }
-        .card-img-top { height: 180px !important; }
+        .mascotas-hero h1 {
+            font-size: 28px;
+        }
+
+        .mascotas-hero .subtitle {
+            font-size: 16px;
+        }
+
+        .filtros-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filtro-group {
+            width: 100%;
+        }
+
+        .filtro-input, .filtro-select {
+            width: 100%;
+        }
+
+        .filtro-buttons {
+            justify-content: center;
+        }
+
+        .mascota-card {
+            max-width: 100%;
+        }
+
+        .mascota-image-container {
+            height: 220px;
+        }
     }
 </style>

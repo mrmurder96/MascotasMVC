@@ -130,6 +130,34 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var hoy = new Date().toISOString().split('T')[0];
+            var fechaMinima = new Date();
+            fechaMinima.setFullYear(fechaMinima.getFullYear() - 120);
+            var fechaMinimaStr = fechaMinima.toISOString().split('T')[0];
+
+            // Establecer límites para fecha de nacimiento
+            $('#FechaNacimiento').attr('max', hoy);
+            $('#FechaNacimiento').attr('min', fechaMinimaStr);
+
+            // Validación adicional
+            $('#FechaNacimiento').on('change', function () {
+                var fechaNac = new Date($(this).val());
+                var hoyDate = new Date();
+                var edadMaxima = new Date();
+                edadMaxima.setFullYear(edadMaxima.getFullYear() - 120);
+
+                if (fechaNac > hoyDate) {
+                    alert('La fecha de nacimiento no puede ser posterior a hoy');
+                    $(this).val('');
+                } else if (fechaNac < edadMaxima) {
+                    alert('La fecha de nacimiento no puede ser mayor a 120 años atrás');
+                    $(this).val('');
+                }
+            });
+        });
+    </script>
 }
 
 <style>

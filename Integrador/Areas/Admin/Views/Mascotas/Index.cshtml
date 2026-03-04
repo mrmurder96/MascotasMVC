@@ -29,38 +29,43 @@
             <!-- Filtros -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>Filtros de Búsqueda</h4>
+                    <h4><i class="glyphicon glyphicon-filter"></i> Filtros de Búsqueda</h4>
                 </div>
                 <div class="panel-body">
                     @using (Html.BeginForm("Index", "Mascotas", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
                     {
-                        <div class="form-group">
+                        <div class="form-group" style="margin-right: 15px;">
                             <label>Nombre:</label>
-                            <input type="text" name="nombre" class="form-control" value="@Request.QueryString["nombre"]" placeholder="Buscar por nombre..." />
+                            <input type="text" name="buscar" class="form-control" value="@ViewBag.Buscar" placeholder="Buscar por nombre..." />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="margin-right: 15px;">
                             <label>Tipo:</label>
-                            <select name="tipo" class="form-control">
+                            <select name="filtroTipo" class="form-control">
                                 <option value="">Todos</option>
-                                <option value="Perro">Perro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Ave">Ave</option>
-                                <option value="Otro">Otro</option>
+                                <option value="Perro" @(ViewBag.TipoSeleccionado == "Perro" ? "selected" : "")>Perro</option>
+                                <option value="Gato" @(ViewBag.TipoSeleccionado == "Gato" ? "selected" : "")>Gato</option>
+                                <option value="Ave" @(ViewBag.TipoSeleccionado == "Ave" ? "selected" : "")>Ave</option>
+                                <option value="Conejo" @(ViewBag.TipoSeleccionado == "Conejo" ? "selected" : "")>Conejo</option>
+                                <option value="Roedor" @(ViewBag.TipoSeleccionado == "Roedor" ? "selected" : "")>Roedor</option>
+                                <option value="Otro" @(ViewBag.TipoSeleccionado == "Otro" ? "selected" : "")>Otro</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="margin-right: 15px;">
                             <label>Estado:</label>
-                            <select name="estado" class="form-control">
+                            <select name="filtroEstado" class="form-control">
                                 <option value="">Todos</option>
-                                <option value="Disponible">Disponible</option>
-                                <option value="Adoptado">Adoptado</option>
-                                <option value="En Proceso">En Proceso</option>
+                                <option value="Disponible" @(ViewBag.EstadoSeleccionado == "Disponible" ? "selected" : "")>Disponible</option>
+                                <option value="Adoptado" @(ViewBag.EstadoSeleccionado == "Adoptado" ? "selected" : "")>Adoptado</option>
+                                <option value="En Proceso" @(ViewBag.EstadoSeleccionado == "En Proceso" ? "selected" : "")>En Proceso</option>
+                                <option value="No Disponible" @(ViewBag.EstadoSeleccionado == "No Disponible" ? "selected" : "")>No Disponible</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">
                             <i class="glyphicon glyphicon-search"></i> Buscar
                         </button>
-                        <a href="@Url.Action("Index")" class="btn btn-default">Limpiar</a>
+                        <a href="@Url.Action("Index")" class="btn btn-default">
+                            <i class="glyphicon glyphicon-refresh"></i> Limpiar
+                        </a>
                     }
                 </div>
             </div>

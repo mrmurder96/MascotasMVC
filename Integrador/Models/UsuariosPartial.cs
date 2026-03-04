@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Integrador.Validations;
 
 namespace Integrador.Models
 {
@@ -58,26 +59,41 @@ namespace Integrador.Models
     public class UsuariosMetadata
     {
         [Required(ErrorMessage = "El nombre es requerido")]
-        [StringLength(100, ErrorMessage = "El nombre no puede exceder 100 caracteres")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres")]
+        [Display(Name = "Nombres")]
         public string Nombres { get; set; }
 
         [Required(ErrorMessage = "Los apellidos son requeridos")]
-        [StringLength(100, ErrorMessage = "Los apellidos no pueden exceder 100 caracteres")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Los apellidos deben tener entre 2 y 50 caracteres")]
+        [Display(Name = "Apellidos")]
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "El email es requerido")]
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
-        [StringLength(150, ErrorMessage = "El email no puede exceder 150 caracteres")]
+        [StringLength(50, ErrorMessage = "El email no puede exceder 50 caracteres")]
+        [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
-        [StringLength(20, ErrorMessage = "La cédula no puede exceder 20 caracteres")]
+        [StringLength(15, ErrorMessage = "La cédula no puede exceder 15 caracteres")]
+        [RegularExpression(@"^[\d\-]+$", ErrorMessage = "La cédula solo puede contener números y guiones")]
+        [Display(Name = "Cédula")]
         public string Cedula { get; set; }
 
-        [Phone(ErrorMessage = "Formato de teléfono inválido")]
-        [StringLength(20, ErrorMessage = "El teléfono no puede exceder 20 caracteres")]
+        [StringLength(15, ErrorMessage = "El teléfono no puede exceder 15 caracteres")]
+        [RegularExpression(@"^[\d\s\-\+\(\)]+$", ErrorMessage = "El teléfono solo puede contener números, espacios, guiones y paréntesis")]
+        [Display(Name = "Teléfono")]
         public string Telefono { get; set; }
 
         [StringLength(200, ErrorMessage = "La dirección no puede exceder 200 caracteres")]
+        [Display(Name = "Dirección")]
         public string Direccion { get; set; }
+
+        [BirthDateRange(MaxYearsAgo = 120, ErrorMessage = "La fecha de nacimiento debe ser válida (no futura y no mayor a 120 años)")]
+        [Display(Name = "Fecha de Nacimiento")]
+        public DateTime? FechaNacimiento { get; set; }
+
+        [NotFutureDate(ErrorMessage = "La fecha de registro no puede ser futura")]
+        [Display(Name = "Fecha de Registro")]
+        public DateTime FechaRegistro { get; set; }
     }
 }

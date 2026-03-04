@@ -26,6 +26,12 @@ namespace Integrador.Controllers
             return View();
         }
 
+        // Acción para mostrar siempre la landing page pública (sin redirecciones)
+        public ActionResult Landing()
+        {
+            return View("Index");
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

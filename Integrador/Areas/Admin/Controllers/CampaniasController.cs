@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using Integrador.Models;
 using Integrador.Filters;
+using Integrador.Helpers;
 
 namespace Integrador.Areas.Admin.Controllers
 {
@@ -47,12 +48,25 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Titulo,Descripcion,FechaInicio,FechaFin,Activa,ImagenUrl")] Campanias campania)
         {
+            // Validación adicional de fechas
+            if (campania.FechaFin.HasValue && campania.FechaFin.Value < campania.FechaInicio)
+            {
+                ModelState.AddModelError("FechaFin", "La fecha de fin debe ser mayor o igual a la fecha de inicio");
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     db.Campanias.Add(campania);
                     db.SaveChanges();
+
+                    // Notificar a todos los usuarios sobre la nueva campaña
+                    if (campania.Activa)
+                    {
+                        NotificacionHelper.NotificarCampanaATodos(db, campania.Titulo, campania.FechaInicio);
+                    }
+
                     TempData["Success"] = "Campaña creada exitosamente";
                     return RedirectToAction("Index");
                 }
@@ -84,6 +98,12 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Titulo,Descripcion,FechaInicio,FechaFin,Activa,ImagenUrl")] Campanias campania)
         {
+            // Validación adicional de fechas
+            if (campania.FechaFin.HasValue && campania.FechaFin.Value < campania.FechaInicio)
+            {
+                ModelState.AddModelError("FechaFin", "La fecha de fin debe ser mayor o igual a la fecha de inicio");
+            }
+
             if (ModelState.IsValid)
             {
                 try

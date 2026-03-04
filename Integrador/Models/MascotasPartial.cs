@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Integrador.Validations;
 
 namespace Integrador.Models
 {
@@ -115,25 +116,47 @@ namespace Integrador.Models
     public class MascotasMetadata
     {
         [Required(ErrorMessage = "El nombre de la mascota es requerido")]
-        [StringLength(100, ErrorMessage = "El nombre no puede exceder 100 caracteres")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El tipo de mascota es requerido")]
-        [StringLength(50, ErrorMessage = "El tipo no puede exceder 50 caracteres")]
+        [StringLength(30, ErrorMessage = "El tipo no puede exceder 30 caracteres")]
+        [Display(Name = "Tipo de mascota")]
         public string Tipo { get; set; }
 
         [Range(0, 30, ErrorMessage = "La edad debe estar entre 0 y 30 años")]
+        [Display(Name = "Edad (años)")]
         public int? Edad { get; set; }
 
-        [StringLength(200, ErrorMessage = "La ubicación no puede exceder 200 caracteres")]
+        [StringLength(100, ErrorMessage = "La ubicación no puede exceder 100 caracteres")]
+        [Display(Name = "Ubicación")]
         public string Ubicacion { get; set; }
 
-        [StringLength(1000, ErrorMessage = "La descripción no puede exceder 1000 caracteres")]
+        [StringLength(500, ErrorMessage = "La descripción no puede exceder 500 caracteres")]
+        [Display(Name = "Descripción")]
         public string Descripcion { get; set; }
 
         [Required(ErrorMessage = "El estado es requerido")]
-        [StringLength(50, ErrorMessage = "El estado no puede exceder 50 caracteres")]
+        [StringLength(30, ErrorMessage = "El estado no puede exceder 30 caracteres")]
+        [Display(Name = "Estado")]
         public string Estado { get; set; }
+
+        [StringLength(50, ErrorMessage = "La raza no puede exceder 50 caracteres")]
+        [Display(Name = "Raza")]
+        public string Raza { get; set; }
+
+        [StringLength(20, ErrorMessage = "El sexo no puede exceder 20 caracteres")]
+        [Display(Name = "Sexo")]
+        public string Sexo { get; set; }
+
+        [StringLength(20, ErrorMessage = "El tamaño no puede exceder 20 caracteres")]
+        [Display(Name = "Tamaño")]
+        public string Tamano { get; set; }
+
+        [NotFutureDate(ErrorMessage = "La fecha de creación no puede ser futura")]
+        [Display(Name = "Fecha de Registro")]
+        public DateTime? FechaCreacion { get; set; }
     }
 }
 

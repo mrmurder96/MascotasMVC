@@ -2,277 +2,441 @@
 
 @{
     ViewBag.Title = "Mascotas Perdidas";
-    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    // Usar LayoutMaster si está logueado, Layout público si no
+    Layout = Session["UsuarioId"] != null 
+        ? "~/Views/Shared/_LayoutMaster.cshtml" 
+        : "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- Hero Section -->
+<section class="perdidas-hero">
+    <div class="hero-content">
+        <h1>🔍 Mascotas Perdidas</h1>
+        <p class="subtitle">Ayúdanos a reunir a las mascotas con sus familias</p>
+        @if (Session["UsuarioId"] != null)
+        {
+            <a href="@Url.Action("Create", "MascotasPerdidas")" class="btn-reportar">
+                ➕ Reportar Mascota Perdida
+            </a>
+        }
+    </div>
+</section>
+
+<!-- Filtros Section -->
+<section class="filtros-section">
+    <div class="filtros-container">
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filtrarMascotas('todas', this)">
+                📋 Todas
+            </button>
+            <button class="filter-tab" onclick="filtrarMascotas('perdidas', this)">
+                🚨 Perdidas
+            </button>
+            <button class="filter-tab" onclick="filtrarMascotas('encontradas', this)">
+                ✅ Encontradas
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Mascotas Perdidas -->
+<section class="perdidas-section">
+    @if (Model != null && Model.Any())
+    {
+        <div class="perdidas-grid" id="mascotasGrid">
+            @foreach (var mascota in Model)
+            {
+                <div class="perdida-card" data-estado="@(mascota.Encontrada ? "encontrada" : "perdida")">
+                    <div class="perdida-image-container">
+                        @if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                        {
+                            <img src="@mascota.FotoUrl" alt="@mascota.Nombre" class="perdida-image" />
+                        }
+                        else
+                        {
+                            <div class="perdida-image-placeholder">🐾</div>
+                        }
+                        @if (mascota.Encontrada)
+                        {
+                            <span class="badge-estado encontrada">✅ Encontrada</span>
+                        }
+                        else
+                        {
+                            <span class="badge-estado perdida">🚨 Perdida</span>
+                        }
+                    </div>
+                    <div class="perdida-info">
+                        <h3>@mascota.Nombre</h3>
+                        <div class="perdida-detalles">
+                            <span class="detalle-item">🏷️ @(mascota.Tipo ?? "No especificado")</span>
+                            @if (!string.IsNullOrEmpty(mascota.Raza))
+                            {
+                                <span class="detalle-item">🐕 @mascota.Raza</span>
+                            }
+                        </div>
+                        <p class="perdida-fecha">📅 Reportado: @mascota.FechaReporte.ToString("dd/MM/yyyy")</p>
+                        <div class="perdida-ubicacion">
+                            <strong>📍 Última ubicación:</strong><br />
+                            @(mascota.Ubicacion ?? "No especificada")
+                        </div>
+                        @if (!string.IsNullOrEmpty(mascota.Descripcion))
+                        {
+                            <p class="perdida-descripcion">
+                                @(mascota.Descripcion.Length > 100 ? mascota.Descripcion.Substring(0, 100) + "..." : mascota.Descripcion)
+                            </p>
+                        }
+                        <a href="@Url.Action("Details", "MascotasPerdidas", new { id = mascota.Id })" class="btn-ver-detalles">
+                            Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🐾</div>
+            <h3>No hay reportes de mascotas perdidas</h3>
+            <p>¡Eso es una buena noticia!</p>
+        </div>
+    }
+</section>
+
 <style>
-    .perdidas-header {
+    /* Hero Section */
+    .perdidas-hero {
         background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        padding: 40px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        padding: 60px 20px;
+        text-align: center;
     }
-    
+
+    .perdidas-hero .hero-content {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .perdidas-hero h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 42px;
+        color: #fff;
+        margin: 0 0 16px 0;
+    }
+
+    .perdidas-hero .subtitle {
+        font-family: 'Nunito', sans-serif;
+        font-size: 18px;
+        color: rgba(255,255,255,0.9);
+        margin: 0 0 24px 0;
+    }
+
+    .btn-reportar {
+        display: inline-block;
+        background: #fff;
+        color: #c0392b;
+        padding: 14px 32px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-reportar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        color: #c0392b;
+        text-decoration: none;
+    }
+
+    /* Filtros Section */
+    .filtros-section {
+        background: #fff;
+        padding: 24px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .filtros-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        padding: 12px 28px;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 30px;
+        cursor: pointer;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #666;
+        transition: all 0.3s ease;
+    }
+
+    .filter-tab:hover {
+        border-color: #e74c3c;
+        color: #e74c3c;
+    }
+
+    .filter-tab.active {
+        background: #e74c3c;
+        border-color: #e74c3c;
+        color: #fff;
+    }
+
+    /* Mascotas Perdidas Section */
+    .perdidas-section {
+        background: rgba(0, 0, 0, 0.03);
+        padding: 60px 20px;
+    }
+
     .perdidas-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 25px;
-        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 28px;
+        max-width: 1400px;
+        margin: 0 auto;
     }
-    
+
+    /* Perdida Card */
     .perdida-card {
         background: white;
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        max-width: 340px;
+        display: flex;
+        flex-direction: column;
     }
-    
+
     .perdida-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
-    
-    .perdida-img {
+
+    .perdida-image-container {
+        position: relative;
+        height: 240px;
+        overflow: hidden;
+        background: #f5f5f5;
+    }
+
+    .perdida-image {
         width: 100%;
-        height: 250px;
+        height: 100%;
         object-fit: cover;
-        background: #f0f0f0;
+        transition: transform 0.3s;
     }
-    
-    .perdida-content {
-        padding: 20px;
+
+    .perdida-card:hover .perdida-image {
+        transform: scale(1.05);
     }
-    
-    .perdida-nombre {
-        font-size: 22px;
-        font-weight: 700;
-        color: #2c3e50;
-        margin: 0 0 10px 0;
-    }
-    
-    .perdida-info {
-        color: #7f8c8d;
-        font-size: 14px;
-        margin: 5px 0;
-    }
-    
-    .perdida-ubicacion {
-        background: #ecf0f1;
-        padding: 10px;
-        border-radius: 6px;
-        margin: 15px 0;
-        font-size: 14px;
-        color: #2c3e50;
-    }
-    
-    .perdida-contacto {
-        background: #e8f4f8;
-        padding: 15px;
-        border-radius: 6px;
-        margin-top: 15px;
-    }
-    
-    .badge-encontrada {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #2ecc71;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    
-    .badge-perdida {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #e74c3c;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    
-    .btn-ver-detalles {
+
+    .perdida-image-placeholder {
         width: 100%;
-        margin-top: 15px;
-        background: #3498db;
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 6px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.3s ease;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
     }
-    
+
+    .badge-estado {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .badge-estado.perdida {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+    }
+
+    .badge-estado.encontrada {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .perdida-info {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .perdida-info h3 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: #000;
+        margin: 0 0 12px 0;
+    }
+
+    .perdida-detalles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .detalle-item {
+        background: #f8f9fa;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        color: #666;
+    }
+
+    .perdida-fecha {
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        color: #999;
+        margin: 0 0 12px 0;
+    }
+
+    .perdida-ubicacion {
+        background: #fff3cd;
+        padding: 12px;
+        border-radius: 10px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        color: #856404;
+        margin-bottom: 12px;
+        border-left: 4px solid #ffc107;
+    }
+
+    .perdida-descripcion {
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+        margin: 0 0 16px 0;
+        flex: 1;
+    }
+
+    .btn-ver-detalles {
+        display: block;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 14px 20px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
     .btn-ver-detalles:hover {
-        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
         color: white;
         text-decoration: none;
     }
-    
+
+    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 80px 20px;
+        max-width: 500px;
+        margin: 0 auto;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
-    
-    .filter-tabs {
-        display: flex;
-        gap: 15px;
-        margin: 20px 0;
-        flex-wrap: wrap;
+
+    .empty-icon {
+        font-size: 100px;
+        margin-bottom: 24px;
     }
-    
-    .filter-tab {
-        padding: 10px 25px;
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: all 0.3s ease;
+
+    .empty-state h3 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 12px 0;
+    }
+
+    .empty-state p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        color: #27ae60;
+        margin: 0;
         font-weight: 600;
-        color: #7f8c8d;
     }
-    
-    .filter-tab:hover,
-    .filter-tab.active {
-        background: #3498db;
-        border-color: #3498db;
-        color: white;
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .perdidas-hero h1 {
+            font-size: 28px;
+        }
+
+        .perdidas-hero .subtitle {
+            font-size: 16px;
+        }
+
+        .filter-tabs {
+            gap: 8px;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .perdida-card {
+            max-width: 100%;
+        }
+
+        .perdida-image-container {
+            height: 200px;
+        }
     }
 </style>
 
-<div class="perdidas-header">
-    <h2 style="margin: 0; font-size: 36px; font-weight: 700;">?? Mascotas Perdidas</h2>
-    <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.95;">Ayódanos a reunir a las mascotas con sus familias</p>
-    
-    @if (Session["UsuarioId"] != null)
-    {
-        <a href="@Url.Action("Create", "MascotasPerdidas")" class="btn btn-light" style="margin-top: 20px; font-weight: 600;">
-            <i class="glyphicon glyphicon-plus"></i> Reportar Mascota Perdida
-        </a>
-    }
-</div>
-
-<div class="filter-tabs">
-    <button class="filter-tab active" onclick="filtrarMascotas('todas')">
-        ?? Todas
-    </button>
-    <button class="filter-tab" onclick="filtrarMascotas('perdidas')">
-        ?? Perdidas
-    </button>
-    <button class="filter-tab" onclick="filtrarMascotas('encontradas')">
-        ? Encontradas
-    </button>
-</div>
-
-@if (Model != null && Model.Any())
-{
-    <div class="perdidas-grid" id="mascotasGrid">
-        @foreach (var mascota in Model)
-        {
-            <div class="perdida-card" data-estado="@(mascota.Encontrada ? "encontrada" : "perdida")">
-                @if (mascota.Encontrada)
-                {
-                    <span class="badge-encontrada">? Encontrada</span>
-                }
-                else
-                {
-                    <span class="badge-perdida">? Perdida</span>
-                }
-                
-                @if (!string.IsNullOrEmpty(mascota.FotoUrl))
-                {
-                    <img src="@mascota.FotoUrl" alt="@mascota.Nombre" class="perdida-img" />
-                }
-                else
-                {
-                    <div class="perdida-img" style="display: flex; align-items: center; justify-content: center; font-size: 80px; background: #ecf0f1;">
-                        ??
-                    </div>
-                }
-                
-                <div class="perdida-content">
-                    <h3 class="perdida-nombre">@mascota.Nombre</h3>
-                    
-                    <div class="perdida-info">
-                        <strong>Tipo:</strong> @(mascota.Tipo ?? "No especificado")
-                    </div>
-                    
-                    @if (!string.IsNullOrEmpty(mascota.Raza))
-                    {
-                        <div class="perdida-info">
-                            <strong>Raza:</strong> @mascota.Raza
-                        </div>
-                    }
-                    
-                    <div class="perdida-info">
-                        <strong>Reportado:</strong> @mascota.FechaReporte.ToString("dd/MM/yyyy")
-                    </div>
-                    
-                    <div class="perdida-ubicacion">
-                        <strong>?? óltima ubicación:</strong><br />
-                        @(mascota.Ubicacion ?? "No especificada")
-                    </div>
-                    
-                    @if (!string.IsNullOrEmpty(mascota.Descripcion))
-                    {
-                        <div class="perdida-info" style="margin-top: 10px; line-height: 1.5;">
-                            @(mascota.Descripcion.Length > 100 ? mascota.Descripcion.Substring(0, 100) + "..." : mascota.Descripcion)
-                        </div>
-                    }
-                    
-                    <a href="@Url.Action("Details", "MascotasPerdidas", new { id = mascota.Id })" class="btn-ver-detalles">
-                        Ver Detalles Completos
-                    </a>
-                </div>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <div class="empty-state">
-        <div style="font-size: 80px; margin-bottom: 20px;">??</div>
-        <h3 style="color: #7f8c8d; margin-bottom: 15px;">No hay reportes de mascotas perdidas</h3>
-        <p style="color: #95a5a6;">óEso es una buena noticia!</p>
-    </div>
-}
-
 @section Scripts {
     <script>
-        function filtrarMascotas(tipo) {
+        function filtrarMascotas(tipo, btn) {
             const cards = document.querySelectorAll('.perdida-card');
             const tabs = document.querySelectorAll('.filter-tab');
-            
+
             // Actualizar tabs activos
             tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            btn.classList.add('active');
+
             // Filtrar cards
             cards.forEach(card => {
                 const estado = card.getAttribute('data-estado');
-                
+
                 if (tipo === 'todas') {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else if (tipo === 'perdidas' && estado === 'perdida') {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else if (tipo === 'encontradas' && estado === 'encontrada') {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }

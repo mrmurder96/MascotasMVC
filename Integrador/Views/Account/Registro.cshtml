@@ -614,13 +614,13 @@
                     <div class="file-input-wrapper">
                         <input type="file"
                                name="Fotos"
-                               accept="image/*"
+                               accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                                multiple
                                id="fileInput"
                                aria-label="Seleccionar fotos de perfil" />
                         <span class="file-input-label" id="fileLabel">📷 Seleccionar fotos</span>
                     </div>
-                    <small class="file-note">Máx 2 MB por imagen. Puedes subir varias imágenes</small>
+                    <small class="file-note">Máx 4 MB por imagen. Formatos: JPG, PNG. Máximo 5 imágenes.</small>
                     <span class="text-danger" id="fileError" style="display: none; margin-left: 20px;"></span>
                     @Html.ValidationMessage("Fotos", "", new { @class = "text-danger" })
                 </div>
@@ -646,7 +646,10 @@
             const fileInput = document.getElementById('fileInput');
             const fileLabel = document.getElementById('fileLabel');
             const fileError = document.getElementById('fileError');
-            const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
+            const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB en bytes
+            const MAX_FILES = 5;
+            const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
+            const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png'];
 
             if (fileInput && fileLabel) {
                 fileInput.addEventListener('change', function () {
@@ -655,26 +658,35 @@
                     let errorMessage = '';
                     let validFiles = [];
 
-                    // Validar cada archivo
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
+                    // Validar cantidad máxima de archivos
+                    if (files.length > MAX_FILES) {
+                        hasError = true;
+                        errorMessage = `Máximo ${MAX_FILES} imágenes permitidas. Seleccionaste ${files.length}.`;
+                    }
 
-                        // Validar que sea una imagen
-                        if (!file.type.startsWith('image/')) {
-                            hasError = true;
-                            errorMessage = `El archivo "${file.name}" no es una imagen válida.`;
-                            break;
+                    if (!hasError) {
+                        // Validar cada archivo
+                        for (let i = 0; i < files.length; i++) {
+                            const file = files[i];
+                            const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+                            // Validar que sea una imagen JPG o PNG
+                            if (!ALLOWED_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(ext)) {
+                                hasError = true;
+                                errorMessage = `El archivo "${file.name}" no es válido. Solo JPG o PNG.`;
+                                break;
+                            }
+
+                            // Validar tamaño (máximo 4MB)
+                            if (file.size > MAX_FILE_SIZE) {
+                                hasError = true;
+                                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                                errorMessage = `El archivo "${file.name}" (${sizeMB} MB) excede el tamaño máximo de 4 MB.`;
+                                break;
+                            }
+
+                            validFiles.push(file);
                         }
-
-                        // Validar tamaño (máximo 2MB)
-                        if (file.size > MAX_FILE_SIZE) {
-                            hasError = true;
-                            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                            errorMessage = `El archivo "${file.name}" (${sizeMB} MB) excede el tamaño máximo de 2 MB.`;
-                            break;
-                        }
-
-                        validFiles.push(file);
                     }
 
                     if (hasError) {

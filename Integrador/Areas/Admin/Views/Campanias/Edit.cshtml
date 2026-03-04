@@ -62,3 +62,31 @@
     .card-header h4 { margin: 0; color: #000; }
     .card-body { padding: 20px; }
 </style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Validación: FechaFin debe ser >= FechaInicio
+            $('#FechaFin').on('change', function () {
+                var fechaInicio = $('#FechaInicio').val();
+                var fechaFin = $(this).val();
+
+                if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
+                    alert('La fecha de fin debe ser mayor o igual a la fecha de inicio');
+                    $(this).val('');
+                }
+            });
+
+            $('#FechaInicio').on('change', function () {
+                var fechaInicio = $(this).val();
+                var fechaFin = $('#FechaFin').val();
+
+                if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
+                    alert('La fecha de fin debe ser mayor o igual a la fecha de inicio');
+                    $('#FechaFin').val('');
+                }
+            });
+        });
+    </script>
+}

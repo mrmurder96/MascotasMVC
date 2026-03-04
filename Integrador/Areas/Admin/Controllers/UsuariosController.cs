@@ -50,6 +50,19 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Nombres,Apellidos,Email,Cedula,Telefono,Direccion,Rol,FechaNacimiento,EstaActivo")] Usuarios usuario, string Password)
         {
+            // Validación adicional de fecha de nacimiento
+            if (usuario.FechaNacimiento.HasValue)
+            {
+                if (usuario.FechaNacimiento.Value > DateTime.Today)
+                {
+                    ModelState.AddModelError("FechaNacimiento", "La fecha de nacimiento no puede ser futura");
+                }
+                else if (usuario.FechaNacimiento.Value < DateTime.Today.AddYears(-120))
+                {
+                    ModelState.AddModelError("FechaNacimiento", "La fecha de nacimiento no puede ser mayor a 120 años atrás");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -118,6 +131,19 @@ namespace Integrador.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Nombres,Apellidos,Email,Cedula,Telefono,Direccion,Rol,FechaNacimiento,EstaActivo,Bloqueado,IntentosFallidos")] Usuarios usuario)
         {
+            // Validación adicional de fecha de nacimiento
+            if (usuario.FechaNacimiento.HasValue)
+            {
+                if (usuario.FechaNacimiento.Value > DateTime.Today)
+                {
+                    ModelState.AddModelError("FechaNacimiento", "La fecha de nacimiento no puede ser futura");
+                }
+                else if (usuario.FechaNacimiento.Value < DateTime.Today.AddYears(-120))
+                {
+                    ModelState.AddModelError("FechaNacimiento", "La fecha de nacimiento no puede ser mayor a 120 años atrás");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try

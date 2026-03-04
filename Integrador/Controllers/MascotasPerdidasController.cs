@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Integrador.Filters;
+using Integrador.Helpers;
 using Integrador.Models;
 
 namespace Integrador.Controllers
@@ -116,9 +117,13 @@ namespace Integrador.Controllers
             // Verificar que sea el usuario que reportó
             if (Session["UsuarioId"] != null)
             {
+                var usuarioId = Convert.ToInt32(Session["UsuarioId"]);
                 mascotaPerdida.Encontrada = true;
                 mascotaPerdida.FechaEncontrada = DateTime.Now;
                 db.SaveChanges();
+
+                // Crear notificación de mascota encontrada
+                NotificacionHelper.NotificarMascotaEncontrada(db, usuarioId, mascotaPerdida.Nombre ?? "tu mascota");
 
                 TempData["Success"] = "¡Nos alegra que hayas encontrado a tu mascota!";
             }

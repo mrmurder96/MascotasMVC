@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Integrador.Filters;
 using Integrador.Helpers;
 using Integrador.Models;
 using Integrador.Models.ViewModels;
@@ -114,9 +115,18 @@ namespace Integrador.Controllers
                 return View(model);
             }
 
+            // Validación de imágenes: solo JPG/PNG, máximo 4MB, máximo 5 archivos
             var allowedExts = new[] { ".jpg", ".jpeg", ".png" };
             var allowedContentTypes = new[] { "image/jpeg", "image/png" };
-            const int maxBytes = 2 * 1024 * 1024; // 2 MB
+            const int maxBytes = 4 * 1024 * 1024; // 4 MB
+            const int maxFiles = 5;
+
+            int fileCount = files.Count(f => f != null && f.ContentLength > 0);
+            if (fileCount > maxFiles)
+            {
+                ModelState.AddModelError("Fotos", $"Máximo {maxFiles} imágenes permitidas.");
+                return View(model);
+            }
 
             foreach (var file in files)
             {
@@ -126,19 +136,19 @@ namespace Integrador.Controllers
                 var ext = Path.GetExtension(file.FileName ?? "").ToLowerInvariant();
                 if (!allowedExts.Contains(ext))
                 {
-                    ModelState.AddModelError("Fotos", "Solo se permiten imágenes con extensión JPG o PNG.");
+                    ModelState.AddModelError("Fotos", $"El archivo '{file.FileName}' no es válido. Solo se permiten imágenes JPG o PNG.");
                     return View(model);
                 }
 
                 if (!allowedContentTypes.Contains(file.ContentType))
                 {
-                    ModelState.AddModelError("Fotos", "Solo se permiten imágenes JPG o PNG.");
+                    ModelState.AddModelError("Fotos", $"El archivo '{file.FileName}' no es una imagen válida. Solo JPG o PNG.");
                     return View(model);
                 }
 
                 if (file.ContentLength > maxBytes)
                 {
-                    ModelState.AddModelError("Fotos", "Cada imagen debe ser menor o igual a 2 MB.");
+                    ModelState.AddModelError("Fotos", $"El archivo '{file.FileName}' excede el tamaño máximo de 4 MB.");
                     return View(model);
                 }
             }
@@ -218,6 +228,10 @@ namespace Integrador.Controllers
                 TempData["RegistroWarning"] = "Registro completado, pero falló al guardar imágenes: " + ex.Message;
             }
 
+            // Crear notificación de bienvenida
+            NotificacionHelper.NotificarBienvenida(db, usuarioRegistro.Id, usuarioRegistro.Nombres);
+
+            TempData["RegistroSuccess"] = "¡Registro exitoso! Ya puedes iniciar sesión.";
             return RedirectToAction("Login");
         }
 
@@ -514,6 +528,240 @@ namespace Integrador.Controllers
             for (int i = 0; i < length; i++)
                 sb.Append(chars[rnd.Next(chars.Length)]);
             return sb.ToString();
+        }
+
+        // =====================================================================
+        // GESTIÓN DE IMÁGENES DEL USUARIO
+        // =====================================================================
+
+        /// <summary>
+        /// Muestra la galería de imágenes del usuario actual
+        /// </summary>
+        [CargarPermisos]
+        public ActionResult Imagenes()
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            // Obtener todas las imágenes del usuario desde la base de datos
+            var imagenes = new System.Collections.Generic.List<UsuarioImagen>();
+
+            try
+            {
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
+                var builder = new EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(
+                        "SELECT Id, UsuarioId, NombreArchivo, ContentType, FechaSubida FROM UsuarioImagenes WHERE UsuarioId = @UsuarioId ORDER BY FechaSubida DESC",
+                        conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                imagenes.Add(new UsuarioImagen
+                                {
+                                    Id = Convert.ToInt32(reader["Id"]),
+                                    UsuarioId = Convert.ToInt32(reader["UsuarioId"]),
+                                    NombreArchivo = reader["NombreArchivo"] as string,
+                                    ContentType = reader["ContentType"] as string,
+                                    FechaSubida = Convert.ToDateTime(reader["FechaSubida"])
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ImagenesError"] = "Error al cargar las imágenes: " + ex.Message;
+            }
+
+            return View(imagenes);
+        }
+
+        /// <summary>
+        /// Obtiene una imagen específica de la base de datos por su ID
+        /// </summary>
+        public ActionResult ObtenerImagen(int id)
+        {
+            try
+            {
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
+                var builder = new EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(
+                        "SELECT Data, ContentType FROM UsuarioImagenes WHERE Id = @Id",
+                        conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var data = reader["Data"] as byte[];
+                                var contentType = reader["ContentType"] as string;
+
+                                if (data != null && !string.IsNullOrEmpty(contentType))
+                                {
+                                    return File(data, contentType);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Si hay error, devolver imagen por defecto
+            }
+
+            // Devolver imagen por defecto si no se encuentra
+            var defaultPath = Server.MapPath("~/Content/images/default-avatar.png");
+            if (System.IO.File.Exists(defaultPath))
+            {
+                return File(defaultPath, "image/png");
+            }
+
+            return HttpNotFound();
+        }
+
+        /// <summary>
+        /// Establece una imagen como foto de perfil del usuario
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EstablecerPerfil(int id)
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            try
+            {
+                // Verificar que la imagen pertenece al usuario
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
+                var builder = new EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                bool esDelUsuario = false;
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(
+                        "SELECT COUNT(*) FROM UsuarioImagenes WHERE Id = @Id AND UsuarioId = @UsuarioId",
+                        conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+                        esDelUsuario = Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                    }
+                }
+
+                if (!esDelUsuario)
+                {
+                    TempData["ImagenesError"] = "No tienes permiso para establecer esta imagen.";
+                    return RedirectToAction("Imagenes");
+                }
+
+                // Actualizar la foto de perfil del usuario
+                var usuario = db.Usuarios.Find(usuarioId);
+                if (usuario != null)
+                {
+                    usuario.FotoPerfilRuta = Url.Action("ObtenerImagen", "Account", new { id = id });
+                    db.SaveChanges();
+                    TempData["ImagenesSuccess"] = "Foto de perfil actualizada correctamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ImagenesError"] = "Error al establecer la foto de perfil: " + ex.Message;
+            }
+
+            return RedirectToAction("Imagenes");
+        }
+
+        /// <summary>
+        /// Elimina una imagen del usuario
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EliminarImagen(int id)
+        {
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login");
+
+            int usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            try
+            {
+                var efConnString = ConfigurationManager.ConnectionStrings["adopEntities"].ConnectionString;
+                var builder = new EntityConnectionStringBuilder(efConnString);
+                var providerConnStr = builder.ProviderConnectionString;
+
+                using (var conn = new SqlConnection(providerConnStr))
+                {
+                    conn.Open();
+
+                    // Verificar que la imagen pertenece al usuario
+                    using (var cmdCheck = new SqlCommand(
+                        "SELECT COUNT(*) FROM UsuarioImagenes WHERE Id = @Id AND UsuarioId = @UsuarioId",
+                        conn))
+                    {
+                        cmdCheck.Parameters.AddWithValue("@Id", id);
+                        cmdCheck.Parameters.AddWithValue("@UsuarioId", usuarioId);
+
+                        if (Convert.ToInt32(cmdCheck.ExecuteScalar()) == 0)
+                        {
+                            TempData["ImagenesError"] = "No tienes permiso para eliminar esta imagen.";
+                            return RedirectToAction("Imagenes");
+                        }
+                    }
+
+                    // Eliminar la imagen
+                    using (var cmdDelete = new SqlCommand(
+                        "DELETE FROM UsuarioImagenes WHERE Id = @Id",
+                        conn))
+                    {
+                        cmdDelete.Parameters.AddWithValue("@Id", id);
+                        cmdDelete.ExecuteNonQuery();
+                    }
+
+                    // Si era la foto de perfil, limpiarla
+                    var usuario = db.Usuarios.Find(usuarioId);
+                    if (usuario != null && !string.IsNullOrEmpty(usuario.FotoPerfilRuta))
+                    {
+                        var imagenUrl = Url.Action("ObtenerImagen", "Account", new { id = id });
+                        if (usuario.FotoPerfilRuta.Contains($"id={id}"))
+                        {
+                            usuario.FotoPerfilRuta = null;
+                            db.SaveChanges();
+                        }
+                    }
+
+                    TempData["ImagenesSuccess"] = "Imagen eliminada correctamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ImagenesError"] = "Error al eliminar la imagen: " + ex.Message;
+            }
+
+            return RedirectToAction("Imagenes");
         }
     }
 }

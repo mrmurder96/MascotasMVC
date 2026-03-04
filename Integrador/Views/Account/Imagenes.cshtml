@@ -2,17 +2,42 @@
 
 @{
     ViewBag.Title = "Mis Imágenes";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3><i class="glyphicon glyphicon-picture" aria-hidden="true"></i> Mis Imágenes</h3>
-        <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-secondary">Volver al perfil</a>
+        <h3><i class="fas fa-images"></i> Mis Imágenes</h3>
+        <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver al perfil
+        </a>
     </div>
+
+    @* Mensajes de éxito y error *@
+    @if (TempData["ImagenesSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["ImagenesSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ImagenesError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["ImagenesError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">No tienes imágenes subidas.</div>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No tienes imágenes subidas. Puedes subir imágenes desde tu perfil.
+        </div>
+        <a href="@Url.Action("Perfil", "Ciudadano")" class="btn btn-primary">
+            <i class="fas fa-user"></i> Ir a Mi Perfil
+        </a>
     }
     else
     {
@@ -20,28 +45,43 @@
             @foreach (var img in Model)
             {
                 <div class="col-md-3 mb-3">
-                    <div class="card h-100">
-                        <img src="@Url.Action("ObtenerImagen", "Account", new { id = img.Id })" class="card-img-top" style="height:180px; object-fit:cover;" alt="@img.NombreArchivo" />
-                        <div class="card-body p-2">
-                            <p class="small mb-2 text-truncate" title="@img.NombreArchivo">@img.NombreArchivo</p>
+                    <div class="card h-100 shadow-sm">
+                        <img src="@Url.Action("ObtenerImagen", "Account", new { id = img.Id })" 
+                             class="card-img-top" 
+                             style="height:180px; object-fit:cover;" 
+                             alt="@img.NombreArchivo" />
 
-                            <div class="d-flex">
-                                @using (Html.BeginForm("EstablecerPerfil", "Account", FormMethod.Post, new { @style = "display:inline;" }))
+                        <div class="card-body p-2">
+                            <p class="small mb-2 text-truncate" title="@img.NombreArchivo">
+                                <i class="fas fa-file-image"></i> @img.NombreArchivo
+                            </p>
+
+                            <div class="btn-group w-100" role="group">
+                                @using (Html.BeginForm("EstablecerPerfil", "Account", FormMethod.Post, new { @class = "d-inline", style = "flex: 1;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@img.Id" />
-                                    <button class="btn btn-sm btn-success w-100" type="submit" style="background-color:#8CFAA4; border-color:#8CFAA4; color:#000;">Usar como perfil</button>
+                                    <button class="btn btn-sm btn-success w-100" type="submit" title="Establecer como foto de perfil">
+                                        <i class="fas fa-user-circle"></i> Usar
+                                    </button>
                                 }
-                                @using (Html.BeginForm("EliminarImagen", "Account", FormMethod.Post, new { @style = "display:inline; margin-left:6px;" }))
+
+                                @using (Html.BeginForm("EliminarImagen", "Account", FormMethod.Post, new { @class = "d-inline ms-1", style = "flex: 1;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@img.Id" />
-                                    <button class="btn btn-sm btn-danger w-100" type="submit" style="background-color:#FA8C99; border-color:#FA8C99; color:#000;" onclick="return confirm('¿Eliminar imagen?');">Eliminar</button>
+                                    <button class="btn btn-sm btn-danger w-100" 
+                                            type="submit" 
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta imagen?');"
+                                            title="Eliminar imagen">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
                                 }
                             </div>
                         </div>
+
                         <div class="card-footer text-muted small p-2">
-                            @img.FechaSubida.ToString("g")
+                            <i class="fas fa-calendar"></i> @img.FechaSubida.ToString("dd/MM/yyyy HH:mm")
                         </div>
                     </div>
                 </div>

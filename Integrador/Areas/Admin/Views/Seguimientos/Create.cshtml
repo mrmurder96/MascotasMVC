@@ -2,72 +2,196 @@
 @{
     ViewBag.Title = "Nuevo Seguimiento";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var adopcion = ViewBag.Adopcion as Integrador.Models.Adopciones;
 }
 
-<div class="container">
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header-card">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><i class="glyphicon glyphicon-plus-sign"></i> Registrar Nuevo Seguimiento</h2>
+                <p class="lead">
+                    Seguimiento para la adopción de 
+                    <strong>@(adopcion?.Mascotas?.Nombre ?? "Mascota")</strong> por 
+                    <strong>@(adopcion?.NombreSolicitante ?? "Adoptante")</strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-right" style="padding-top: 15px;">
+                <a href="@Url.Action("Details", new { id = Model.AdopcionId })" class="btn btn-default btn-lg">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_AlertMessages")
+
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="card">
+        <!-- Info de la Adopción -->
+        <div class="col-md-4">
+            @if (adopcion != null)
+            {
+                <div class="card info-card">
+                    <div class="card-header">
+                        <h4><i class="glyphicon glyphicon-info-sign"></i> Información de Referencia</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mascota -->
+                        @if (adopcion.Mascotas != null)
+                        {
+                            <div class="info-section">
+                                <div class="section-header">
+                                    <i class="glyphicon glyphicon-paw"></i> Mascota
+                                </div>
+                                <div class="info-preview">
+                                    @if (!string.IsNullOrEmpty(adopcion.Mascotas.FotoUrl))
+                                    {
+                                        if (adopcion.Mascotas.FotoUrl.StartsWith("/") || adopcion.Mascotas.FotoUrl.StartsWith("~"))
+                                        {
+                                            <img src="@Url.Content(adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
+                                        }
+                                    }
+                                    <div class="info-nombre">@adopcion.Mascotas.Nombre</div>
+                                    <div class="info-tipo">@adopcion.Mascotas.Tipo @(!string.IsNullOrEmpty(adopcion.Mascotas.Raza) ? "- " + adopcion.Mascotas.Raza : "")</div>
+                                </div>
+                            </div>
+                        }
+                        
+                        <!-- Adoptante -->
+                        <div class="info-section">
+                            <div class="section-header">
+                                <i class="glyphicon glyphicon-user"></i> Adoptante
+                            </div>
+                            <div class="info-detail">
+                                <strong>@adopcion.NombreSolicitante</strong>
+                                <small>@adopcion.Email</small>
+                                <small>@adopcion.Telefono</small>
+                            </div>
+                        </div>
+
+                        <!-- Fecha Adopción -->
+                        <div class="info-section">
+                            <div class="section-header">
+                                <i class="glyphicon glyphicon-calendar"></i> Fecha de Adopción
+                            </div>
+                            <div class="info-fecha">
+                                @adopcion.FechaSolicitud.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips -->
+                <div class="card tips-card">
+                    <div class="card-header">
+                        <h4><i class="glyphicon glyphicon-lightbulb"></i> Consejos para el Seguimiento</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="tips-list">
+                            <li><i class="glyphicon glyphicon-ok"></i> Verifica el estado de salud general</li>
+                            <li><i class="glyphicon glyphicon-ok"></i> Pregunta sobre alimentación y hábitos</li>
+                            <li><i class="glyphicon glyphicon-ok"></i> Confirma vacunas y controles veterinarios</li>
+                            <li><i class="glyphicon glyphicon-ok"></i> Evalúa la adaptación al hogar</li>
+                            <li><i class="glyphicon glyphicon-ok"></i> Registra cualquier preocupación</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Formulario -->
+        <div class="col-md-8">
+            <div class="card form-card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-plus"></i> Registrar Nuevo Seguimiento Post-Adopción</h3>
+                    <h4><i class="glyphicon glyphicon-edit"></i> Datos del Seguimiento</h4>
                 </div>
                 <div class="card-body">
-                    @Html.Partial("_AlertMessages")
-
-                    @using (Html.BeginForm("Create", "Seguimientos", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    @using (Html.BeginForm("Create", "Seguimientos", new { area = "Admin" }, FormMethod.Post, new { @class = "form-seguimiento" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(m => m.AdopcionId)
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Adopción *</label>
-                            <div class="col-md-9">
-                                @Html.DropDownList("AdopcionId", ViewBag.Adopciones as SelectList, "Seleccione una adopción...", new { @class = "form-control" })
-                                <small class="text-muted">Solo se muestran adopciones finalizadas</small>
+                        <div class="form-section">
+                            <h5><i class="glyphicon glyphicon-calendar"></i> Información Básica</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label required">
+                                            <i class="glyphicon glyphicon-calendar"></i> Fecha del Seguimiento
+                                        </label>
+                                        @Html.TextBoxFor(m => m.FechaSeguimiento, "{0:yyyy-MM-dd}", new { @class = "form-control input-lg", type = "date", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.FechaSeguimiento, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label required">
+                                            <i class="glyphicon glyphicon-phone-alt"></i> Tipo de Seguimiento
+                                        </label>
+                                        @Html.DropDownListFor(m => m.TipoSeguimiento, ViewBag.TiposSeguimiento as SelectList, "Seleccione tipo...", new { @class = "form-control input-lg", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.TipoSeguimiento, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.FechaSeguimiento, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-4">
-                                @Html.TextBoxFor(m => m.FechaSeguimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                                @Html.ValidationMessageFor(m => m.FechaSeguimiento, "", new { @class = "text-danger" })
+                        <div class="form-section">
+                            <h5><i class="glyphicon glyphicon-heart"></i> Estado de la Mascota</h5>
+                            
+                            <div class="estado-selector">
+                                <div class="estado-option" data-value="Excelente">
+                                    <div class="estado-icon estado-excelente">⭐</div>
+                                    <span>Excelente</span>
+                                </div>
+                                <div class="estado-option" data-value="Bueno">
+                                    <div class="estado-icon estado-bueno">✅</div>
+                                    <span>Bueno</span>
+                                </div>
+                                <div class="estado-option" data-value="Regular">
+                                    <div class="estado-icon estado-regular">⚠️</div>
+                                    <span>Regular</span>
+                                </div>
+                                <div class="estado-option" data-value="Requiere Atención">
+                                    <div class="estado-icon estado-atencion">🔶</div>
+                                    <span>Requiere Atención</span>
+                                </div>
+                                <div class="estado-option" data-value="Crítico">
+                                    <div class="estado-icon estado-critico">🔴</div>
+                                    <span>Crítico</span>
+                                </div>
                             </div>
+                            @Html.HiddenFor(m => m.EstadoMascota, new { @id = "EstadoMascotaInput" })
+                            @Html.ValidationMessageFor(m => m.EstadoMascota, "", new { @class = "text-danger" })
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.EstadoMascota, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.EstadoMascota, new SelectList(new[] { "Excelente", "Bueno", "Regular", "Malo" }), "Seleccione estado...", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.EstadoMascota, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Observaciones, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control", rows = 5, placeholder = "Detalles del seguimiento, comportamiento de la mascota, adaptación, salud, etc." })
+                        <div class="form-section">
+                            <h5><i class="glyphicon glyphicon-comment"></i> Observaciones</h5>
+                            
+                            <div class="form-group">
+                                @Html.TextAreaFor(m => m.Observaciones, new { 
+                                    @class = "form-control", 
+                                    rows = 6, 
+                                    placeholder = "Describa el estado de la mascota, comportamiento, adaptación al hogar, salud, alimentación, cualquier preocupación o aspecto positivo observado..." 
+                                })
                                 @Html.ValidationMessageFor(m => m.Observaciones, "", new { @class = "text-danger" })
+                                <small class="text-muted">Sea lo más detallado posible para mantener un historial completo.</small>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Próximo Seguimiento</label>
-                            <div class="col-md-4">
-                                <input type="date" name="ProximoSeguimiento" class="form-control" />
-                                <small class="text-muted">Opcional</small>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Seguimiento
-                                </button>
-                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
-                                    <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
-                                </a>
-                            </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-guardar btn-lg">
+                                <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Seguimiento
+                            </button>
+                            <a href="@Url.Action("Details", new { id = Model.AdopcionId })" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-remove"></i> Cancelar
+                            </a>
                         </div>
                     }
                 </div>
@@ -78,11 +202,266 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Selector de estado
+            $('.estado-option').on('click', function () {
+                $('.estado-option').removeClass('selected');
+                $(this).addClass('selected');
+                $('#EstadoMascotaInput').val($(this).data('value'));
+            });
+
+            // Validar que se seleccione un estado antes de enviar
+            $('form').on('submit', function (e) {
+                if (!$('#EstadoMascotaInput').val()) {
+                    e.preventDefault();
+                    alert('Por favor seleccione el estado de la mascota');
+                    return false;
+                }
+            });
+
+            // Si hay un valor previo, seleccionarlo
+            var estadoActual = $('#EstadoMascotaInput').val();
+            if (estadoActual) {
+                $('.estado-option[data-value="' + estadoActual + '"]').addClass('selected');
+            }
+        });
+    </script>
 }
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
-    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
-    .card-header h3 { margin: 0; color: #000; }
-    .card-body { padding: 30px; }
+    /* Header */
+    .page-header-card {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .page-header-card h2 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .page-header-card .lead {
+        margin: 0;
+        color: #34495e;
+        font-size: 15px;
+    }
+
+    /* Cards */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #BBFA8C 0%, #a8f590 100%);
+        padding: 15px 20px;
+        border-bottom: 1px solid #93A597;
+    }
+    .card-header h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Info Card */
+    .info-section {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px dashed #e8f5e9;
+    }
+    .info-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    .section-header {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 12px;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+    .section-header i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+    .info-preview {
+        text-align: center;
+    }
+    .info-preview img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .info-nombre {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 18px;
+    }
+    .info-tipo {
+        color: #666;
+        font-size: 14px;
+    }
+    .info-detail {
+        display: flex;
+        flex-direction: column;
+    }
+    .info-detail strong {
+        color: #2c3e50;
+        font-size: 16px;
+    }
+    .info-detail small {
+        color: #888;
+        font-size: 13px;
+    }
+    .info-fecha {
+        font-weight: 600;
+        color: #27ae60;
+        font-size: 15px;
+    }
+
+    /* Tips Card */
+    .tips-card .card-header {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    }
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .tips-list li {
+        padding: 10px 0;
+        border-bottom: 1px dashed #f0f0f0;
+        color: #555;
+        font-size: 14px;
+    }
+    .tips-list li:last-child {
+        border-bottom: none;
+    }
+    .tips-list i {
+        color: #27ae60;
+        margin-right: 10px;
+    }
+
+    /* Form */
+    .form-section {
+        margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #e8f5e9;
+    }
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+    .form-section h5 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #8CFAA4;
+        display: inline-block;
+    }
+    .form-section h5 i {
+        margin-right: 8px;
+        color: #8CFAA4;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .form-group label i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+    .required::after {
+        content: ' *';
+        color: #e74c3c;
+    }
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #8CFAA4;
+        box-shadow: 0 0 0 3px rgba(140, 250, 164, 0.2);
+    }
+
+    /* Estado Selector */
+    .estado-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    .estado-option {
+        flex: 1;
+        min-width: 100px;
+        padding: 20px 15px;
+        text-align: center;
+        border: 2px solid #e8f5e9;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fafffe;
+    }
+    .estado-option:hover {
+        border-color: #8CFAA4;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .estado-option.selected {
+        border-color: #27ae60;
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(140, 250, 164, 0.3);
+    }
+    .estado-option .estado-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    .estado-option span {
+        display: block;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 13px;
+    }
+
+    /* Actions */
+    .form-actions {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 2px solid #e8f5e9;
+        text-align: center;
+    }
+    .btn-guardar {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border: none;
+        color: #2c3e50;
+        font-weight: 600;
+        padding: 15px 40px;
+        border-radius: 10px;
+        margin-right: 15px;
+        transition: all 0.3s ease;
+    }
+    .btn-guardar:hover {
+        background: linear-gradient(135deg, #a8f590 0%, #7ce89a 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(140, 250, 164, 0.4);
+        color: #2c3e50;
+    }
 </style>

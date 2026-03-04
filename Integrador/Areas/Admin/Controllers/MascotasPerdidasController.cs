@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Integrador.Controllers;
 using Integrador.Filters;
+using Integrador.Helpers;
 using Integrador.Models;
 
 namespace Integrador.Areas.Admin.Controllers
@@ -177,6 +178,12 @@ namespace Integrador.Areas.Admin.Controllers
                 reporte.FechaResolucion = DateTime.Now;
                 reporte.Notas = notas;
                 db.SaveChanges();
+
+                // Notificar al usuario que reportó
+                if (reporte.UsuarioRegistraId.HasValue)
+                {
+                    NotificacionHelper.NotificarMascotaEncontrada(db, reporte.UsuarioRegistraId.Value, reporte.Nombre ?? "la mascota");
+                }
 
                 TempData["Success"] = "Reporte marcado como resuelto";
                 return RedirectToAction("Index");

@@ -190,6 +190,47 @@
             box-shadow: 0 4px 14px rgba(250,140,153,0.4);
         }
 
+        /* ===== NOTIFICATION ICON ===== */
+        .notification-icon {
+            position: relative;
+            font-size: 22px;
+            color: #555;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-icon:hover {
+            background: #f0faf4;
+            color: #4a7c5c;
+            text-decoration: none;
+        }
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            background: linear-gradient(135deg, #FA8C99, #e74c3c);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            box-shadow: 0 2px 6px rgba(250,140,153,0.4);
+            animation: pulse-badge 2s infinite;
+        }
+        @@keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         /* ===== CONTENT AREA ===== */
         .content-area {
             padding: 28px 32px;
@@ -627,35 +668,10 @@
                     var rol = Session["Rol"]?.ToString();
                     var permisos = ViewBag.Permisos as List<Permisos>;
 
-                    if (rol == "Administrador")
-                    {
-                        <li>
-                            <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="menu-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li>
-                            <a href="@Url.Action("Index", "Ciudadano")" class="menu-item">
-                                <i class="fas fa-home"></i>
-                                <span>Inicio</span>
-                            </a>
-                        </li>
-                    }
-
                     if (permisos != null && permisos.Count > 0)
                     {
                         foreach (var permiso in permisos)
                         {
-                            // Omitir Dashboard del loop ya que se agrega manualmente arriba
-                            if (permiso.ControllerName == "Admin" && permiso.ActionName == "Index")
-                            {
-                                continue;
-                            }
-
                             var esFontAwesome = permiso.Icono != null && permiso.Icono.StartsWith("fa-");
                             var esGlyphicon = permiso.Icono != null && permiso.Icono.StartsWith("glyphicon-");
 
@@ -699,28 +715,6 @@
                             </li>
                         }
                     }
-
-                    if (rol == "Ciudadano")
-                    {
-                        <li>
-                            <a href="@Url.Action("Perfil", "Ciudadano")" class="menu-item">
-                                <i class="fas fa-user"></i>
-                                <span>Mi Perfil</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Notificaciones", "Ciudadano")" class="menu-item">
-                                <i class="fas fa-bell"></i>
-                                <span>Notificaciones</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("MisAdopciones", "Ciudadano")" class="menu-item">
-                                <i class="fas fa-heart"></i>
-                                <span>Mis Adopciones</span>
-                            </a>
-                        </li>
-                    }
                 }
             </ul>
         </aside>
@@ -734,6 +728,13 @@
                     <h2>@ViewBag.Title</h2>
                 </div>
                 <div class="navbar-right">
+                    @if (Session["Rol"]?.ToString() == "Ciudadano")
+                    {
+                        <a href="@Url.Action("Notificaciones", "Ciudadano")" class="notification-icon" id="notificationBell" title="Notificaciones">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
+                        </a>
+                    }
                     <div class="user-info">
                         <div class="user-avatar">
                             @if (Session["Nombre"] != null)
@@ -784,6 +785,36 @@
                 }
             });
         })();
+
+        // Cargar contador de notificaciones para ciudadanos
+        @if (Session["Rol"]?.ToString() == "Ciudadano")
+        {
+            <text>
+        function loadNotificationCount() {
+            $.ajax({
+                url: '@Url.Action("ContarNotificacionesNoLeidas", "Ciudadano")',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var badge = document.getElementById('notificationCount');
+                    if (badge && data.count > 0) {
+                        badge.textContent = data.count > 99 ? '99+' : data.count;
+                        badge.style.display = 'flex';
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Cargar al inicio
+        $(document).ready(function() {
+            loadNotificationCount();
+            // Actualizar cada 60 segundos
+            setInterval(loadNotificationCount, 60000);
+        });
+            </text>
+        }
     </script>
 </body>
 </html>

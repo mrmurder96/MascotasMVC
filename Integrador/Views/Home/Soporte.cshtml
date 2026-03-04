@@ -1,91 +1,377 @@
 @{
-    ViewBag.Title = "Soporte";
+    ViewBag.Title = "Soporte - Pura Compañía";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- Hero Section -->
+<section class="soporte-hero">
+    <div class="hero-content">
+        <h1>❓ Centro de Ayuda</h1>
+        <p class="subtitle">¿Tienes dudas? Aquí encontrarás respuestas rápidas a las preguntas más frecuentes.</p>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2>Preguntas Frecuentes</h2>
+
+        <div class="faq-grid">
+            <!-- Pregunta 1 -->
+            <div class="faq-card">
+                <div class="faq-icon">❤️</div>
+                <h3>¿Cómo solicito la adopción de una mascota?</h3>
+                <p>
+                    En la ficha de la mascota pulsa el botón <strong>"¡Quiero Adoptarlo!"</strong> y sigue las instrucciones. 
+                    Completa el formulario con tus datos y recibirás un correo de confirmación con los siguientes pasos del proceso.
+                </p>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="faq-card">
+                <div class="faq-icon">🏠</div>
+                <h3>¿Puedo cambiar mi centro de adopción preferido?</h3>
+                <p>
+                    Sí, puedes ver todos los centros de adopción (refugios) disponibles en la sección 
+                    <strong>"Refugios"</strong> del menú principal y consultar cuál te queda más cerca.
+                </p>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="faq-card">
+                <div class="faq-icon">📧</div>
+                <h3>No recibí el correo de confirmación, ¿qué hago?</h3>
+                <p>
+                    Primero revisa la carpeta de <strong>spam o correo no deseado</strong>. Si no encuentras el correo, 
+                    escríbenos indicando tu nombre de usuario y la acción que realizaste para ayudarte lo antes posible.
+                </p>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="faq-card">
+                <div class="faq-icon">📷</div>
+                <h3>¿Cómo cambio mi foto de perfil?</h3>
+                <p>
+                    Ve a <strong>"Mi Perfil"</strong> en el menú de usuario, luego accede a <strong>"Mis Imágenes"</strong>. 
+                    Desde ahí puedes subir nuevas fotos y seleccionar <strong>"Establecer como perfil"</strong> en la imagen que desees.
+                </p>
+            </div>
+
+            <!-- Pregunta 5 -->
+            <div class="faq-card">
+                <div class="faq-icon">🔍</div>
+                <h3>¿Cómo reporto una mascota perdida o encontrada?</h3>
+                <p>
+                    Accede a la sección <strong>"Mascotas Perdidas"</strong> en el menú principal. 
+                    Allí podrás crear un nuevo reporte indicando si perdiste tu mascota o si encontraste una.
+                    Incluye fotos y la mayor cantidad de información posible.
+                </p>
+            </div>
+
+            <!-- Pregunta 6 -->
+            <div class="faq-card">
+                <div class="faq-icon">⏱️</div>
+                <h3>¿Cuánto tiempo toma el proceso de adopción?</h3>
+                <p>
+                    El tiempo varía según el refugio, pero generalmente el proceso incluye: revisión de solicitud (1-3 días), 
+                    entrevista (si aplica), y visita al hogar. El proceso completo puede tomar entre <strong>1 a 2 semanas</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="contact-container">
+        <h2>📞 Contacto Directo</h2>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <h3>Correo Electrónico</h3>
+                <a href="mailto:soporte@puracompania.com">soporte@puracompania.com</a>
+                <p>Respuesta en 24-48 horas hábiles</p>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">🕐</div>
+                <h3>Horario de Atención</h3>
+                <p><strong>Lunes a Viernes:</strong> 9:00 AM - 6:00 PM</p>
+                <p><strong>Sábados:</strong> 9:00 AM - 1:00 PM</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Links Section -->
+<section class="links-section">
+    <div class="links-container">
+        <h2>🔗 Enlaces Útiles</h2>
+
+        <div class="links-grid">
+            <a href="@Url.Action("Index", "Mascotas")" class="link-card">
+                <span class="link-icon">🐾</span>
+                <span class="link-text">Ver Mascotas</span>
+            </a>
+            <a href="@Url.Action("Index", "Refugios")" class="link-card">
+                <span class="link-icon">🏠</span>
+                <span class="link-text">Refugios</span>
+            </a>
+            <a href="@Url.Action("Index", "MascotasPerdidas")" class="link-card">
+                <span class="link-icon">🔍</span>
+                <span class="link-text">Mascotas Perdidas</span>
+            </a>
+            <a href="@Url.Action("Index", "Ciudadano")" class="link-card">
+                <span class="link-icon">👤</span>
+                <span class="link-text">Mi Perfil</span>
+            </a>
+        </div>
+    </div>
+</section>
+
 <style>
-    .support-page {
-        max-width: 900px;
-        margin: 2rem auto;
-        background: #ffffffcc;
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Hero Section */
+    .soporte-hero {
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        padding: 60px 20px;
+        text-align: center;
     }
 
-    .support-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
+    .soporte-hero .hero-content {
+        max-width: 700px;
+        margin: 0 auto;
     }
 
-        .support-header h2 {
-            color: #333;
-            margin: 0;
-        }
+    .soporte-hero h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 42px;
+        color: #000;
+        margin: 0 0 16px 0;
+    }
 
-    .faq-list {
-        list-style: none;
-        padding: 0;
+    .soporte-hero .subtitle {
+        font-family: 'Nunito', sans-serif;
+        font-size: 18px;
+        color: #333;
         margin: 0;
     }
 
-    .faq-item + .faq-item {
-        margin-top: 0.75rem;
-        border-top: 1px dashed #e0e0e0;
-        padding-top: 0.75rem;
+    /* FAQ Section */
+    .faq-section {
+        background: #FFFFFF;
+        padding: 60px 20px;
     }
 
-    .faq-question {
-        font-weight: 600;
-        color: #333;
+    .faq-container {
+        max-width: 1100px;
+        margin: 0 auto;
     }
 
-    .faq-answer {
+    .faq-container h2 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 32px;
+        color: #000;
+        text-align: center;
+        margin: 0 0 40px 0;
+    }
+
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .faq-card {
+        background: #f8f9fa;
+        border-radius: 16px;
+        padding: 28px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .faq-card:hover {
+        border-color: #BBFA8C;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(187, 250, 140, 0.2);
+    }
+
+    .faq-icon {
+        font-size: 40px;
+        margin-bottom: 16px;
+    }
+
+    .faq-card h3 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #000;
+        margin: 0 0 12px 0;
+    }
+
+    .faq-card p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
         color: #555;
-        margin-top: 0.25rem;
+        line-height: 1.6;
+        margin: 0;
     }
 
-    .contact-email {
-        margin-top: 1rem;
-        font-weight: 600;
-        color: #333;
+    /* Contact Section */
+    .contact-section {
+        background: rgba(0, 0, 0, 0.03);
+        padding: 60px 20px;
+    }
+
+    .contact-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .contact-container h2 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 32px;
+        color: #000;
+        text-align: center;
+        margin: 0 0 40px 0;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .contact-card {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .contact-icon {
+        font-size: 48px;
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    .contact-card h3 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        color: #000;
+        margin: 0 0 12px 0;
+    }
+
+    .contact-card a {
+        font-family: 'Nunito', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #27ae60;
+        text-decoration: none;
+    }
+
+    .contact-card a:hover {
+        text-decoration: underline;
+    }
+
+    .contact-card p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        color: #666;
+        margin: 8px 0 0 0;
+    }
+
+    /* Links Section */
+    .links-section {
+        background: #FFFFFF;
+        padding: 60px 20px;
+    }
+
+    .links-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .links-container h2 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 32px;
+        color: #000;
+        text-align: center;
+        margin: 0 0 40px 0;
+    }
+
+    .links-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .link-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 16px;
+        background: #f8f9fa;
+        border-radius: 16px;
+        border: 2px solid transparent;
+        text-decoration: none;
+        color: #000;
+        transition: all 0.3s ease;
+    }
+
+    .link-card:hover {
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        border-color: #8CFAA4;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(187, 250, 140, 0.3);
+        text-decoration: none;
+        color: #000;
+    }
+
+    .link-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .link-text {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .links-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .soporte-hero h1 {
+            font-size: 28px;
+        }
+
+        .faq-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .links-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 </style>
-
-<div class="support-page" role="main" aria-labelledby="support-title">
-    <div class="support-header">
-        <h2 id="support-title"><i class="glyphicon glyphicon-question-sign" aria-hidden="true"></i> Soporte - Preguntas frecuentes</h2>
-        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Ciudadano")">Volver al Perfil</a>
-    </div>
-
-    <p>¿Tienes dudas? Aquí tienes respuestas rápidas y un correo para contactarnos.</p>
-
-    <ul class="faq-list" role="list">
-        <li class="faq-item">
-            <div class="faq-question">¿Cómo solicito la adopción de una mascota?</div>
-            <div class="faq-answer">En la ficha de la mascota pulsa "Solicitar adopción" y sigue las instrucciones. Recibirás un correo de confirmación con los siguientes pasos.</div>
-        </li>
-
-        <li class="faq-item">
-            <div class="faq-question">¿Puedo cambiar mi centro de adopción preferido?</div>
-            <div class="faq-answer">Sí, accede a "Centros de adopción" desde tu perfil y selecciona el centro que prefieras como predeterminado.</div>
-        </li>
-
-        <li class="faq-item">
-            <div class="faq-question">No recibí el correo de confirmación, ¿Qué hago?</div>
-            <div class="faq-answer">Revisa la carpeta de spam. Si no está, escríbenos indicando tu usuario y la acción que realizaste.</div>
-        </li>
-
-        <li class="faq-item">
-            <div class="faq-question">¿Cómo cambio mi foto de perfil?</div>
-            <div class="faq-answer">Ve a "Mis Imágenes" en tu perfil, sube la foto y selecciona "Establecer como perfil".</div>
-        </li>
-    </ul>
-
-    <div class="contact-email">
-        Correo de soporte: <a href="mailto:soporte@tudominio.com">soporte@tudominio.com</a>
-        <div style="font-size:0.9rem; color:#666; margin-top:0.25rem;">Horario de atención: L-V 9:00-18:00</div>
-    </div>
-</div>

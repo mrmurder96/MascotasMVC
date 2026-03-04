@@ -5,112 +5,466 @@
 }
 
 <div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h2><i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i> Seguimientos Post-Adopción</h2>
-        </div>
-        <div class="col-md-6 text-right">
-            <a href="@Url.Action("Create")" class="btn btn-success btn-lg" aria-label="Crear nuevo seguimiento">
-                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Nuevo Seguimiento
-            </a>
+    <!-- Header -->
+    <div class="page-header-card">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><i class="glyphicon glyphicon-heart"></i> Seguimientos Post-Adopción</h2>
+                <p class="lead">Monitorea el bienestar de las mascotas adoptadas y mantén contacto con los adoptantes.</p>
+            </div>
+            <div class="col-md-4 text-right" style="padding-top: 15px;">
+                @if (Model != null && Model.Any())
+                {
+                    <span class="badge badge-stats">
+                        <i class="glyphicon glyphicon-ok"></i> @Model.Count() adopciones para seguimiento
+                    </span>
+                }
+            </div>
         </div>
     </div>
 
     @Html.Partial("_AlertMessages")
 
+    <!-- Estadísticas Rápidas -->
+    <div class="row stats-row">
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-total">
+                <div class="stat-icon">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@(Model?.Count() ?? 0)</h3>
+                    <p>Adopciones Activas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-pending">
+                <div class="stat-icon">
+                    <i class="glyphicon glyphicon-time"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@(Model?.Count(a => a.Estado == "Aprobada") ?? 0)</h3>
+                    <p>Pendientes de Seguimiento</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-completed">
+                <div class="stat-icon">
+                    <i class="glyphicon glyphicon-ok-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@(Model?.Count(a => a.Estado == "Completada") ?? 0)</h3>
+                    <p>Completadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-success">
+                <div class="stat-icon">
+                    <i class="glyphicon glyphicon-heart"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@(Model?.Sum(a => a.Mascotas != null ? 1 : 0) ?? 0)</h3>
+                    <p>Mascotas Monitoreadas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
     <div class="card">
+        <div class="card-header">
+            <h4><i class="glyphicon glyphicon-filter"></i> Filtrar Adopciones</h4>
+        </div>
         <div class="card-body">
-            @if (Model != null && Model.Any())
+            @using (Html.BeginForm("Index", "Seguimientos", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline filter-form" }))
             {
-                <div class="table-responsive">
-                    <table class="table table-hover" role="table" aria-label="Tabla de seguimientos de adopción">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Adopción</th>
-                                <th scope="col">Mascota</th>
-                                <th scope="col">Adoptante</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col" class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var seguimiento in Model)
-                            {
-                                <tr>
-                                    <td><strong>#@seguimiento.Id</strong></td>
-                                    <td>@seguimiento.FechaSolicitud.ToString("dd/MM/yyyy")</td>
-                                    <td>Adopción #@seguimiento.Id</td>
-                                    <td>
-                                        @if (seguimiento.Mascotas != null)
-                                        {
-                                            <strong>@seguimiento.Mascotas.Nombre</strong>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (seguimiento.Usuarios != null)
-                                        {
-                                            @seguimiento.Usuarios.Nombres @seguimiento.Usuarios.Apellidos
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (seguimiento.Estado == "Aprobada")
-                                        {
-                                            <span class="label label-success">@seguimiento.Estado</span>
-                                        }
-                                        else if (seguimiento.Estado == "Completada")
-                                        {
-                                            <span class="label label-info">@seguimiento.Estado</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-warning">@seguimiento.Estado</span>
-                                        }
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group" aria-label="Acciones del seguimiento">
-                                            <a href="@Url.Action("Details", new { id = seguimiento.Id })" 
-                                               class="btn btn-info btn-sm" 
-                                               title="Ver detalles"
-                                               aria-label="Ver detalles del seguimiento @seguimiento.Id">
-                                                <i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i>
-                                            </a>
-                                            <a href="@Url.Action("Edit", new { id = seguimiento.Id })" 
-                                               class="btn btn-warning btn-sm" 
-                                               title="Editar"
-                                               aria-label="Editar seguimiento @seguimiento.Id">
-                                                <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
-                                            </a>
-                                            <a href="@Url.Action("Delete", new { id = seguimiento.Id })" 
-                                               class="btn btn-danger btn-sm" 
-                                               title="Eliminar"
-                                               onclick="return confirm('¿Eliminar seguimiento?')"
-                                               aria-label="Eliminar seguimiento @seguimiento.Id">
-                                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <div class="form-group">
+                    <label><i class="glyphicon glyphicon-flag"></i> Estado:</label>
+                    <select name="filtroEstado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Pendiente" @(ViewBag.EstadoSeleccionado == "Pendiente" ? "selected" : "")>Pendiente de Seguimiento</option>
+                        <option value="Con Seguimiento" @(ViewBag.EstadoSeleccionado == "Con Seguimiento" ? "selected" : "")>Con Seguimiento Reciente</option>
+                    </select>
                 </div>
-            }
-            else
-            {
-                <div class="alert alert-info text-center" role="alert">
-                    <h4>No hay seguimientos registrados</h4>
-                    <p>Los seguimientos permiten monitorear el bienestar de las mascotas adoptadas.</p>
+                <div class="form-group">
+                    <label><i class="glyphicon glyphicon-calendar"></i> Desde:</label>
+                    <input type="date" name="fechaDesde" class="form-control" value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
                 </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-search"></i> Filtrar
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-default">
+                    <i class="glyphicon glyphicon-refresh"></i> Limpiar
+                </a>
             }
         </div>
     </div>
+
+    <!-- Lista de Adopciones para Seguimiento -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var adopcion in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="seguimiento-card">
+                        <!-- Cabecera con foto de mascota -->
+                        <div class="seguimiento-header">
+                            @if (adopcion.Mascotas != null && !string.IsNullOrEmpty(adopcion.Mascotas.FotoUrl))
+                            {
+                                if (adopcion.Mascotas.FotoUrl.StartsWith("/") || adopcion.Mascotas.FotoUrl.StartsWith("~"))
+                                {
+                                    <img src="@Url.Content(adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
+                                }
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/300x150?text=🐾" alt="Sin imagen" />
+                            }
+                            <div class="estado-overlay">
+                                @if (adopcion.Estado == "Aprobada")
+                                {
+                                    <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> @adopcion.Estado</span>
+                                }
+                                else if (adopcion.Estado == "Completada")
+                                {
+                                    <span class="label label-info"><i class="glyphicon glyphicon-heart"></i> @adopcion.Estado</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-warning">@adopcion.Estado</span>
+                                }
+                            </div>
+                            <div class="adopcion-id">#@adopcion.Id</div>
+                        </div>
+
+                        <!-- Información de la mascota -->
+                        <div class="seguimiento-mascota">
+                            @if (adopcion.Mascotas != null)
+                            {
+                                <h4>@adopcion.Mascotas.Nombre</h4>
+                                <p class="mascota-tipo">
+                                    <i class="glyphicon glyphicon-tag"></i> @adopcion.Mascotas.Tipo
+                                    @if (!string.IsNullOrEmpty(adopcion.Mascotas.Raza))
+                                    {
+                                        <span>- @adopcion.Mascotas.Raza</span>
+                                    }
+                                </p>
+                            }
+                        </div>
+
+                        <!-- Información del adoptante -->
+                        <div class="seguimiento-adoptante">
+                            <div class="adoptante-info">
+                                <div class="adoptante-avatar">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                </div>
+                                <div class="adoptante-datos">
+                                    <strong>@adopcion.NombreSolicitante</strong>
+                                    <small>@adopcion.Email</small>
+                                </div>
+                            </div>
+                            <div class="fecha-adopcion">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                                @adopcion.FechaSolicitud.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
+
+                        <!-- Acciones -->
+                        <div class="seguimiento-acciones">
+                            <a href="@Url.Action("Details", new { id = adopcion.Id })" class="btn btn-ver-seguimientos btn-block">
+                                <i class="glyphicon glyphicon-eye-open"></i> Ver Seguimientos
+                            </a>
+                            <a href="@Url.Action("Create", new { adopcionId = adopcion.Id })" class="btn btn-nuevo-seguimiento btn-block">
+                                <i class="glyphicon glyphicon-plus"></i> Nuevo Seguimiento
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center" style="padding: 60px 20px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">📋</div>
+                <h3 style="color: #666;">No hay adopciones para seguimiento</h3>
+                <p style="color: #888; font-size: 16px;">
+                    Las adopciones aprobadas aparecerán aquí para que puedas realizar el seguimiento post-adopción.
+                </p>
+                <a href="@Url.Action("Index", "Adopciones")" class="btn btn-primary btn-lg" style="margin-top: 20px;">
+                    <i class="glyphicon glyphicon-heart"></i> Ver Adopciones
+                </a>
+            </div>
+        </div>
+    }
 </div>
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .card-body { padding: 20px; }
-    .table th { background-color: #BBFA8C; font-weight: 600; color: #000; }
-    .mb-4 { margin-bottom: 20px; }
+    /* Header */
+    .page-header-card {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .page-header-card h2 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .page-header-card .lead {
+        margin: 0;
+        color: #34495e;
+        font-size: 15px;
+    }
+    .badge-stats {
+        background: white;
+        color: #27ae60;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* Stats */
+    .stats-row {
+        margin-bottom: 25px;
+    }
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 15px;
+        border-left: 4px solid;
+    }
+    .stat-total { border-left-color: #3498db; }
+    .stat-pending { border-left-color: #f39c12; }
+    .stat-completed { border-left-color: #9b59b6; }
+    .stat-success { border-left-color: #27ae60; }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    .stat-total .stat-icon { background: rgba(52, 152, 219, 0.15); color: #3498db; }
+    .stat-pending .stat-icon { background: rgba(243, 156, 18, 0.15); color: #f39c12; }
+    .stat-completed .stat-icon { background: rgba(155, 89, 182, 0.15); color: #9b59b6; }
+    .stat-success .stat-icon { background: rgba(39, 174, 96, 0.15); color: #27ae60; }
+
+    .stat-icon i { font-size: 22px; }
+    .stat-info h3 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    .stat-info p {
+        margin: 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    /* Card */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #BBFA8C 0%, #a8f590 100%);
+        padding: 15px 20px;
+        border-bottom: 1px solid #93A597;
+    }
+    .card-header h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Filter Form */
+    .filter-form .form-group {
+        margin-right: 20px;
+        margin-bottom: 10px;
+    }
+    .filter-form label {
+        margin-right: 8px;
+        font-weight: 600;
+        color: #555;
+    }
+    .filter-form .form-control {
+        border-radius: 6px;
+        border: 2px solid #e0e0e0;
+    }
+
+    /* Seguimiento Card */
+    .seguimiento-card {
+        background: white;
+        border: 2px solid #e8f5e9;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    .seguimiento-card:hover {
+        border-color: #8CFAA4;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(140, 250, 164, 0.25);
+    }
+
+    .seguimiento-header {
+        position: relative;
+        height: 150px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .seguimiento-header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.9;
+    }
+    .estado-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    .estado-overlay .label {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    .adopcion-id {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .seguimiento-mascota {
+        padding: 15px 20px 10px;
+        border-bottom: 1px dashed #e8f5e9;
+    }
+    .seguimiento-mascota h4 {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 20px;
+    }
+    .mascota-tipo {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+    .mascota-tipo i {
+        color: #8CFAA4;
+    }
+
+    .seguimiento-adoptante {
+        padding: 15px 20px;
+        background: #fafffe;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .adoptante-info {
+        display: flex;
+        align-items: center;
+    }
+    .adoptante-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+    .adoptante-avatar i {
+        font-size: 18px;
+        color: #2c3e50;
+    }
+    .adoptante-datos {
+        display: flex;
+        flex-direction: column;
+    }
+    .adoptante-datos strong {
+        color: #2c3e50;
+        font-size: 14px;
+    }
+    .adoptante-datos small {
+        color: #888;
+        font-size: 12px;
+    }
+    .fecha-adopcion {
+        color: #888;
+        font-size: 13px;
+    }
+    .fecha-adopcion i {
+        color: #8CFAA4;
+        margin-right: 5px;
+    }
+
+    .seguimiento-acciones {
+        padding: 15px;
+        background: #f8fdf9;
+        border-top: 1px solid #e8f5e9;
+    }
+    .btn-ver-seguimientos {
+        background: white;
+        border: 2px solid #3498db;
+        color: #3498db;
+        font-weight: 600;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-ver-seguimientos:hover {
+        background: #3498db;
+        color: white;
+    }
+    .btn-nuevo-seguimiento {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        border: none;
+        color: #2c3e50;
+        font-weight: 600;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-nuevo-seguimiento:hover {
+        background: linear-gradient(135deg, #a8f590 0%, #7ce89a 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(140, 250, 164, 0.4);
+        color: #2c3e50;
+    }
 </style>

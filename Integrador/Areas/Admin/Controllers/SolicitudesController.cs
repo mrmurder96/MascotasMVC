@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Web.Mvc;
 using Integrador.Controllers;
 using Integrador.Filters;
+using Integrador.Helpers;
 using Integrador.Models;
 
 namespace Integrador.Areas.Admin.Controllers
@@ -160,6 +161,9 @@ namespace Integrador.Areas.Admin.Controllers
                 // Enviar notificación por email (RF-28)
                 EnviarNotificacionAprobacion(solicitud);
 
+                // Crear notificación en el sistema
+                CrearNotificacionSistema(solicitud, true, null);
+
                 TempData["Success"] = "Solicitud aprobada exitosamente";
                 return RedirectToAction("Details", new { id });
             }
@@ -197,6 +201,9 @@ namespace Integrador.Areas.Admin.Controllers
                 // Enviar notificación de rechazo
                 EnviarNotificacionRechazo(solicitud, motivoRechazo);
 
+                // Crear notificación en el sistema
+                CrearNotificacionSistema(solicitud, false, motivoRechazo);
+
                 TempData["Success"] = "Solicitud rechazada";
                 return RedirectToAction("Details", new { id });
             }
@@ -215,7 +222,7 @@ namespace Integrador.Areas.Admin.Controllers
         {
             try
             {
-                var solicitud = db.Adopciones.Find(id);
+                var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
                 if (solicitud == null)
                 {
                     return Json(new { success = false, message = "Solicitud no encontrada" });
@@ -224,11 +231,83 @@ namespace Integrador.Areas.Admin.Controllers
                 solicitud.Estado = Adopciones.Estados.EnRevision;
                 db.SaveChanges();
 
+                // Notificar al usuario
+                if (solicitud.UsuarioId.HasValue)
+                {
+                    NotificacionHelper.NotificarSolicitudEnRevision(db, solicitud.UsuarioId.Value, solicitud.Mascotas?.Nombre ?? "la mascota");
+                }
+
                 return Json(new { success = true, message = "Solicitud marcada en revisión" });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // GET: Admin/Solicitudes/Finalizar/5
+        [ValidarPermisoCrud(ControllerName = "Solicitudes", Operacion = "Actualizar")]
+        public ActionResult Finalizar(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
+            if (solicitud == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Solo se pueden finalizar adopciones aprobadas
+            if (solicitud.Estado != "Aprobada")
+            {
+                TempData["Error"] = "Solo se pueden finalizar adopciones aprobadas";
+                return RedirectToAction("Details", new { id });
+            }
+
+            return View(solicitud);
+        }
+
+        // POST: Admin/Solicitudes/Finalizar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidarPermisoCrud(ControllerName = "Solicitudes", Operacion = "Actualizar")]
+        public ActionResult Finalizar(int id)
+        {
+            try
+            {
+                var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
+                if (solicitud == null)
+                {
+                    TempData["Error"] = "Solicitud no encontrada";
+                    return RedirectToAction("Index");
+                }
+
+                if (solicitud.Estado != "Aprobada")
+                {
+                    TempData["Error"] = "Solo se pueden finalizar adopciones aprobadas";
+                    return RedirectToAction("Details", new { id });
+                }
+
+                // Finalizar la adopción
+                solicitud.Estado = "Finalizada";
+                db.SaveChanges();
+
+                // Notificar al usuario que la adopción fue completada
+                if (solicitud.UsuarioId.HasValue)
+                {
+                    NotificacionHelper.NotificarAdopcionFinalizada(db, solicitud.UsuarioId.Value, solicitud.Mascotas?.Nombre ?? "la mascota");
+                }
+
+                TempData["Success"] = "¡Adopción finalizada exitosamente!";
+                return RedirectToAction("Details", new { id });
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al finalizar: " + ex.Message;
+                return RedirectToAction("Details", new { id });
             }
         }
 
@@ -333,6 +412,24 @@ namespace Integrador.Areas.Admin.Controllers
             catch
             {
                 // Log error
+            }
+        }
+
+        /// <summary>
+        /// Crea una notificación en el sistema para el usuario
+        /// </summary>
+        private void CrearNotificacionSistema(Adopciones solicitud, bool aprobada, string motivoRechazo)
+        {
+            if (!solicitud.UsuarioId.HasValue)
+                return;
+
+            if (aprobada)
+            {
+                NotificacionHelper.NotificarAdopcionAprobada(db, solicitud.UsuarioId.Value, solicitud.Mascotas?.Nombre ?? "la mascota");
+            }
+            else
+            {
+                NotificacionHelper.NotificarAdopcionRechazada(db, solicitud.UsuarioId.Value, solicitud.Mascotas?.Nombre ?? "la mascota", motivoRechazo);
             }
         }
 

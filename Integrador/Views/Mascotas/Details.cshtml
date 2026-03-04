@@ -1,32 +1,474 @@
-
+@model Integrador.Models.Mascotas
 @{
-    ViewBag.Title = Model?.Nombre ?? "Detalle mascota";
+    ViewBag.Title = Model?.Nombre + " - Pura Compañía";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container py-4">
-    <div class="row">
-        <div class="col-md-5">
-            <img src="@(string.IsNullOrEmpty(Model.FotoUrl) ? "/Content/placeholder_pet.png" : Model.FotoUrl)" class="img-fluid rounded shadow" alt="@Model.Nombre" />
-        </div>
-        <div class="col-md-7">
-            <h2 class="text-success">@Model.Nombre</h2>
-            <p><strong>Tipo:</strong> @Model.Tipo</p>
-            <p><strong>Edad:</strong> @Model.Edad aóos</p>
-            <p><strong>Ubicación actual:</strong> @Model.Ubicacion</p>
-            <p><strong>Estado:</strong> @Model.Estado</p>
-            <hr />
-            <p>@Model.Descripcion</p>
+<!-- Hero Section -->
+<section class="detalle-hero">
+    <div class="hero-content">
+        <span class="badge-tipo @(Model.Tipo?.ToLower() == "gato" ? "gato" : Model.Tipo?.ToLower() == "perro" ? "perro" : "otro")">
+            @Model.Tipo
+        </span>
+        <h1>@Model.Nombre</h1>
+        <p class="subtitulo">@(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)</p>
+    </div>
+</section>
 
-            @if (Model.Estado == "Disponible")
-            {
-                <a class="btn btn-success" href="@Url.Action("Adopt","Mascotas", new { id = Model.Id })">Iniciar proceso de adopción</a>
-            }
-            else
-            {
-                <button class="btn btn-outline-secondary" disabled>No disponible para adopción</button>
-            }
+<!-- Contenido Principal -->
+<section class="detalle-content">
+    <div class="detalle-container">
+        <div class="detalle-grid">
+            <!-- Imagen -->
+            <div class="detalle-imagen-wrapper">
+                <div class="detalle-imagen">
+                    @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                    {
+                        if (Model.FotoUrl.StartsWith("/") || Model.FotoUrl.StartsWith("~"))
+                        {
+                            <img src="@Url.Content(Model.FotoUrl)" alt="@Model.Nombre" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl)" alt="@Model.Nombre" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="imagen-placeholder">🐾</div>
+                    }
+                </div>
+                <div class="estado-badge">
+                    @if (Model.Estado == "Disponible")
+                    {
+                        <span class="badge-disponible">✓ Disponible para Adopción</span>
+                    }
+                    else if (Model.Estado == "Adoptado")
+                    {
+                        <span class="badge-adoptado">❤️ Adoptado</span>
+                    }
+                    else
+                    {
+                        <span class="badge-otro">@Model.Estado</span>
+                    }
+                </div>
+            </div>
 
-            <a class="btn btn-link ms-2" href="@Url.Action("Index","Mascotas")">Volver a lista</a>
+            <!-- Información -->
+            <div class="detalle-info">
+                <h2>Información de @Model.Nombre</h2>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-icon">🏷️</span>
+                        <div class="info-content">
+                            <label>Tipo</label>
+                            <span>@Model.Tipo</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🐕</span>
+                        <div class="info-content">
+                            <label>Raza</label>
+                            <span>@(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🎂</span>
+                        <div class="info-content">
+                            <label>Edad</label>
+                            <span>@(Model.Edad.HasValue ? Model.Edad + " años" : "Desconocida")</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">⚧</span>
+                        <div class="info-content">
+                            <label>Sexo</label>
+                            <span>@(string.IsNullOrEmpty(Model.Sexo) ? "No especificado" : Model.Sexo)</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📏</span>
+                        <div class="info-content">
+                            <label>Tamaño</label>
+                            <span>@(string.IsNullOrEmpty(Model.Tamano) ? "No especificado" : Model.Tamano)</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <div class="info-content">
+                            <label>Ubicación</label>
+                            <span>@(string.IsNullOrEmpty(Model.Ubicacion) ? "No especificada" : Model.Ubicacion)</span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Descripcion))
+                {
+                    <div class="descripcion-box">
+                        <h3>Acerca de @Model.Nombre</h3>
+                        <p>@Model.Descripcion</p>
+                    </div>
+                }
+
+                <!-- Acciones -->
+                <div class="acciones-box">
+                    @if (Model.Estado == "Disponible")
+                    {
+                        <a href="@Url.Action("Adopt", new { id = Model.Id })" class="btn-adoptar-grande">
+                            ❤️ ¡Quiero Adoptar a @Model.Nombre!
+                        </a>
+                        <p class="info-adopcion">Al hacer clic iniciarás el proceso de solicitud de adopción.</p>
+                    }
+                    else
+                    {
+                        <div class="no-disponible">
+                            <span class="no-disponible-icon">🚫</span>
+                            <p>Esta mascota ya no está disponible para adopción.</p>
+                            <a href="@Url.Action("Index")" class="btn-ver-otras">Ver otras mascotas</a>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<style>
+    /* Hero Section */
+    .detalle-hero {
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        padding: 50px 20px;
+        text-align: center;
+    }
+
+    .detalle-hero .hero-content {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .badge-tipo {
+        display: inline-block;
+        background: #FFD4E5;
+        color: #C25B8A;
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .badge-tipo.gato {
+        background: #E8D4FF;
+        color: #8A5BC2;
+    }
+
+    .badge-tipo.perro {
+        background: #D4E5FF;
+        color: #4A7BC2;
+    }
+
+    .badge-tipo.otro {
+        background: #FFF4D4;
+        color: #C2A35B;
+    }
+
+    .detalle-hero h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 48px;
+        color: #000;
+        margin: 0 0 8px 0;
+    }
+
+    .detalle-hero .subtitulo {
+        font-family: 'Nunito', sans-serif;
+        font-size: 20px;
+        color: #333;
+        margin: 0;
+    }
+
+    /* Content Section */
+    .detalle-content {
+        background: #f8f9fa;
+        padding: 60px 20px;
+    }
+
+    .detalle-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .detalle-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* Imagen */
+    .detalle-imagen-wrapper {
+        position: sticky;
+        top: 20px;
+    }
+
+    .detalle-imagen {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .detalle-imagen img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .imagen-placeholder {
+        width: 100%;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+    }
+
+    .estado-badge {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    .badge-disponible {
+        display: inline-block;
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 25px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .badge-adoptado {
+        display: inline-block;
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 25px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .badge-otro {
+        display: inline-block;
+        background: #f39c12;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 25px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* Info */
+    .detalle-info {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .detalle-info h2 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 24px;
+        color: #000;
+        margin: 0 0 24px 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+    }
+
+    .info-icon {
+        font-size: 24px;
+    }
+
+    .info-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-content label {
+        font-family: 'Nunito', sans-serif;
+        font-size: 12px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    .info-content span {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    /* Descripción */
+    .descripcion-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border-left: 4px solid #BBFA8C;
+    }
+
+    .descripcion-box h3 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #333;
+        margin: 0 0 12px 0;
+    }
+
+    .descripcion-box p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        color: #555;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Acciones */
+    .acciones-box {
+        text-align: center;
+        padding-top: 16px;
+    }
+
+    .btn-adoptar-grande {
+        display: inline-block;
+        background: linear-gradient(135deg, #BBFA8C 0%, #A5E88A 100%);
+        color: #000;
+        padding: 18px 48px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-adoptar-grande:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(187, 250, 140, 0.5);
+        color: #000;
+        text-decoration: none;
+    }
+
+    .info-adopcion {
+        font-family: 'Nunito', sans-serif;
+        font-size: 13px;
+        color: #888;
+        margin: 16px 0 0 0;
+    }
+
+    .no-disponible {
+        text-align: center;
+        padding: 24px;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .no-disponible-icon {
+        font-size: 48px;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .no-disponible p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        color: #666;
+        margin: 0 0 16px 0;
+    }
+
+    .btn-ver-otras {
+        display: inline-block;
+        background: #FAA88C;
+        color: #000;
+        padding: 12px 28px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-ver-otras:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(250, 168, 140, 0.4);
+        color: #000;
+        text-decoration: none;
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .detalle-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .detalle-imagen-wrapper {
+            position: static;
+        }
+
+        .detalle-hero h1 {
+            font-size: 36px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .detalle-hero {
+            padding: 30px 16px;
+        }
+
+        .detalle-hero h1 {
+            font-size: 28px;
+        }
+
+        .detalle-content {
+            padding: 30px 16px;
+        }
+
+        .detalle-info {
+            padding: 20px;
+        }
+
+        .btn-adoptar-grande {
+            padding: 14px 32px;
+            font-size: 16px;
+        }
+    }
+</style>

@@ -1,249 +1,554 @@
 @model Integrador.Models.MascotasPerdidas
 
 @{
-    ViewBag.Title = "Detalles - " + Model.Nombre;
-    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    ViewBag.Title = Model.Nombre + " - Mascota Perdida";
+    Layout = Session["UsuarioId"] != null 
+        ? "~/Views/Shared/_LayoutMaster.cshtml" 
+        : "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .details-container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-    
-    .details-header {
-        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        padding: 30px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    .details-content {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .details-image {
-        width: 100%;
-        max-height: 500px;
-        object-fit: cover;
-    }
-    
-    .details-body {
-        padding: 30px;
-    }
-    
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-    }
-    
-    .info-box {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 4px solid #3498db;
-    }
-    
-    .info-label {
-        font-size: 13px;
-        color: #7f8c8d;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-    }
-    
-    .info-value {
-        font-size: 18px;
-        color: #2c3e50;
-        font-weight: 600;
-    }
-    
-    .contact-box {
-        background: #e8f4f8;
-        padding: 25px;
-        border-radius: 12px;
-        margin: 30px 0;
-        border-left: 5px solid #3498db;
-    }
-    
-    .contact-box h4 {
-        margin: 0 0 15px 0;
-        color: #2c3e50;
-        font-size: 20px;
-    }
-    
-    .contact-item {
-        margin: 10px 0;
-        font-size: 16px;
-        color: #2c3e50;
-    }
-    
-    .status-found {
-        background: #d4edda;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 5px solid #28a745;
-        margin: 20px 0;
-    }
-    
-    .status-lost {
-        background: #f8d7da;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 5px solid #dc3545;
-        margin: 20px 0;
-    }
-</style>
-
-<div class="details-container">
-    <div class="details-header">
-        <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-light" style="margin-bottom: 15px;">
-            <i class="glyphicon glyphicon-arrow-left"></i> Volver al listado
-        </a>
-        <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">
-            @Model.Nombre
-        </h2>
-    </div>
-    
-    <div class="details-content">
-        @if (!string.IsNullOrEmpty(Model.FotoUrl))
+<!-- Hero Section -->
+<section class="detalle-hero @(Model.Encontrada ? "encontrada" : "perdida")">
+    <div class="hero-content">
+        @if (Model.Encontrada)
         {
-            <img src="@Model.FotoUrl" alt="@Model.Nombre" class="details-image" />
+            <span class="badge-estado">✅ Encontrada</span>
         }
         else
         {
-            <div class="details-image" style="height: 400px; background: #ecf0f1; display: flex; align-items: center; justify-content: center; font-size: 120px;">
-                ??
-            </div>
+            <span class="badge-estado">🚨 Perdida</span>
         }
-        
-        <div class="details-body">
-            @if (Model.Encontrada)
-            {
-                <div class="status-found">
-                    <h4 style="margin: 0; color: #155724;">
-                        <i class="glyphicon glyphicon-ok-circle"></i> óMascota Encontrada!
-                    </h4>
-                    <p style="margin: 10px 0 0 0; color: #155724;">
-                        Esta mascota fue encontrada el @Model.FechaEncontrada?.ToString("dd/MM/yyyy")
-                    </p>
-                </div>
-            }
-            else
-            {
-                <div class="status-lost">
-                    <h4 style="margin: 0; color: #721c24;">
-                        <i class="glyphicon glyphicon-exclamation-sign"></i> Mascota Perdida
-                    </h4>
-                    <p style="margin: 10px 0 0 0; color: #721c24;">
-                        Si has visto a esta mascota, por favor contacta con el dueóo usando la información de contacto abajo.
-                    </p>
-                </div>
-            }
-            
-            <h3 style="margin-top: 30px; color: #2c3e50;">Información de la Mascota</h3>
-            
-            <div class="info-grid">
-                <div class="info-box">
-                    <div class="info-label">Tipo</div>
-                    <div class="info-value">@(Model.Tipo ?? "No especificado")</div>
-                </div>
-                
-                @if (!string.IsNullOrEmpty(Model.Raza))
-                {
-                    <div class="info-box">
-                        <div class="info-label">Raza</div>
-                        <div class="info-value">@Model.Raza</div>
-                    </div>
-                }
-                
-                @if (!string.IsNullOrEmpty(Model.Color))
-                {
-                    <div class="info-box">
-                        <div class="info-label">Color</div>
-                        <div class="info-value">@Model.Color</div>
-                    </div>
-                }
-                
-                <div class="info-box">
-                    <div class="info-label">Fecha de Reporte</div>
-                    <div class="info-value">@Model.FechaReporte.ToString("dd/MM/yyyy")</div>
-                </div>
-            </div>
-            
-            <div class="info-box" style="margin: 20px 0;">
-                <div class="info-label">?? óltima Ubicación Conocida</div>
-                <div class="info-value">@(Model.Ubicacion ?? "No especificada")</div>
-            </div>
-            
-            @if (!string.IsNullOrEmpty(Model.Descripcion))
-            {
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Descripción</h4>
-                    <p style="line-height: 1.8; color: #555; font-size: 16px;">
-                        @Model.Descripcion
-                    </p>
-                </div>
-            }
-            
-            <div class="contact-box">
-                <h4>?? Información de Contacto</h4>
-                
-                @if (!string.IsNullOrEmpty(Model.NombreContacto))
-                {
-                    <div class="contact-item">
-                        <strong>Nombre:</strong> @Model.NombreContacto
-                    </div>
-                }
-                
-                @if (!string.IsNullOrEmpty(Model.Telefono))
-                {
-                    <div class="contact-item">
-                        <strong>Telófono:</strong> 
-                        <a href="tel:@Model.Telefono" style="color: #3498db; font-weight: 600;">@Model.Telefono</a>
-                    </div>
-                }
-                
-                @if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <div class="contact-item">
-                        <strong>Email:</strong> 
-                        <a href="mailto:@Model.Email" style="color: #3498db; font-weight: 600;">@Model.Email</a>
-                    </div>
-                }
-            </div>
-            
-            @if (!Model.Encontrada && Session["UsuarioId"] != null)
-            {
-                <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 5px solid #ffc107;">
-                    <h4 style="margin: 0 0 10px 0; color: #856404;">óEncontraste a tu mascota?</h4>
-                    <p style="margin: 0 0 15px 0; color: #856404;">
-                        Si encontraste a tu mascota, marca este reporte como "Encontrada" para que otros lo sepan.
-                    </p>
-                    
-                    @using (Html.BeginForm("MarcarEncontrada", "MascotasPerdidas", new { id = Model.Id }, FormMethod.Post))
+        <h1>@Model.Nombre</h1>
+        <p class="subtitulo">@(Model.Tipo ?? "Mascota") @(!string.IsNullOrEmpty(Model.Raza) ? "• " + Model.Raza : "")</p>
+    </div>
+</section>
+
+<!-- Contenido Principal -->
+<section class="detalle-content">
+    <div class="detalle-container">
+        <div class="detalle-grid">
+            <!-- Imagen -->
+            <div class="detalle-imagen-wrapper">
+                <div class="detalle-imagen">
+                    @if (!string.IsNullOrEmpty(Model.FotoUrl))
                     {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-success btn-lg" onclick="return confirm('¿Estás seguro de que encontraste a tu mascota?')">
-                            <i class="glyphicon glyphicon-ok"></i> Marcar como Encontrada
-                        </button>
+                        <img src="@Model.FotoUrl" alt="@Model.Nombre" />
+                    }
+                    else
+                    {
+                        <div class="imagen-placeholder">🐾</div>
                     }
                 </div>
-            }
-            
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-default btn-lg">
-                    <i class="glyphicon glyphicon-arrow-left"></i> Volver al Listado
-                </a>
+
+                <!-- Status Box -->
+                @if (Model.Encontrada)
+                {
+                    <div class="status-box encontrada">
+                        <span class="status-icon">🎉</span>
+                        <div class="status-text">
+                            <strong>¡Mascota Encontrada!</strong>
+                            <p>Encontrada el @Model.FechaEncontrada?.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="status-box perdida">
+                        <span class="status-icon">🚨</span>
+                        <div class="status-text">
+                            <strong>Mascota Perdida</strong>
+                            <p>Si la has visto, por favor contacta al dueño</p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Información -->
+            <div class="detalle-info">
+                <h2>Información de la Mascota</h2>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-icon">🏷️</span>
+                        <div class="info-content">
+                            <label>Tipo</label>
+                            <span>@(Model.Tipo ?? "No especificado")</span>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Raza))
+                    {
+                        <div class="info-item">
+                            <span class="info-icon">🐕</span>
+                            <div class="info-content">
+                                <label>Raza</label>
+                                <span>@Model.Raza</span>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Color))
+                    {
+                        <div class="info-item">
+                            <span class="info-icon">🎨</span>
+                            <div class="info-content">
+                                <label>Color</label>
+                                <span>@Model.Color</span>
+                            </div>
+                        </div>
+                    }
+                    <div class="info-item">
+                        <span class="info-icon">📅</span>
+                        <div class="info-content">
+                            <label>Fecha de Reporte</label>
+                            <span>@Model.FechaReporte.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ubicacion-box">
+                    <span class="ubicacion-icon">📍</span>
+                    <div class="ubicacion-content">
+                        <label>Última Ubicación Conocida</label>
+                        <span>@(Model.Ubicacion ?? "No especificada")</span>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Descripcion))
+                {
+                    <div class="descripcion-box">
+                        <h3>Descripción</h3>
+                        <p>@Model.Descripcion</p>
+                    </div>
+                }
+
+                <!-- Contacto -->
+                <div class="contacto-box">
+                    <h3>📞 Información de Contacto</h3>
+                    <div class="contacto-items">
+                        @if (!string.IsNullOrEmpty(Model.NombreContacto))
+                        {
+                            <div class="contacto-item">
+                                <span class="contacto-icon">👤</span>
+                                <span>@Model.NombreContacto</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Telefono))
+                        {
+                            <div class="contacto-item">
+                                <span class="contacto-icon">📱</span>
+                                <a href="tel:@Model.Telefono">@Model.Telefono</a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            <div class="contacto-item">
+                                <span class="contacto-icon">✉️</span>
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Acción: Marcar como encontrada -->
+                @if (!Model.Encontrada && Session["UsuarioId"] != null)
+                {
+                    <div class="accion-encontrada">
+                        <h4>🎯 ¿Encontraste a tu mascota?</h4>
+                        <p>Si encontraste a tu mascota, marca este reporte como "Encontrada" para que otros lo sepan.</p>
+                        @using (Html.BeginForm("MarcarEncontrada", "MascotasPerdidas", new { id = Model.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-marcar-encontrada" onclick="return confirm('¿Estás seguro de que encontraste a tu mascota?')">
+                                ✅ Marcar como Encontrada
+                            </button>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<style>
+    /* Hero Section */
+    .detalle-hero {
+        padding: 50px 20px;
+        text-align: center;
+    }
+
+    .detalle-hero.perdida {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .detalle-hero.encontrada {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    }
+
+    .detalle-hero .hero-content {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .detalle-hero .badge-estado {
+        display: inline-block;
+        background: rgba(255,255,255,0.9);
+        color: #333;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .detalle-hero h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 48px;
+        color: #fff;
+        margin: 0 0 8px 0;
+    }
+
+    .detalle-hero .subtitulo {
+        font-family: 'Nunito', sans-serif;
+        font-size: 18px;
+        color: rgba(255,255,255,0.9);
+        margin: 0;
+    }
+
+    /* Content Section */
+    .detalle-content {
+        background: #f8f9fa;
+        padding: 60px 20px;
+    }
+
+    .detalle-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .detalle-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* Imagen */
+    .detalle-imagen-wrapper {
+        position: sticky;
+        top: 20px;
+    }
+
+    .detalle-imagen {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .detalle-imagen img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .imagen-placeholder {
+        width: 100%;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+    }
+
+    /* Status Box */
+    .status-box {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        border-radius: 16px;
+        margin-top: 16px;
+    }
+
+    .status-box.perdida {
+        background: #f8d7da;
+        border: 2px solid #f5c6cb;
+    }
+
+    .status-box.encontrada {
+        background: #d4edda;
+        border: 2px solid #c3e6cb;
+    }
+
+    .status-icon {
+        font-size: 36px;
+    }
+
+    .status-text strong {
+        font-family: 'Nunito', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .status-box.perdida .status-text strong { color: #721c24; }
+    .status-box.encontrada .status-text strong { color: #155724; }
+
+    .status-text p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .status-box.perdida .status-text p { color: #721c24; }
+    .status-box.encontrada .status-text p { color: #155724; }
+
+    /* Info */
+    .detalle-info {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .detalle-info h2 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 24px;
+        color: #000;
+        margin: 0 0 24px 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+    }
+
+    .info-icon {
+        font-size: 24px;
+    }
+
+    .info-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-content label {
+        font-family: 'Nunito', sans-serif;
+        font-size: 12px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    .info-content span {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    /* Ubicación */
+    .ubicacion-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border-left: 4px solid #ffc107;
+    }
+
+    .ubicacion-icon {
+        font-size: 28px;
+    }
+
+    .ubicacion-content label {
+        font-family: 'Nunito', sans-serif;
+        font-size: 12px;
+        color: #856404;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .ubicacion-content span {
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #856404;
+    }
+
+    /* Descripción */
+    .descripcion-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid #3498db;
+    }
+
+    .descripcion-box h3 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #333;
+        margin: 0 0 12px 0;
+    }
+
+    .descripcion-box p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 15px;
+        color: #555;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Contacto */
+    .contacto-box {
+        background: #e8f4f8;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        border-left: 4px solid #3498db;
+    }
+
+    .contacto-box h3 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #2c3e50;
+        margin: 0 0 16px 0;
+    }
+
+    .contacto-items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .contacto-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 16px;
+    }
+
+    .contacto-icon {
+        font-size: 20px;
+    }
+
+    .contacto-item span {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .contacto-item a {
+        color: #3498db;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .contacto-item a:hover {
+        text-decoration: underline;
+    }
+
+    /* Acción Encontrada */
+    .accion-encontrada {
+        background: #fff3cd;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        border: 2px solid #ffc107;
+    }
+
+    .accion-encontrada h4 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #856404;
+        margin: 0 0 8px 0;
+    }
+
+    .accion-encontrada p {
+        font-family: 'Nunito', sans-serif;
+        font-size: 14px;
+        color: #856404;
+        margin: 0 0 16px 0;
+    }
+
+    .btn-marcar-encontrada {
+        display: inline-block;
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+        padding: 14px 32px;
+        border-radius: 30px;
+        border: none;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-marcar-encontrada:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .detalle-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .detalle-imagen-wrapper {
+            position: static;
+        }
+
+        .detalle-hero h1 {
+            font-size: 36px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .detalle-hero {
+            padding: 30px 16px;
+        }
+
+        .detalle-hero h1 {
+            font-size: 28px;
+        }
+
+        .detalle-content {
+            padding: 30px 16px;
+        }
+
+        .detalle-info {
+            padding: 20px;
+        }
+    }
+</style>
