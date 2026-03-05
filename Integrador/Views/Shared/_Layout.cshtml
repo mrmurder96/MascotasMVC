@@ -8,8 +8,73 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!-- Font Awesome para iconos modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
+        /* ===== GLYPHICONS COMPATIBILITY (Bootstrap 5 no incluye Glyphicons) ===== */
+        /* Mapeo de Glyphicons a Font Awesome para compatibilidad */
+        .glyphicon { font-family: 'Font Awesome 6 Free'; font-weight: 900; font-style: normal; display: inline-block; }
+        .glyphicon-ok::before { content: "\f00c"; }
+        .glyphicon-remove::before { content: "\f00d"; }
+        .glyphicon-trash::before { content: "\f1f8"; }
+        .glyphicon-edit::before { content: "\f304"; }
+        .glyphicon-pencil::before { content: "\f303"; }
+        .glyphicon-eye-open::before { content: "\f06e"; }
+        .glyphicon-eye-close::before { content: "\f070"; }
+        .glyphicon-search::before { content: "\f002"; }
+        .glyphicon-plus::before { content: "\2b"; }
+        .glyphicon-minus::before { content: "\f068"; }
+        .glyphicon-refresh::before { content: "\f021"; }
+        .glyphicon-home::before { content: "\f015"; }
+        .glyphicon-user::before { content: "\f007"; }
+        .glyphicon-cog::before { content: "\f013"; }
+        .glyphicon-heart::before { content: "\f004"; }
+        .glyphicon-star::before { content: "\f005"; }
+        .glyphicon-list::before { content: "\f03a"; }
+        .glyphicon-list-alt::before { content: "\f022"; }
+        .glyphicon-file::before { content: "\f15b"; }
+        .glyphicon-folder-open::before { content: "\f07c"; }
+        .glyphicon-download::before { content: "\f019"; }
+        .glyphicon-upload::before { content: "\f093"; }
+        .glyphicon-envelope::before { content: "\f0e0"; }
+        .glyphicon-phone::before { content: "\f095"; }
+        .glyphicon-calendar::before { content: "\f073"; }
+        .glyphicon-time::before { content: "\f017"; }
+        .glyphicon-check::before { content: "\f058"; }
+        .glyphicon-lock::before { content: "\f023"; }
+        .glyphicon-warning-sign::before { content: "\f071"; }
+        .glyphicon-info-sign::before { content: "\f05a"; }
+        .glyphicon-question-sign::before { content: "\f059"; }
+        .glyphicon-exclamation-sign::before { content: "\f06a"; }
+        .glyphicon-arrow-left::before { content: "\f060"; }
+        .glyphicon-arrow-right::before { content: "\f061"; }
+        .glyphicon-arrow-up::before { content: "\f062"; }
+        .glyphicon-arrow-down::before { content: "\f063"; }
+        .glyphicon-chevron-left::before { content: "\f053"; }
+        .glyphicon-chevron-right::before { content: "\f054"; }
+        .glyphicon-chevron-up::before { content: "\f077"; }
+        .glyphicon-chevron-down::before { content: "\f078"; }
+        .glyphicon-th-list::before { content: "\f00b"; }
+        .glyphicon-th::before { content: "\f00a"; }
+        .glyphicon-ban-circle::before { content: "\f05e"; }
+        .glyphicon-pause::before { content: "\f04c"; }
+        .glyphicon-play::before { content: "\f04b"; }
+        .glyphicon-stop::before { content: "\f04d"; }
+        .glyphicon-floppy-disk::before { content: "\f0c7"; }
+        .glyphicon-save::before { content: "\f0c7"; }
+        .glyphicon-print::before { content: "\f02f"; }
+        .glyphicon-camera::before { content: "\f030"; }
+        .glyphicon-picture::before { content: "\f03e"; }
+        .glyphicon-map-marker::before { content: "\f3c5"; }
+        .glyphicon-comment::before { content: "\f075"; }
+        .glyphicon-tags::before { content: "\f02c"; }
+        .glyphicon-tag::before { content: "\f02b"; }
+        .glyphicon-bookmark::before { content: "\f02e"; }
+        .glyphicon-log-out::before { content: "\f2f5"; }
+        .glyphicon-log-in::before { content: "\f2f6"; }
+        .glyphicon-send::before { content: "\f1d8"; }
+
         * {
             margin: 0;
             padding: 0;

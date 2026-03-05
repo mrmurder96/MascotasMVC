@@ -93,12 +93,23 @@ namespace Integrador.Areas.Admin.Controllers
         // POST: Admin/Notificaciones/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,UsuarioId,Titulo,Mensaje,Leido,Fecha")] Notificaciones notificacion)
+        public ActionResult Edit([Bind(Include = "Id,UsuarioId,Titulo,Mensaje,Leido")] Notificaciones notificacion)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Obtener la notificación original para preservar la Fecha
+                    var notificacionOriginal = db.Notificaciones.AsNoTracking().FirstOrDefault(n => n.Id == notificacion.Id);
+                    if (notificacionOriginal != null)
+                    {
+                        notificacion.Fecha = notificacionOriginal.Fecha;
+                    }
+                    else
+                    {
+                        notificacion.Fecha = DateTime.Now;
+                    }
+
                     db.Entry(notificacion).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["Success"] = "Notificación actualizada exitosamente";

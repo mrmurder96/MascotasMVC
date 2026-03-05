@@ -2,11 +2,12 @@
 @{
     ViewBag.Title = "Detalles de Solicitud";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var usuarioRegistrado = ViewBag.UsuarioRegistrado as Integrador.Models.Usuarios;
 }
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3><i class="glyphicon glyphicon-file" aria-hidden="true"></i> Detalles de la Solicitud de Adopción #@Model.Id</h3>
@@ -17,7 +18,7 @@
                     <!-- Estado de la solicitud -->
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="estado-solicitud-card @Model.Estado.ToLower()" role="status" aria-label="Estado de la solicitud: @Model.Estado">
+                            <div class="estado-solicitud-card" role="status" aria-label="Estado de la solicitud: @Model.Estado">
                                 <h2>
                                     Estado: 
                                     @if (Model.Estado == "Pendiente")
@@ -37,49 +38,91 @@
                                         <span class="label label-info label-xl"><i class="glyphicon glyphicon-check"></i> @Model.Estado</span>
                                     }
                                 </h2>
+                                <p class="text-muted" style="margin-top: 10px;">
+                                    Fecha de Solicitud: <strong>@Model.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mt-4">
-                        <!-- Información del Ciudadano -->
+                        <!-- Información del Solicitante -->
                         <div class="col-md-6">
-                            <div class="panel panel-default">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <h4><i class="glyphicon glyphicon-user" aria-hidden="true"></i> Información del Solicitante</h4>
+                                    <h4><i class="glyphicon glyphicon-user"></i> Información del Solicitante</h4>
                                 </div>
                                 <div class="panel-body">
-                                    @if (Model.Usuario != null)
+                                    <table class="table table-striped table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Nombre Completo:</strong></td>
+                                                <td>@(Model.NombreSolicitante ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Documento:</strong></td>
+                                                <td>@(Model.Documento ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Email:</strong></td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(Model.Email))
+                                                    {
+                                                        <a href="mailto:@Model.Email">@Model.Email</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>No especificado</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Teléfono:</strong></td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(Model.Telefono))
+                                                    {
+                                                        <a href="tel:@Model.Telefono">@Model.Telefono</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>No especificado</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Dirección:</strong></td>
+                                                <td>@(Model.Direccion ?? "No especificada")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Ciudad:</strong></td>
+                                                <td>@(Model.Ciudad ?? "No especificada")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Código Postal:</strong></td>
+                                                <td>@(Model.CodigoPostal ?? "No especificado")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    @if (usuarioRegistrado != null)
                                     {
-                                        <dl class="dl-horizontal">
-                                            <dt>Nombre</dt>
-                                            <dd><strong>@Model.Usuario.Nombre</strong></dd>
-
-                                            <dt>Email</dt>
-                                            <dd><a href="mailto:@Model.Usuario.Email">@Model.Usuario.Email</a></dd>
-
-                                            <dt>Teléfono</dt>
-                                            <dd>@(Model.Usuario.Telefono ?? "No especificado")</dd>
-
-                                            <dt>Edad</dt>
-                                            <dd>
-                                                @Model.Usuario.Edad años
-                                                @if (Model.Usuario.EsMayorDeEdad)
+                                        <div class="alert alert-info" style="margin-top: 15px;">
+                                            <strong><i class="glyphicon glyphicon-info-sign"></i> Usuario Registrado:</strong><br/>
+                                            @usuarioRegistrado.Nombres @usuarioRegistrado.Apellidos<br/>
+                                            @if (usuarioRegistrado.FechaNacimiento.HasValue)
+                                            {
+                                                var edad = DateTime.Now.Year - usuarioRegistrado.FechaNacimiento.Value.Year;
+                                                <span>Edad: @edad años </span>
+                                                if (edad >= 18)
                                                 {
-                                                    <span class="label label-success">Mayor de edad <i class="glyphicon glyphicon-ok"></i></span>
+                                                    <span class="label label-success">Mayor de edad</span>
                                                 }
                                                 else
                                                 {
                                                     <span class="label label-danger">Menor de edad</span>
                                                 }
-                                            </dd>
-
-                                            <dt>Dirección</dt>
-                                            <dd>@(Model.Usuario.Direccion ?? "No especificada")</dd>
-
-                                            <dt>Usuario desde</dt>
-                                            <dd>@Model.Usuario.FechaRegistro.ToString("dd/MM/yyyy")</dd>
-                                        </dl>
+                                            }
+                                        </div>
                                     }
                                 </div>
                             </div>
@@ -87,82 +130,340 @@
 
                         <!-- Información de la Mascota -->
                         <div class="col-md-6">
-                            <div class="panel panel-default">
+                            <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <h4><i class="glyphicon glyphicon-heart" aria-hidden="true"></i> Información de la Mascota</h4>
+                                    <h4><i class="glyphicon glyphicon-heart"></i> Información de la Mascota</h4>
                                 </div>
                                 <div class="panel-body">
-                                    @if (Model.Mascota != null)
+                                    @if (Model.Mascotas != null)
                                     {
-                                        <div class="text-center mb-3">
-                                            @if (!string.IsNullOrEmpty(Model.Mascota.Imagen))
+                                        <div class="text-center" style="margin-bottom: 15px;">
+                                            @if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
                                             {
-                                                <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 
-                                                     alt="Foto de @Model.Mascota.Nombre" 
+                                                <img src="@Url.Content(Model.Mascotas.FotoUrl)" 
+                                                     alt="Foto de @Model.Mascotas.Nombre" 
                                                      class="img-thumbnail" 
-                                                     style="max-width: 200px;" />
+                                                     style="max-width: 200px; max-height: 200px;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="text-muted"><i class="glyphicon glyphicon-picture"></i> Sin foto</div>
                                             }
                                         </div>
-                                        <dl class="dl-horizontal">
-                                            <dt>Nombre</dt>
-                                            <dd><strong>@Model.Mascota.Nombre</strong></dd>
-
-                                            <dt>Tipo/Raza</dt>
-                                            <dd>@Model.Mascota.Tipo - @Model.Mascota.Raza</dd>
-
-                                            <dt>Edad</dt>
-                                            <dd>@Model.Mascota.Edad años</dd>
-
-                                            <dt>Sexo</dt>
-                                            <dd>@Model.Mascota.Sexo</dd>
-
-                                            <dt>Tamaño</dt>
-                                            <dd>@Model.Mascota.Tamano</dd>
-
-                                            <dt>Estado Actual</dt>
-                                            <dd>
-                                                @if (Model.Mascota.Estado == "Disponible")
-                                                {
-                                                    <span class="label label-success">@Model.Mascota.Estado</span>
-                                                }
-                                                else if (Model.Mascota.Estado == "Adoptado")
-                                                {
-                                                    <span class="label label-info">@Model.Mascota.Estado</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="label label-warning">@Model.Mascota.Estado</span>
-                                                }
-                                            </dd>
-                                        </dl>
+                                        <table class="table table-striped table-condensed">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Nombre:</strong></td>
+                                                    <td><strong>@Model.Mascotas.Nombre</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Tipo:</strong></td>
+                                                    <td>@(Model.Mascotas.Tipo ?? "No especificado")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Raza:</strong></td>
+                                                    <td>@(Model.Mascotas.Raza ?? "No especificada")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Edad:</strong></td>
+                                                    <td>@(Model.Mascotas.Edad?.ToString() ?? "No especificada") años</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Sexo:</strong></td>
+                                                    <td>@(Model.Mascotas.Sexo ?? "No especificado")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Tamaño:</strong></td>
+                                                    <td>@(Model.Mascotas.Tamano ?? "No especificado")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Estado Actual:</strong></td>
+                                                    <td>
+                                                        @if (Model.Mascotas.Estado == "Disponible")
+                                                        {
+                                                            <span class="label label-success">@Model.Mascotas.Estado</span>
+                                                        }
+                                                        else if (Model.Mascotas.Estado == "Adoptado")
+                                                        {
+                                                            <span class="label label-info">@Model.Mascotas.Estado</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label label-warning">@Model.Mascotas.Estado</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning">
+                                            <i class="glyphicon glyphicon-warning-sign"></i> No se encontró información de la mascota.
+                                        </div>
                                     }
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Información de la Solicitud -->
+                    <!-- Información de Vivienda -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-home"></i> Información de Vivienda</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Tipo de Vivienda:</strong></td>
+                                                <td>@(Model.TipoVivienda ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Propietario/Inquilino:</strong></td>
+                                                <td>@(Model.PropietarioInquilino ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>¿Permite Mascotas?:</strong></td>
+                                                <td>
+                                                    @if (Model.PermiteMascotas == "Si" || Model.PermiteMascotas == "Sí")
+                                                    {
+                                                        <span class="label label-success">Sí</span>
+                                                    }
+                                                    else if (Model.PermiteMascotas == "No")
+                                                    {
+                                                        <span class="label label-danger">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.PermiteMascotas ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>¿Tiene Patio?:</strong></td>
+                                                <td>
+                                                    @if (Model.TienePatio == "Si" || Model.TienePatio == "Sí")
+                                                    {
+                                                        <span class="label label-success">Sí</span>
+                                                    }
+                                                    else if (Model.TienePatio == "No")
+                                                    {
+                                                        <span class="label label-warning">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.TienePatio ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del Hogar -->
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-user"></i> Composición del Hogar</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Personas en el Hogar:</strong></td>
+                                                <td>@(Model.PersonasHogar ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>¿Hay Niños?:</strong></td>
+                                                <td>
+                                                    @if (Model.HayNinos == "Si" || Model.HayNinos == "Sí")
+                                                    {
+                                                        <span class="label label-info">Sí</span>
+                                                    }
+                                                    else if (Model.HayNinos == "No")
+                                                    {
+                                                        <span class="label label-default">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.HayNinos ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            @if (!string.IsNullOrEmpty(Model.EdadesNinos))
+                                            {
+                                                <tr>
+                                                    <td><strong>Edades de los Niños:</strong></td>
+                                                    <td>@Model.EdadesNinos</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td><strong>Horas que estará sola:</strong></td>
+                                                <td>@(Model.HorasSola ?? "No especificado")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Lugar donde dormirá:</strong></td>
+                                                <td>@(Model.LugarDormir ?? "No especificado")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Experiencia con Mascotas -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-star"></i> Experiencia con Mascotas</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Experiencia Previa:</strong></td>
+                                                <td>@(Model.ExperienciaMascotas ?? "No especificada")</td>
+                                            </tr>
+                                            @if (!string.IsNullOrEmpty(Model.QuePasoMascotas))
+                                            {
+                                                <tr>
+                                                    <td><strong>¿Qué pasó con ellas?:</strong></td>
+                                                    <td>@Model.QuePasoMascotas</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td><strong>¿Tiene Otras Mascotas?:</strong></td>
+                                                <td>
+                                                    @if (Model.OtrasMascotas == "Si" || Model.OtrasMascotas == "Sí")
+                                                    {
+                                                        <span class="label label-info">Sí</span>
+                                                    }
+                                                    else if (Model.OtrasMascotas == "No")
+                                                    {
+                                                        <span class="label label-default">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.OtrasMascotas ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            @if (!string.IsNullOrEmpty(Model.DescripcionOtrasMascotas))
+                                            {
+                                                <tr>
+                                                    <td><strong>Descripción Otras Mascotas:</strong></td>
+                                                    <td>@Model.DescripcionOtrasMascotas</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Veterinaria y Económica -->
+                        <div class="col-md-6">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <h4><i class="glyphicon glyphicon-plus"></i> Cuidado Veterinario</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Acceso a Veterinario:</strong></td>
+                                                <td>
+                                                    @if (Model.AccesoVeterinario == "Si" || Model.AccesoVeterinario == "Sí")
+                                                    {
+                                                        <span class="label label-success">Sí</span>
+                                                    }
+                                                    else if (Model.AccesoVeterinario == "No")
+                                                    {
+                                                        <span class="label label-danger">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.AccesoVeterinario ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>¿Puede cubrir gastos veterinarios?:</strong></td>
+                                                <td>
+                                                    @if (Model.GastosVeterinarios == "Si" || Model.GastosVeterinarios == "Sí")
+                                                    {
+                                                        <span class="label label-success">Sí</span>
+                                                    }
+                                                    else if (Model.GastosVeterinarios == "No")
+                                                    {
+                                                        <span class="label label-danger">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(Model.GastosVeterinarios ?? "No especificado")</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Plan si se muda:</strong></td>
+                                                <td>@(Model.PlanMudanza ?? "No especificado")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Motivación -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4><i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i> Detalles de la Solicitud</h4>
+                                    <h4><i class="glyphicon glyphicon-comment"></i> Motivación y Detalles Adicionales</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <dl class="dl-horizontal">
-                                        <dt>ID Solicitud</dt>
-                                        <dd><strong>#@Model.Id</strong></dd>
-
-                                        <dt>Fecha de Solicitud</dt>
-                                        <dd>@Model.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</dd>
-
-                                        <dt>Motivo de Adopción</dt>
-                                        <dd>
-                                            <div class="well">
-                                                @(Model.Motivo ?? "No especificado")
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <strong>Motivación para Adoptar:</strong>
+                                            <div class="well" style="margin-top: 10px;">
+                                                @(Model.Motivacion ?? "No especificada")
                                             </div>
-                                        </dd>
-                                    </dl>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 15px;">
+                                        <div class="col-md-6">
+                                            <strong>¿Cómo se enteró?:</strong>
+                                            <p>@(Model.ComoSeEntero ?? "No especificado")</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Compromisos:</strong><br/>
+                                            @if (Model.AceptaTerminos)
+                                            {
+                                                <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Acepta términos y condiciones</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger"><i class="glyphicon glyphicon-remove"></i> No aceptó términos</span>
+                                            }
+                                            <br/><br/>
+                                            @if (Model.AceptaVisitas)
+                                            {
+                                                <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Acepta visitas de seguimiento</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-warning"><i class="glyphicon glyphicon-remove"></i> No aceptó visitas</span>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -174,24 +475,25 @@
                     <div class="text-center" role="toolbar" aria-label="Acciones de la solicitud">
                         @if (Model.Estado == "Pendiente")
                         {
-                            <a href="@Url.Action("Aprobar", new { id = Model.Id })" 
-                               class="btn btn-success btn-lg"
-                               aria-label="Aprobar solicitud de adopción">
+                            <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalAprobar"
+                                    aria-label="Aprobar solicitud de adopción">
                                 <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Aprobar Solicitud
-                            </a>
-                            <a href="@Url.Action("Rechazar", new { id = Model.Id })" 
-                               class="btn btn-danger btn-lg"
-                               aria-label="Rechazar solicitud de adopción">
+                            </button>
+                            <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalRechazar"
+                                    aria-label="Rechazar solicitud de adopción">
                                 <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Rechazar Solicitud
-                            </a>
+                            </button>
                         }
                         else if (Model.Estado == "Aprobada")
                         {
-                            <a href="@Url.Action("Finalizar", new { id = Model.Id })" 
-                               class="btn btn-primary btn-lg"
-                               aria-label="Finalizar proceso de adopción">
-                                <i class="glyphicon glyphicon-check" aria-hidden="true"></i> Finalizar Adopción
-                            </a>
+                            using (Html.BeginForm("Finalizar", "Solicitudes", new { id = Model.Id }, FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-primary btn-lg"
+                                        aria-label="Finalizar proceso de adopción">
+                                    <i class="glyphicon glyphicon-check" aria-hidden="true"></i> Finalizar Adopción
+                                </button>
+                            }
                         }
 
                         <a href="@Url.Action("Index")" 
@@ -200,6 +502,62 @@
                             <i class="glyphicon glyphicon-arrow-left" aria-hidden="true"></i> Volver al Listado
                         </a>
                     </div>
+
+                    @if (Model.Estado == "Pendiente")
+                    {
+                        <!-- Modal Aprobar -->
+                        <div class="modal fade" id="modalAprobar" tabindex="-1" aria-labelledby="modalAprobarLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    @using (Html.BeginForm("Aprobar", "Solicitudes", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="modalAprobarLabel"><i class="glyphicon glyphicon-ok"></i> Aprobar Solicitud</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Está seguro de aprobar esta solicitud de adopción?</p>
+                                            <div class="form-group">
+                                                <label for="observaciones">Observaciones (opcional):</label>
+                                                <textarea name="observaciones" class="form-control" rows="3" placeholder="Ingrese observaciones si las hay..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> Aprobar</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Rechazar -->
+                        <div class="modal fade" id="modalRechazar" tabindex="-1" aria-labelledby="modalRechazarLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    @using (Html.BeginForm("Rechazar", "Solicitudes", new { area = "Admin", id = Model.Id }, FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="modalRechazarLabel"><i class="glyphicon glyphicon-remove"></i> Rechazar Solicitud</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="motivoRechazo">Motivo de rechazo (requerido):</label>
+                                                <textarea name="motivoRechazo" class="form-control" rows="3" required placeholder="Ingrese el motivo del rechazo..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Rechazar</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -207,19 +565,23 @@
 </div>
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; margin-bottom: 20px; }
     .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
     .card-header h3 { margin: 0; color: #000; }
     .card-body { padding: 30px; }
     .estado-solicitud-card { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px; margin-bottom: 30px; }
     .estado-solicitud-card h2 { margin: 0; }
     .label-xl { font-size: 18px; padding: 10px 20px; }
-    .panel { border: 1px solid #ddd; border-radius: 8px; }
-    .panel-heading { background-color: #f8f9fa; padding: 10px 15px; border-bottom: 1px solid #ddd; }
-    .panel-heading h4 { margin: 0; }
+    .panel { border-radius: 8px; margin-bottom: 20px; }
+    .panel-heading { border-radius: 8px 8px 0 0; }
+    .panel-heading h4 { margin: 0; font-size: 16px; }
+    .panel-primary .panel-heading { background-color: #337ab7; color: white; }
+    .panel-success .panel-heading { background-color: #5cb85c; color: white; }
+    .panel-info .panel-heading { background-color: #5bc0de; color: white; }
+    .panel-warning .panel-heading { background-color: #f0ad4e; color: white; }
     .panel-body { padding: 15px; }
-    .dl-horizontal dt { width: 150px; font-weight: 600; }
-    .dl-horizontal dd { margin-left: 170px; }
+    .table-condensed td { padding: 8px !important; }
+    .well { background-color: #f9f9f9; border: 1px solid #e3e3e3; padding: 15px; border-radius: 4px; margin-bottom: 0; }
     .mt-4 { margin-top: 20px; }
     .mb-3 { margin-bottom: 15px; }
 </style>

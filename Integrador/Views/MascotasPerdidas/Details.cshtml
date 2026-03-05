@@ -47,7 +47,7 @@
                         <span class="status-icon">🎉</span>
                         <div class="status-text">
                             <strong>¡Mascota Encontrada!</strong>
-                            <p>Encontrada el @Model.FechaEncontrada?.ToString("dd/MM/yyyy")</p>
+                            <p>Encontrada el @(Model.FechaEncontrada.HasValue ? Model.FechaEncontrada.Value.ToString("dd/MM/yyyy") : "N/A")</p>
                         </div>
                     </div>
                 }

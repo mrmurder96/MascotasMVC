@@ -47,8 +47,12 @@ namespace Integrador.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ClienteAuthorize]
-        public ActionResult Create(MascotasPerdidas mascotaPerdida)
+        public ActionResult Create([Bind(Include = "Nombre,TipoReporte,TipoMascota,Raza,UbicacionReporte,Descripcion,NombreReportante,TelefonoContacto,EmailContacto")] MascotasPerdidas mascotaPerdida)
         {
+            // Eliminar validaciones para campos que se establecen en el servidor
+            ModelState.Remove("FechaReporte");
+            ModelState.Remove("Estado");
+
             if (ModelState.IsValid)
             {
                 try
@@ -61,7 +65,7 @@ namespace Integrador.Controllers
                         {
                             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                             var extension = Path.GetExtension(file.FileName).ToLower();
-                            
+
                             if (!allowedExtensions.Contains(extension))
                             {
                                 ModelState.AddModelError("", "Solo se permiten imágenes (jpg, jpeg, png, gif)");
@@ -70,19 +74,25 @@ namespace Integrador.Controllers
 
                             var fileName = $"perdida_{Guid.NewGuid()}{extension}";
                             var uploadPath = Server.MapPath("~/Content/uploads/perdidas");
-                            
+
                             if (!Directory.Exists(uploadPath))
                                 Directory.CreateDirectory(uploadPath);
 
                             var filePath = Path.Combine(uploadPath, fileName);
                             file.SaveAs(filePath);
-                            
+
                             mascotaPerdida.FotoUrl = "/Content/uploads/perdidas/" + fileName;
                         }
                     }
 
                     mascotaPerdida.FechaReporte = DateTime.Now;
                     mascotaPerdida.Estado = "Activo";
+
+                    // Establecer TipoReporte si no viene del formulario
+                    if (string.IsNullOrEmpty(mascotaPerdida.TipoReporte))
+                    {
+                        mascotaPerdida.TipoReporte = "Perdida";
+                    }
 
                     if (Session["UsuarioId"] != null)
                     {

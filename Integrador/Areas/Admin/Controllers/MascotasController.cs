@@ -182,6 +182,13 @@ namespace Integrador.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Obtener la mascota original para preservar FechaCreacion
+                var mascotaOriginal = db.Mascotas.AsNoTracking().FirstOrDefault(m => m.Id == mascota.Id);
+                if (mascotaOriginal != null)
+                {
+                    mascota.FechaCreacion = mascotaOriginal.FechaCreacion;
+                }
+
                 // Si se cargó una nueva imagen
                 if (foto != null && foto.ContentLength > 0)
                 {

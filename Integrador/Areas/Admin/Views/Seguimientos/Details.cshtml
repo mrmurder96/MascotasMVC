@@ -129,7 +129,7 @@
                         @GetEstadoIcon(ultimoSeguimiento.EstadoMascota)
                     </div>
                     <div class="estado-info">
-                        <h5>Estado Actual de @Model.Mascotas?.Nombre</h5>
+                        <h5>Estado Actual de @(Model.Mascotas != null ? Model.Mascotas.Nombre : "la mascota")</h5>
                         <h3>@ultimoSeguimiento.EstadoMascota</h3>
                         <small>Último seguimiento: @ultimoSeguimiento.FechaSeguimiento.ToString("dd/MM/yyyy")</small>
                     </div>

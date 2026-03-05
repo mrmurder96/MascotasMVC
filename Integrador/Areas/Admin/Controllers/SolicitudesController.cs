@@ -87,16 +87,21 @@ namespace Integrador.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
+            // Cargar la solicitud con la mascota relacionada
+            var solicitud = db.Adopciones
+                .Include(a => a.Mascotas)
+                .FirstOrDefault(a => a.Id == id);
+
             if (solicitud == null)
             {
                 return HttpNotFound();
             }
 
-            // Si hay UsuarioId, cargar datos del usuario
+            // Si hay UsuarioId, cargar datos del usuario y pasarlo al ViewBag
             if (solicitud.UsuarioId.HasValue)
             {
-                ViewBag.Usuario = db.Usuarios.Find(solicitud.UsuarioId.Value);
+                var usuario = db.Usuarios.Find(solicitud.UsuarioId.Value);
+                ViewBag.UsuarioRegistrado = usuario;
             }
 
             return View(solicitud);
@@ -113,17 +118,18 @@ namespace Integrador.Areas.Admin.Controllers
                 var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
                 if (solicitud == null)
                 {
-                    TempData["Error"] = "Solicitud no encontrada";
+                    TempData["ErrorMessage"] = "Solicitud no encontrada";
                     return RedirectToAction("Index");
                 }
 
                 // Validaciones de negocio (RF-16, RF-20, RF-21)
                 var mascota = solicitud.Mascotas;
-                
-                // RF-21: Verificar que la mascota esté disponible
-                if (!mascota.EstaDisponible)
+
+                // RF-21: Verificar que la mascota no esté ya adoptada
+                // Permitir aprobar si está "Disponible" o "En proceso"
+                if (mascota.Estado == "Adoptado")
                 {
-                    TempData["Error"] = "La mascota ya no está disponible para adopción";
+                    TempData["ErrorMessage"] = "La mascota ya fue adoptada";
                     return RedirectToAction("Details", new { id });
                 }
 
@@ -133,14 +139,14 @@ namespace Integrador.Areas.Admin.Controllers
                     var usuario = db.Usuarios.Find(solicitud.UsuarioId.Value);
                     if (usuario != null && !usuario.EsMayorDeEdad)
                     {
-                        TempData["Error"] = "El adoptante debe ser mayor de edad";
+                        TempData["ErrorMessage"] = "El adoptante debe ser mayor de edad";
                         return RedirectToAction("Details", new { id });
                     }
                 }
 
                 // Aprobar solicitud
                 solicitud.Estado = Adopciones.Estados.Aprobada;
-                
+
                 // Cambiar estado de la mascota
                 mascota.Estado = "Adoptado";
 
@@ -164,12 +170,12 @@ namespace Integrador.Areas.Admin.Controllers
                 // Crear notificación en el sistema
                 CrearNotificacionSistema(solicitud, true, null);
 
-                TempData["Success"] = "Solicitud aprobada exitosamente";
+                TempData["SuccessMessage"] = "Solicitud aprobada exitosamente";
                 return RedirectToAction("Details", new { id });
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Error al aprobar solicitud: " + ex.Message;
+                TempData["ErrorMessage"] = "Error al aprobar solicitud: " + ex.Message;
                 return RedirectToAction("Details", new { id });
             }
         }
@@ -185,17 +191,30 @@ namespace Integrador.Areas.Admin.Controllers
                 var solicitud = db.Adopciones.Include(a => a.Mascotas).FirstOrDefault(a => a.Id == id);
                 if (solicitud == null)
                 {
-                    TempData["Error"] = "Solicitud no encontrada";
+                    TempData["ErrorMessage"] = "Solicitud no encontrada";
                     return RedirectToAction("Index");
                 }
 
                 if (string.IsNullOrWhiteSpace(motivoRechazo))
                 {
-                    TempData["Error"] = "Debe proporcionar un motivo de rechazo";
+                    TempData["ErrorMessage"] = "Debe proporcionar un motivo de rechazo";
                     return RedirectToAction("Details", new { id });
                 }
 
                 solicitud.Estado = Adopciones.Estados.Rechazada;
+
+                // Verificar si hay otras solicitudes pendientes para esta mascota
+                var otrasSolicitudesPendientes = db.Adopciones
+                    .Any(a => a.MascotaId == solicitud.MascotaId && 
+                              a.Id != id && 
+                              (a.Estado == "Pendiente" || a.Estado == "En Revisión"));
+
+                // Si no hay otras solicitudes pendientes, la mascota vuelve a estar disponible
+                if (!otrasSolicitudesPendientes && solicitud.Mascotas != null)
+                {
+                    solicitud.Mascotas.Estado = "Disponible";
+                }
+
                 db.SaveChanges();
 
                 // Enviar notificación de rechazo
@@ -204,12 +223,12 @@ namespace Integrador.Areas.Admin.Controllers
                 // Crear notificación en el sistema
                 CrearNotificacionSistema(solicitud, false, motivoRechazo);
 
-                TempData["Success"] = "Solicitud rechazada";
+                TempData["SuccessMessage"] = "Solicitud rechazada";
                 return RedirectToAction("Details", new { id });
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Error al rechazar solicitud: " + ex.Message;
+                TempData["ErrorMessage"] = "Error al rechazar solicitud: " + ex.Message;
                 return RedirectToAction("Details", new { id });
             }
         }

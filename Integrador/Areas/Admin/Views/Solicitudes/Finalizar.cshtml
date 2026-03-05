@@ -15,7 +15,7 @@
                     @Html.Partial("_AlertMessages")
 
                     <div class="alert alert-success">
-                        <strong>Solicitud #@Model.Id</strong> - Adopción de <strong>@Model.Mascota?.Nombre</strong> por <strong>@Model.Usuario?.Nombre</strong>
+                        <strong>Solicitud #@Model.Id</strong> - Adopción de <strong>@(Model.Mascota != null ? Model.Mascota.Nombre : "la mascota")</strong> por <strong>@(Model.Usuario != null ? Model.Usuario.Nombre : "el adoptante")</strong>
                     </div>
 
                     <div class="panel panel-primary">
@@ -36,16 +36,16 @@
                                     <h5>Información del Adoptante</h5>
                                     <dl>
                                         <dt>Nombre</dt>
-                                        <dd>@Model.Usuario?.Nombre</dd>
+                                        <dd>@(Model.Usuario != null ? Model.Usuario.Nombre : "No especificado")</dd>
                                         <dt>Email</dt>
-                                        <dd>@Model.Usuario?.Email</dd>
+                                        <dd>@(Model.Usuario != null ? Model.Usuario.Email : "No especificado")</dd>
                                         <dt>Teléfono</dt>
-                                        <dd>@Model.Usuario?.Telefono</dd>
+                                        <dd>@(Model.Usuario != null ? Model.Usuario.Telefono : "No especificado")</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <h5>Información de la Mascota</h5>
-                                    @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
+                                    @if (Model.Mascota != null && !string.IsNullOrEmpty(Model.Mascota.Imagen))
                                     {
                                         <div class="text-center mb-3">
                                             <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 
@@ -56,11 +56,11 @@
                                     }
                                     <dl>
                                         <dt>Nombre</dt>
-                                        <dd>@Model.Mascota?.Nombre</dd>
+                                        <dd>@(Model.Mascota != null ? Model.Mascota.Nombre : "No especificado")</dd>
                                         <dt>Tipo/Raza</dt>
-                                        <dd>@Model.Mascota?.Tipo - @Model.Mascota?.Raza</dd>
+                                        <dd>@(Model.Mascota != null ? Model.Mascota.Tipo + " - " + Model.Mascota.Raza : "No especificado")</dd>
                                         <dt>Edad</dt>
-                                        <dd>@Model.Mascota?.Edad años</dd>
+                                        <dd>@(Model.Mascota != null && Model.Mascota.Edad.HasValue ? Model.Mascota.Edad.Value + " años" : "No especificada")</dd>
                                     </dl>
                                 </div>
                             </div>

@@ -15,7 +15,7 @@
                     @Html.Partial("_AlertMessages")
 
                     <div class="alert alert-warning" role="alert">
-                        <strong>Solicitud #@Model.Id</strong> - @Model.Usuario?.Nombre solicita adoptar a <strong>@Model.Mascota?.Nombre</strong>
+                        <strong>Solicitud #@Model.Id</strong> - @(Model.Usuario != null ? Model.Usuario.Nombre : "Solicitante") solicita adoptar a <strong>@(Model.Mascota != null ? Model.Mascota.Nombre : "la mascota")</strong>
                     </div>
 
                     @using (Html.BeginForm("Rechazar", "Solicitudes", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -55,7 +55,7 @@
                                     </ul>
                                 </div>
 
-                                @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
+                                @if (Model.Mascota != null && !string.IsNullOrEmpty(Model.Mascota.Imagen))
                                 {
                                     <div class="text-center mt-3">
                                         <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 

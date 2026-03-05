@@ -1,4 +1,4 @@
-
+@model Integrador.Models.Mascota
 @{
     ViewBag.Title = "Formulario de adopción";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
@@ -274,9 +274,10 @@
         </div>
     }
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Adopt", "Mascotas", new { id = Model.Id }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
 
         <!-- Seccion 1: Datos Personales -->
         <div class="form-section">
@@ -285,38 +286,38 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Nombre completo <span class="required">*</span></label>
-                    <input type="text" name="nombreSolicitante" class="form-control" placeholder="Ej: Maria Garcia Lopez" required />
+                    <input type="text" name="nombreSolicitante" class="form-control" placeholder="Ej: Maria Garcia Lopez" value="@ViewBag.NombreSolicitante" required />
                 </div>
                 <div class="form-group">
                     <label>Documento de identidad <span class="required">*</span></label>
-                    <input type="text" name="documento" class="form-control" placeholder="Ej: 12345678" required />
+                    <input type="text" name="documento" id="documento" class="form-control" placeholder="Ej: 12345678" value="" required />
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Correo electronico <span class="required">*</span></label>
-                    <input type="email" name="email" class="form-control" placeholder="Ej: maria@email.com" required />
+                    <input type="email" name="email" class="form-control" placeholder="Ej: maria@email.com" value="@ViewBag.Email" required />
                 </div>
                 <div class="form-group">
                     <label>Telefono de contacto <span class="required">*</span></label>
-                    <input type="tel" name="telefono" class="form-control" placeholder="Ej: 999-888-777" required />
+                    <input type="tel" name="telefono" class="form-control" placeholder="Ej: 999-888-777" value="@ViewBag.Telefono" required />
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Direccion completa <span class="required">*</span></label>
-                <input type="text" name="direccion" class="form-control" placeholder="Ej: Av. Principal 123, Colonia Centro" required />
+                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Ej: Av. Principal 123, Colonia Centro" value="" required />
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Ciudad <span class="required">*</span></label>
-                    <input type="text" name="ciudad" class="form-control" placeholder="Ej: Ciudad de Mexico" required />
+                    <input type="text" name="ciudad" id="ciudad" class="form-control" placeholder="Ej: Ciudad de Mexico" value="" required />
                 </div>
                 <div class="form-group">
                     <label>Codigo postal</label>
-                    <input type="text" name="codigoPostal" class="form-control" placeholder="Ej: 12345" />
+                    <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" placeholder="Ej: 12345" value="" />
                 </div>
             </div>
         </div>
@@ -368,7 +369,7 @@
                         <input type="radio" name="tienePatio" value="si" /> Si
                     </label>
                     <label class="radio-item">
-                        <input type="radio" name="tienePatio" value="no" /> No
+                        <input type="radio" name="tienePatio" value="no" checked /> No
                     </label>
                 </div>
             </div>
@@ -392,7 +393,7 @@
                         <input type="radio" name="hayNinos" value="si" /> Si
                     </label>
                     <label class="radio-item">
-                        <input type="radio" name="hayNinos" value="no" /> No
+                        <input type="radio" name="hayNinos" value="no" checked /> No
                     </label>
                 </div>
             </div>
@@ -414,7 +415,7 @@
                         <input type="radio" name="experienciaMascotas" value="si" /> Si
                     </label>
                     <label class="radio-item">
-                        <input type="radio" name="experienciaMascotas" value="no" /> No
+                        <input type="radio" name="experienciaMascotas" value="no" checked /> No
                     </label>
                 </div>
             </div>
@@ -431,7 +432,7 @@
                         <input type="radio" name="otrasMascotas" value="si" /> Si
                     </label>
                     <label class="radio-item">
-                        <input type="radio" name="otrasMascotas" value="no" /> No
+                        <input type="radio" name="otrasMascotas" value="no" checked /> No
                     </label>
                 </div>
             </div>
@@ -467,7 +468,7 @@
                 <label>Tiene acceso a un veterinario?</label>
                 <div class="radio-group">
                     <label class="radio-item">
-                        <input type="radio" name="accesoVeterinario" value="si" /> Si
+                        <input type="radio" name="accesoVeterinario" value="si" checked /> Si
                     </label>
                     <label class="radio-item">
                         <input type="radio" name="accesoVeterinario" value="no" /> No
@@ -479,7 +480,7 @@
                 <label>Esta dispuesto a cubrir gastos veterinarios (vacunas, esterilizacion, emergencias)? <span class="required">*</span></label>
                 <div class="radio-group">
                     <label class="radio-item">
-                        <input type="radio" name="gastosVeterinarios" value="si" required /> Si
+                        <input type="radio" name="gastosVeterinarios" value="si" checked /> Si
                     </label>
                     <label class="radio-item">
                         <input type="radio" name="gastosVeterinarios" value="no" /> No
@@ -543,3 +544,18 @@
         </a>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        // Debug: Mostrar todos los valores del formulario antes de enviar
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var formData = new FormData(this);
+            console.log('=== DATOS DEL FORMULARIO ===');
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            console.log('=== FIN DATOS ===');
+            // No prevenir el envío, solo mostrar los datos
+        });
+    </script>
+}

@@ -2,46 +2,97 @@
 @using System.Linq
 
 @{
-    ViewBag.Title = "Campaóas";
+    ViewBag.Title = "Campañas";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    var usuarioLogueado = Session["UsuarioId"] != null;
 }
 
 <div class="container py-4">
-    <h2 class="text-success mb-4">Campaóas</h2>
-
-    @if (User?.Identity?.IsAuthenticated ?? false)
-    {
-        <p>Ver tus campaóas personales: <a class="btn btn-outline-primary" href='@Url.Action("MisCampanas","Campanas")'>Mis campaóas</a></p>
-
-        if (Model != null && Model.Any())
-        {
-            <div class="row">
-                @foreach (var camp in Model)
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="glyphicon glyphicon-bullhorn"></i> Campañas de Adopción</h2>
+        </div>
+        <div class="card-body">
+            @if (usuarioLogueado)
+            {
+                if (Model != null && Model.Any())
                 {
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <img src="@( !string.IsNullOrEmpty(camp.ImagenUrl) ? camp.ImagenUrl : Url.Content("~/Content/placeholder_campaign.png") )" class="card-img-top" alt="@camp.Titulo" style="height:200px;object-fit:cover;" />
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@camp.Titulo</h5>
-                                <p class="card-text text-truncate">@camp.Descripcion</p>
-                                <p class="card-text">
-                                    <small class="text-muted">
-                                        Desde: @camp.FechaInicio.ToString("dd/MM/yyyy")@(camp.FechaFin.HasValue ? " - " + camp.FechaFin.Value.ToString("dd/MM/yyyy") : "")
-                                    </small>
-                                </p>
-                                <a class="mt-auto btn btn-outline-success" href='@Url.Action("Details","Campanas", new { id = camp.Id })'>Ver detalles</a>
+                    <div class="row">
+                        @foreach (var camp in Model)
+                        {
+                            <div class="col-md-6 col-lg-4" style="margin-bottom: 20px;">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h4 style="margin: 0;">@camp.Titulo</h4>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(camp.ImagenUrl))
+                                    {
+                                        <div style="height: 200px; overflow: hidden;">
+                                            <img src="@camp.ImagenUrl" alt="@camp.Titulo" style="width: 100%; height: 100%; object-fit: cover;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="height: 200px; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                            <i class="glyphicon glyphicon-picture" style="font-size: 50px; color: #ccc;"></i>
+                                        </div>
+                                    }
+                                    <div class="panel-body">
+                                        <p style="height: 60px; overflow: hidden;">@camp.Descripcion</p>
+                                        <p>
+                                            <small class="text-muted">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                Desde: @camp.FechaInicio.ToString("dd/MM/yyyy")
+                                                @if (camp.FechaFin.HasValue)
+                                                {
+                                                    <span> hasta @camp.FechaFin.Value.ToString("dd/MM/yyyy")</span>
+                                                }
+                                            </small>
+                                        </p>
+                                        @if (camp.Activa)
+                                        {
+                                            <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Activa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-default">Finalizada</span>
+                                        }
+                                    </div>
+                                    <div class="panel-footer">
+                                        <a class="btn btn-primary btn-block" href="@Url.Action("Details", "Campanas", new { id = camp.Id })">
+                                            <i class="glyphicon glyphicon-eye-open"></i> Ver Detalles
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 }
-            </div>
-        }
-        else
-        {
-            <p>No hay campaóas activas para mostrar.</p>
-        }
-    }
-    else
-    {
-        <p>Debes <a href='@Url.Action("Login","Account")'>iniciar sesión</a> para ver tus campaóas.</p>
-    }
+                else
+                {
+                    <div class="alert alert-info text-center">
+                        <h4><i class="glyphicon glyphicon-info-sign"></i> No hay campañas activas</h4>
+                        <p>Por el momento no hay campañas de adopción disponibles. ¡Vuelve pronto!</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning text-center">
+                    <h4><i class="glyphicon glyphicon-lock"></i> Acceso Restringido</h4>
+                    <p>Debes <a href="@Url.Action("Login", "Account")">iniciar sesión</a> para ver las campañas.</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+<style>
+    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
+    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
+    .card-header h2 { margin: 0; color: #000; font-size: 24px; }
+    .card-body { padding: 20px; }
+    .panel { margin-bottom: 0; }
+    .panel-success .panel-heading { background-color: #5cb85c; color: white; }
+    .panel-footer { background-color: #f5f5f5; padding: 10px 15px; }
+</style>

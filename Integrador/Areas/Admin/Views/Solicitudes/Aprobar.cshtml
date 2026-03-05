@@ -15,7 +15,7 @@
                     @Html.Partial("_AlertMessages")
 
                     <div class="alert alert-info" role="alert">
-                        <strong>Solicitud #@Model.Id</strong> - @Model.Usuario?.Nombre solicita adoptar a <strong>@Model.Mascota?.Nombre</strong>
+                        <strong>Solicitud #@Model.Id</strong> - @(Model.Usuario != null ? Model.Usuario.Nombre : "Solicitante") solicita adoptar a <strong>@(Model.Mascota != null ? Model.Mascota.Nombre : "la mascota")</strong>
                     </div>
 
                     @if (ViewBag.ValidationErrors != null && ViewBag.ValidationErrors.Count > 0)
@@ -51,7 +51,7 @@
                                     <li><i class="glyphicon glyphicon-ok text-success"></i> La solicitud quedará registrada como <span class="label label-success">Aprobada</span></li>
                                 </ul>
 
-                                @if (!string.IsNullOrEmpty(Model.Mascota?.Imagen))
+                                @if (Model.Mascota != null && !string.IsNullOrEmpty(Model.Mascota.Imagen))
                                 {
                                     <div class="text-center mt-3">
                                         <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascota.Imagen)" 

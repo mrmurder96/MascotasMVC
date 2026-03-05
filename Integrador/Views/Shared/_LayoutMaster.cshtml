@@ -10,8 +10,81 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    
+    <!-- Bootstrap 3 Glyphicons (compatibilidad con vistas existentes) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+
     <style>
+        /* ===== GLYPHICONS COMPATIBILITY (Bootstrap 5 no incluye Glyphicons) ===== */
+        /* Mapeo de Glyphicons a Font Awesome para compatibilidad */
+        .glyphicon { font-family: 'Font Awesome 6 Free'; font-weight: 900; font-style: normal; display: inline-block; }
+        .glyphicon-ok::before { content: "\f00c"; } /* fa-check */
+        .glyphicon-remove::before { content: "\f00d"; } /* fa-xmark */
+        .glyphicon-trash::before { content: "\f1f8"; } /* fa-trash */
+        .glyphicon-edit::before { content: "\f304"; } /* fa-pen */
+        .glyphicon-pencil::before { content: "\f303"; } /* fa-pencil */
+        .glyphicon-eye-open::before { content: "\f06e"; } /* fa-eye */
+        .glyphicon-eye-close::before { content: "\f070"; } /* fa-eye-slash */
+        .glyphicon-search::before { content: "\f002"; } /* fa-magnifying-glass */
+        .glyphicon-plus::before { content: "\2b"; } /* fa-plus */
+        .glyphicon-minus::before { content: "\f068"; } /* fa-minus */
+        .glyphicon-refresh::before { content: "\f021"; } /* fa-arrows-rotate */
+        .glyphicon-home::before { content: "\f015"; } /* fa-house */
+        .glyphicon-user::before { content: "\f007"; } /* fa-user */
+        .glyphicon-cog::before { content: "\f013"; } /* fa-gear */
+        .glyphicon-heart::before { content: "\f004"; } /* fa-heart */
+        .glyphicon-star::before { content: "\f005"; } /* fa-star */
+        .glyphicon-list::before { content: "\f03a"; } /* fa-list */
+        .glyphicon-list-alt::before { content: "\f022"; } /* fa-rectangle-list */
+        .glyphicon-file::before { content: "\f15b"; } /* fa-file */
+        .glyphicon-folder-open::before { content: "\f07c"; } /* fa-folder-open */
+        .glyphicon-download::before { content: "\f019"; } /* fa-download */
+        .glyphicon-upload::before { content: "\f093"; } /* fa-upload */
+        .glyphicon-envelope::before { content: "\f0e0"; } /* fa-envelope */
+        .glyphicon-phone::before { content: "\f095"; } /* fa-phone */
+        .glyphicon-calendar::before { content: "\f073"; } /* fa-calendar */
+        .glyphicon-time::before { content: "\f017"; } /* fa-clock */
+        .glyphicon-check::before { content: "\f058"; } /* fa-circle-check */
+        .glyphicon-lock::before { content: "\f023"; } /* fa-lock */
+        .glyphicon-warning-sign::before { content: "\f071"; } /* fa-triangle-exclamation */
+        .glyphicon-info-sign::before { content: "\f05a"; } /* fa-circle-info */
+        .glyphicon-question-sign::before { content: "\f059"; } /* fa-circle-question */
+        .glyphicon-exclamation-sign::before { content: "\f06a"; } /* fa-circle-exclamation */
+        .glyphicon-arrow-left::before { content: "\f060"; } /* fa-arrow-left */
+        .glyphicon-arrow-right::before { content: "\f061"; } /* fa-arrow-right */
+        .glyphicon-arrow-up::before { content: "\f062"; } /* fa-arrow-up */
+        .glyphicon-arrow-down::before { content: "\f063"; } /* fa-arrow-down */
+        .glyphicon-chevron-left::before { content: "\f053"; } /* fa-chevron-left */
+        .glyphicon-chevron-right::before { content: "\f054"; } /* fa-chevron-right */
+        .glyphicon-chevron-up::before { content: "\f077"; } /* fa-chevron-up */
+        .glyphicon-chevron-down::before { content: "\f078"; } /* fa-chevron-down */
+        .glyphicon-th-list::before { content: "\f00b"; } /* fa-table-list */
+        .glyphicon-th::before { content: "\f00a"; } /* fa-table-cells */
+        .glyphicon-ban-circle::before { content: "\f05e"; } /* fa-ban */
+        .glyphicon-pause::before { content: "\f04c"; } /* fa-pause */
+        .glyphicon-play::before { content: "\f04b"; } /* fa-play */
+        .glyphicon-stop::before { content: "\f04d"; } /* fa-stop */
+        .glyphicon-floppy-disk::before { content: "\f0c7"; } /* fa-floppy-disk */
+        .glyphicon-save::before { content: "\f0c7"; } /* fa-floppy-disk */
+        .glyphicon-print::before { content: "\f02f"; } /* fa-print */
+        .glyphicon-camera::before { content: "\f030"; } /* fa-camera */
+        .glyphicon-picture::before { content: "\f03e"; } /* fa-image */
+        .glyphicon-map-marker::before { content: "\f3c5"; } /* fa-location-dot */
+        .glyphicon-comment::before { content: "\f075"; } /* fa-comment */
+        .glyphicon-tags::before { content: "\f02c"; } /* fa-tags */
+        .glyphicon-tag::before { content: "\f02b"; } /* fa-tag */
+        .glyphicon-bookmark::before { content: "\f02e"; } /* fa-bookmark */
+        .glyphicon-export::before { content: "\f56e"; } /* fa-file-export */
+        .glyphicon-import::before { content: "\f56f"; } /* fa-file-import */
+        .glyphicon-log-out::before { content: "\f2f5"; } /* fa-right-from-bracket */
+        .glyphicon-log-in::before { content: "\f2f6"; } /* fa-right-to-bracket */
+        .glyphicon-dashboard::before { content: "\f3fd"; } /* fa-gauge */
+        .glyphicon-stats::before { content: "\f201"; } /* fa-chart-line */
+        .glyphicon-tasks::before { content: "\f0ae"; } /* fa-tasks */
+        .glyphicon-filter::before { content: "\f0b0"; } /* fa-filter */
+        .glyphicon-sort::before { content: "\f0dc"; } /* fa-sort */
+        .glyphicon-link::before { content: "\f0c1"; } /* fa-link */
+        .glyphicon-send::before { content: "\f1d8"; } /* fa-paper-plane */
+
         /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 

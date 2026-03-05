@@ -102,69 +102,69 @@ namespace Integrador.Controllers
 
         // POST: /Mascotas/Adopt/5
         [HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Adopt(int id, FormCollection form)
-{
-    if (Session["UsuarioId"] == null)
-        return RedirectToAction("Login", "Account");
-
-    var usuarioId = Convert.ToInt32(Session["UsuarioId"]);
-
-    try
-    {
-        var adopcion = new Adopciones
+        [ValidateAntiForgeryToken]
+        public ActionResult Adopt(int id, FormCollection form)
         {
-            MascotaId = id,
-            UsuarioId = usuarioId,
-            NombreSolicitante = form["nombreSolicitante"],
-            Email = form["email"],
-            Telefono = form["telefono"],
-            FechaSolicitud = DateTime.Now,
-            Estado = "Pendiente",
-            Documento = form["documento"],
-            Direccion = form["direccion"],
-            Ciudad = form["ciudad"],
-            CodigoPostal = form["codigoPostal"],
-            TipoVivienda = form["tipoVivienda"],
-            PropietarioInquilino = form["propietarioInquilino"],
-            PermiteMascotas = form["permiteMascotas"],
-            TienePatio = form["tienePatio"],
-            PersonasHogar = form["personasHogar"],
-            HayNinos = form["hayNinos"],
-            EdadesNinos = form["edadesNinos"],
-            ExperienciaMascotas = form["experienciaMascotas"],
-            QuePasoMascotas = form["quepasoMascotas"],
-            OtrasMascotas = form["otrasMascotas"],
-            DescripcionOtrasMascotas = form["descripcionOtrasMascotas"],
-            HorasSola = form["horasSola"],
-            LugarDormir = form["lugardormir"],
-            AccesoVeterinario = form["accesoVeterinario"],
-            GastosVeterinarios = form["gastosVeterinarios"],
-            PlanMudanza = form["planMudanza"],
-            Motivacion = form["motivacion"],
-            ComoSeEntero = form["comoSeEntero"],
-            AceptaTerminos = form["aceptaTerminos"] == "on" || form["aceptaTerminos"] == "true",
-            AceptaVisitas = form["aceptaVisitas"] == "on" || form["aceptaVisitas"] == "true"
-        };
-        db.Adopciones.Add(adopcion);
+            if (Session["UsuarioId"] == null)
+                return RedirectToAction("Login", "Account");
 
-        var mascota = db.Mascotas.Find(id);
-        if (mascota != null)
-        {
-            mascota.Estado = "En proceso";
+            var usuarioId = Convert.ToInt32(Session["UsuarioId"]);
+
+            try
+            {
+                var adopcion = new Adopciones
+                {
+                    MascotaId = id,
+                    UsuarioId = usuarioId,
+                    NombreSolicitante = form["nombreSolicitante"],
+                    Email = form["email"],
+                    Telefono = form["telefono"],
+                    FechaSolicitud = DateTime.Now,
+                    Estado = "Pendiente",
+                    Documento = form["documento"],
+                    Direccion = form["direccion"],
+                    Ciudad = form["ciudad"],
+                    CodigoPostal = form["codigoPostal"],
+                    TipoVivienda = form["tipoVivienda"],
+                    PropietarioInquilino = form["propietarioInquilino"],
+                    PermiteMascotas = form["permiteMascotas"],
+                    TienePatio = form["tienePatio"],
+                    PersonasHogar = form["personasHogar"],
+                    HayNinos = form["hayNinos"],
+                    EdadesNinos = form["edadesNinos"],
+                    ExperienciaMascotas = form["experienciaMascotas"],
+                    QuePasoMascotas = form["quepasoMascotas"],
+                    OtrasMascotas = form["otrasMascotas"],
+                    DescripcionOtrasMascotas = form["descripcionOtrasMascotas"],
+                    HorasSola = form["horasSola"],
+                    LugarDormir = form["lugardormir"],
+                    AccesoVeterinario = form["accesoVeterinario"],
+                    GastosVeterinarios = form["gastosVeterinarios"],
+                    PlanMudanza = form["planMudanza"],
+                    Motivacion = form["motivacion"],
+                    ComoSeEntero = form["comoSeEntero"],
+                    AceptaTerminos = form["aceptaTerminos"] == "on" || form["aceptaTerminos"] == "true",
+                    AceptaVisitas = form["aceptaVisitas"] == "on" || form["aceptaVisitas"] == "true"
+                };
+                db.Adopciones.Add(adopcion);
+
+                var mascota = db.Mascotas.Find(id);
+                if (mascota != null)
+                {
+                    mascota.Estado = "En proceso";
+                }
+
+                db.SaveChanges();
+
+                TempData["Success"] = "Solicitud de adopción enviada exitosamente! Nos pondremos en contacto contigo pronto.";
+                return RedirectToAction("MisAdopciones", "Ciudadano");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error al procesar la solicitud: " + ex.Message);
+                return View(new Mascota { Id = id });
+            }
         }
-
-        db.SaveChanges();
-
-        TempData["Success"] = "Solicitud de adopción enviada exitosamente! Nos pondremos en contacto contigo pronto.";
-        return RedirectToAction("MisAdopciones", "Ciudadano");
-    }
-    catch (Exception ex)
-    {
-        ModelState.AddModelError("", "Error al procesar la solicitud: " + ex.Message);
-        return View(new Mascota { Id = id });
-    }
-}
 
         protected override void Dispose(bool disposing)
         {

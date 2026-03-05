@@ -17,6 +17,31 @@
           <Property Name="Telefono" Type="nvarchar" MaxLength="50" />
           <Property Name="FechaSolicitud" Type="datetime" Nullable="false" />
           <Property Name="Estado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Motivo" Type="nvarchar" MaxLength="500" />
+          <Property Name="Documento" Type="nvarchar" MaxLength="50" />
+          <Property Name="Direccion" Type="nvarchar" MaxLength="300" />
+          <Property Name="Ciudad" Type="nvarchar" MaxLength="100" />
+          <Property Name="CodigoPostal" Type="nvarchar" MaxLength="20" />
+          <Property Name="TipoVivienda" Type="nvarchar" MaxLength="50" />
+          <Property Name="PropietarioInquilino" Type="nvarchar" MaxLength="50" />
+          <Property Name="PermiteMascotas" Type="nvarchar" MaxLength="20" />
+          <Property Name="TienePatio" Type="nvarchar" MaxLength="20" />
+          <Property Name="PersonasHogar" Type="nvarchar" MaxLength="20" />
+          <Property Name="HayNinos" Type="nvarchar" MaxLength="20" />
+          <Property Name="EdadesNinos" Type="nvarchar" MaxLength="100" />
+          <Property Name="ExperienciaMascotas" Type="nvarchar" MaxLength="20" />
+          <Property Name="QuePasoMascotas" Type="nvarchar" MaxLength="500" />
+          <Property Name="OtrasMascotas" Type="nvarchar" MaxLength="20" />
+          <Property Name="DescripcionOtrasMascotas" Type="nvarchar" MaxLength="500" />
+          <Property Name="HorasSola" Type="nvarchar" MaxLength="20" />
+          <Property Name="LugarDormir" Type="nvarchar" MaxLength="200" />
+          <Property Name="AccesoVeterinario" Type="nvarchar" MaxLength="20" />
+          <Property Name="GastosVeterinarios" Type="nvarchar" MaxLength="20" />
+          <Property Name="PlanMudanza" Type="nvarchar" MaxLength="500" />
+          <Property Name="Motivacion" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ComoSeEntero" Type="nvarchar" MaxLength="50" />
+          <Property Name="AceptaTerminos" Type="bit" Nullable="false" />
+          <Property Name="AceptaVisitas" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Campanias">
           <Key>
@@ -345,6 +370,31 @@
           <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Motivo" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Documento" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Ciudad" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CodigoPostal" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TipoVivienda" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PropietarioInquilino" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PermiteMascotas" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TienePatio" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PersonasHogar" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="HayNinos" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EdadesNinos" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ExperienciaMascotas" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="QuePasoMascotas" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="OtrasMascotas" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DescripcionOtrasMascotas" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="HorasSola" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LugarDormir" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AccesoVeterinario" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="GastosVeterinarios" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PlanMudanza" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Motivacion" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ComoSeEntero" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AceptaTerminos" Type="Boolean" Nullable="false" />
+          <Property Name="AceptaVisitas" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Mascotas" Relationship="Self.FK_Adopciones_Mascotas" FromRole="Adopciones" ToRole="Mascotas" />
           <NavigationProperty Name="Seguimientos" Relationship="adopModel.FK_Seguimientos_Adopciones" FromRole="Adopciones" ToRole="Seguimientos" />
         </EntityType>
@@ -688,6 +738,31 @@
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
                 <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
                 <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Documento" ColumnName="Documento" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
+                <ScalarProperty Name="TipoVivienda" ColumnName="TipoVivienda" />
+                <ScalarProperty Name="PropietarioInquilino" ColumnName="PropietarioInquilino" />
+                <ScalarProperty Name="PermiteMascotas" ColumnName="PermiteMascotas" />
+                <ScalarProperty Name="TienePatio" ColumnName="TienePatio" />
+                <ScalarProperty Name="PersonasHogar" ColumnName="PersonasHogar" />
+                <ScalarProperty Name="HayNinos" ColumnName="HayNinos" />
+                <ScalarProperty Name="EdadesNinos" ColumnName="EdadesNinos" />
+                <ScalarProperty Name="ExperienciaMascotas" ColumnName="ExperienciaMascotas" />
+                <ScalarProperty Name="QuePasoMascotas" ColumnName="QuePasoMascotas" />
+                <ScalarProperty Name="OtrasMascotas" ColumnName="OtrasMascotas" />
+                <ScalarProperty Name="DescripcionOtrasMascotas" ColumnName="DescripcionOtrasMascotas" />
+                <ScalarProperty Name="HorasSola" ColumnName="HorasSola" />
+                <ScalarProperty Name="LugarDormir" ColumnName="LugarDormir" />
+                <ScalarProperty Name="AccesoVeterinario" ColumnName="AccesoVeterinario" />
+                <ScalarProperty Name="GastosVeterinarios" ColumnName="GastosVeterinarios" />
+                <ScalarProperty Name="PlanMudanza" ColumnName="PlanMudanza" />
+                <ScalarProperty Name="Motivacion" ColumnName="Motivacion" />
+                <ScalarProperty Name="ComoSeEntero" ColumnName="ComoSeEntero" />
+                <ScalarProperty Name="AceptaTerminos" ColumnName="AceptaTerminos" />
+                <ScalarProperty Name="AceptaVisitas" ColumnName="AceptaVisitas" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
