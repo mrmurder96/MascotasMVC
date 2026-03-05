@@ -548,10 +548,10 @@
             letter-spacing: 0.3px;
         }
 
-        .label-success { background: linear-gradient(135deg, #8CFAA4, #BBFA8C); color: #1a4a2a; }
-        .label-warning { background: linear-gradient(135deg, #FAA88C, #ffc5a8); color: #5a3520; }
-        .label-danger  { background: linear-gradient(135deg, #FA8C99, #fca5b0); color: #5a1a25; }
-        .label-info    { background: linear-gradient(135deg, #93A597, #adbfb2); color: #fff; }
+        .label-success { background: linear-gradient(135deg, #28a745, #5cb85c); color: #fff; }
+        .label-warning { background: linear-gradient(135deg, #ffc107, #ffda6a); color: #212529; }
+        .label-danger  { background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; }
+        .label-info    { background: linear-gradient(135deg, #17a2b8, #5bc0de); color: #fff; }
         .label-default { background: #e4e8ec; color: #666; }
 
         .badge {
@@ -560,9 +560,16 @@
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
-            background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
-            color: #BBFA8C;
         }
+
+        /* Bootstrap 5 badge colors with distinct colors */
+        .badge.bg-success, .badge-success { background: linear-gradient(135deg, #28a745, #5cb85c) !important; color: #fff !important; }
+        .badge.bg-warning, .badge-warning { background: linear-gradient(135deg, #ffc107, #ffda6a) !important; color: #212529 !important; }
+        .badge.bg-danger, .badge-danger { background: linear-gradient(135deg, #dc3545, #e4606d) !important; color: #fff !important; }
+        .badge.bg-info, .badge-info { background: linear-gradient(135deg, #17a2b8, #5bc0de) !important; color: #fff !important; }
+        .badge.bg-primary, .badge-primary { background: linear-gradient(135deg, #0d6efd, #4d94ff) !important; color: #fff !important; }
+        .badge.bg-secondary, .badge-secondary { background: linear-gradient(135deg, #6c757d, #95a0a8) !important; color: #fff !important; }
+        .badge.bg-dark, .badge-dark { background: linear-gradient(135deg, #343a40, #495057) !important; color: #fff !important; }
 
         /* --- ALERTS --- */
         .alert {
