@@ -286,8 +286,6 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
     <Content Include="Areas\Admin\Views\Web.config" />
-    <Content Include="Areas\Admin\Views\Reportes\Solicitudes.cshtml" />
-    <Content Include="Areas\Admin\Views\Reportes\Usuarios.cshtml" />
     <Content Include="Areas\Admin\Views\MascotasPerdidas\Index.cshtml" />
     <Content Include="Areas\Admin\Views\MascotasPerdidas\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Categorias\Index.cshtml" />
@@ -295,8 +293,6 @@
     <Content Include="Areas\Admin\Views\Categorias\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Categorias\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Categorias\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Reportes\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Reportes\PostSeguimiento.cshtml" />
     <Content Include="Areas\Admin\Views\Mascotas\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Solicitudes\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Usuarios\Index.cshtml" />
@@ -326,8 +322,6 @@
     <Content Include="Areas\Admin\Views\Notificaciones\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Notificaciones\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Notificaciones\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Reportes\Adopciones.cshtml" />
-    <Content Include="Areas\Admin\Views\Reportes\Mascotas.cshtml" />
     <Content Include="Areas\Admin\Views\Refugios\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Refugios\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Refugios\Edit.cshtml" />
@@ -338,6 +332,13 @@
     <Content Include="Areas\Admin\Views\Seguimientos\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Seguimientos\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Seguimientos\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Adopciones.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\PostSeguimiento.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Auditoria.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Solicitudes.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Mascotas.cshtml" />
+    <Content Include="Areas\Admin\Views\Reportes\Usuarios.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

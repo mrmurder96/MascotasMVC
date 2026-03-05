@@ -1,0 +1,325 @@
+@{
+    ViewBag.Title = "Auditoría de Seguridad";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+
+    var totalBloqueados = ViewBag.TotalBloqueados ?? 0;
+    var totalConIntentos = ViewBag.TotalConIntentos ?? 0;
+    var usuariosEnRiesgo = ViewBag.UsuariosEnRiesgo ?? 0;
+
+    var usuariosBloqueados = ViewBag.UsuariosBloqueados as IEnumerable<Integrador.Models.Usuarios>;
+    var usuariosConIntentos = ViewBag.UsuariosConIntentos as IEnumerable<Integrador.Models.Usuarios>;
+}
+
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-shield-alt me-2"></i>Auditoría de Seguridad</h2>
+            <p class="text-muted mb-0">Monitoreo de intentos de acceso y usuarios bloqueados</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-calendar me-1"></i>Desde</label>
+                    <input type="date" name="fechaDesde" class="form-control" 
+                           value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-calendar-alt me-1"></i>Hasta</label>
+                    <input type="date" name="fechaHasta" class="form-control" 
+                           value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPIs de Seguridad -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Usuarios Bloqueados</h6>
+                            <h2 class="mb-0 fw-bold">@totalBloqueados</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-user-lock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Con Intentos Fallidos</h6>
+                            <h2 class="mb-0 fw-bold">@totalConIntentos</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">En Alto Riesgo (≥2 intentos)</h6>
+                            <h2 class="mb-0 fw-bold">@usuariosEnRiesgo</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-skull-crossbones fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerta de Seguridad -->
+    @if (Convert.ToInt32(usuariosEnRiesgo) > 0)
+    {
+        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+            <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+            <div>
+                <h5 class="alert-heading mb-1">¡Alerta de Seguridad!</h5>
+                <p class="mb-0">Hay <strong>@usuariosEnRiesgo usuarios</strong> con múltiples intentos fallidos de login. Se recomienda revisar estos casos.</p>
+            </div>
+        </div>
+    }
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-danger"></i>Estado de Cuentas</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartEstado" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-warning"></i>Distribución de Intentos Fallidos</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartIntentos" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios Bloqueados -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-user-lock me-2 text-danger"></i>Usuarios Bloqueados</h5>
+            <span class="badge bg-danger">@(usuariosBloqueados?.Count() ?? 0) registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-danger">
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                            <th><i class="fas fa-user me-1"></i>Usuario</th>
+                            <th><i class="fas fa-envelope me-1"></i>Email</th>
+                            <th><i class="fas fa-user-tag me-1"></i>Rol</th>
+                            <th class="text-center"><i class="fas fa-exclamation me-1"></i>Intentos</th>
+                            <th><i class="fas fa-calendar me-1"></i>Fecha Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (usuariosBloqueados != null && usuariosBloqueados.Any())
+                        {
+                            foreach (var usuario in usuariosBloqueados)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-dark">@usuario.Id</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-danger bg-opacity-10 rounded-circle p-2 me-2">
+                                                <i class="fas fa-user-lock text-danger"></i>
+                                            </div>
+                                            <strong>@usuario.Nombres @usuario.Apellidos</strong>
+                                        </div>
+                                    </td>
+                                    <td>@usuario.Email</td>
+                                    <td><span class="badge bg-secondary">@usuario.Rol</span></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-danger">@usuario.IntentosFallidos</span>
+                                    </td>
+                                    <td>
+                                        @usuario.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-3x text-success mb-3 d-block"></i>
+                                    <p class="text-muted mb-0">No hay usuarios bloqueados en el periodo seleccionado</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios con Intentos Fallidos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2 text-warning"></i>Usuarios con Intentos Fallidos</h5>
+            <span class="badge bg-warning text-dark">@(usuariosConIntentos?.Count() ?? 0) registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-warning">
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                            <th><i class="fas fa-user me-1"></i>Usuario</th>
+                            <th><i class="fas fa-envelope me-1"></i>Email</th>
+                            <th><i class="fas fa-user-tag me-1"></i>Rol</th>
+                            <th class="text-center"><i class="fas fa-exclamation me-1"></i>Intentos</th>
+                            <th class="text-center"><i class="fas fa-lock me-1"></i>Bloqueado</th>
+                            <th class="text-center"><i class="fas fa-signal me-1"></i>Nivel Riesgo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (usuariosConIntentos != null && usuariosConIntentos.Any())
+                        {
+                            foreach (var usuario in usuariosConIntentos)
+                            {
+                                var riesgo = usuario.IntentosFallidos >= 2 ? "Alto" : "Bajo";
+                                var riesgoClass = usuario.IntentosFallidos >= 2 ? "danger" : "warning";
+                                var bloqueadoClass = usuario.Bloqueado ? "danger" : "success";
+                                <tr class="@(usuario.IntentosFallidos >= 2 ? "table-danger" : "")">
+                                    <td><span class="badge bg-dark">@usuario.Id</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-2">
+                                                <i class="fas fa-user-clock text-warning"></i>
+                                            </div>
+                                            <strong>@usuario.Nombres @usuario.Apellidos</strong>
+                                        </div>
+                                    </td>
+                                    <td>@usuario.Email</td>
+                                    <td><span class="badge bg-secondary">@usuario.Rol</span></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-@(usuario.IntentosFallidos >= 2 ? "danger" : "warning") @(usuario.IntentosFallidos < 2 ? "text-dark" : "")">
+                                            @usuario.IntentosFallidos / 3
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-@bloqueadoClass">
+                                            <i class="fas @(usuario.Bloqueado ? "fa-lock" : "fa-lock-open") me-1"></i>
+                                            @(usuario.Bloqueado ? "Sí" : "No")
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-@riesgoClass @(riesgo == "Bajo" ? "text-dark" : "")">
+                                            <i class="fas @(riesgo == "Alto" ? "fa-exclamation-circle" : "fa-info-circle") me-1"></i>
+                                            @riesgo
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-3x text-success mb-3 d-block"></i>
+                                    <p class="text-muted mb-0">No hay usuarios con intentos fallidos</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gráfico de Estado
+            new Chart(document.getElementById('chartEstado'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bloqueados', 'En Riesgo', 'Con Intentos'],
+                    datasets: [{
+                        data: [@totalBloqueados, @usuariosEnRiesgo, @(Convert.ToInt32(totalConIntentos) - Convert.ToInt32(usuariosEnRiesgo))],
+                        backgroundColor: ['#dc3545', '#fd7e14', '#ffc107'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Calcular distribución de intentos
+            @{
+                var intent1 = usuariosConIntentos?.Count(u => u.IntentosFallidos == 1) ?? 0;
+                var intent2 = usuariosConIntentos?.Count(u => u.IntentosFallidos == 2) ?? 0;
+                var intent3 = usuariosConIntentos?.Count(u => u.IntentosFallidos >= 3) ?? 0;
+            }
+
+            // Gráfico de Intentos
+            new Chart(document.getElementById('chartIntentos'), {
+                type: 'bar',
+                data: {
+                    labels: ['1 intento', '2 intentos', '3+ intentos'],
+                    datasets: [{
+                        label: 'Usuarios',
+                        data: [@intent1, @intent2, @intent3],
+                        backgroundColor: ['#ffc107', '#fd7e14', '#dc3545'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+}

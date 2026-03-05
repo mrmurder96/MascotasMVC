@@ -1,131 +1,184 @@
+@model IEnumerable<Integrador.Models.Adopciones>
 @{
     ViewBag.Title = "Reporte de Adopciones";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
 <div class="container-fluid">
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h2><i class="glyphicon glyphicon-stats" style="color:#93A597"></i> Reporte de Adopciones</h2>
+    <!-- Header -->
+    <div class="report-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><i class="fas fa-heart"></i> Reporte de Adopciones</h2>
+                <p class="subtitle">Análisis detallado de todas las adopciones del sistema</p>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="@Url.Action("Index")" class="btn btn-default">
+                    <i class="fas fa-arrow-left"></i> Volver a Reportes
+                </a>
+            </div>
+        </div>
     </div>
-</div>
-
-    @Html.Partial("_AlertMessages")
 
     <!-- Filtros -->
-    <div class="card mb-3">
-        <div class="card-body">
-            @using (Html.BeginForm("Adopciones", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
-            {
-                <div class="form-group">
-                    <label>Desde:</label>
-                    <input type="date" name="fechaInicio" class="form-control" value="@Request.QueryString["fechaInicio"]" />
-                </div>
-                <div class="form-group">
-                    <label>Hasta:</label>
-                    <input type="date" name="fechaFin" class="form-control" value="@Request.QueryString["fechaFin"]" />
-                </div>
-                <div class="form-group">
-                    <label>Estado:</label>
-                    <select name="estado" class="form-control">
-                        <option value="">Todos</option>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Aprobada">Aprobada</option>
-                        <option value="Rechazada">Rechazada</option>
-                        <option value="Finalizada">Finalizada</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="glyphicon glyphicon-search"></i> Filtrar
-                </button>
-                <a href="@Url.Action("ExportarAdopciones", new { fechaInicio = Request.QueryString["fechaInicio"], fechaFin = Request.QueryString["fechaFin"], estado = Request.QueryString["estado"] })" 
-                   class="btn btn-success">
-                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                </a>
-            }
-        </div>
+    <div class="filter-card">
+        @using (Html.BeginForm("Adopciones", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
+        {
+            <div class="filter-group">
+                <label><i class="fas fa-calendar"></i> Desde:</label>
+                <input type="date" name="fechaDesde" class="form-control" 
+                       value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-calendar"></i> Hasta:</label>
+                <input type="date" name="fechaHasta" class="form-control" 
+                       value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Estado:</label>
+                @Html.DropDownList("estado", (SelectList)ViewBag.Estados, new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Filtrar
+            </button>
+            <a href="@Url.Action("Adopciones", new { fechaDesde = ViewBag.FechaDesde, fechaHasta = ViewBag.FechaHasta, estado = ViewBag.EstadoSeleccionado, formato = "csv" })" 
+               class="btn btn-success">
+                <i class="fas fa-file-csv"></i> Exportar CSV
+            </a>
+        }
     </div>
 
     <!-- Estadísticas -->
-    <div class="row">
+    <div class="row stats-row">
         <div class="col-md-3">
-            <div class="stat-box stat-info">
-                <h3>@ViewBag.TotalAdopciones</h3>
-                <p>Total Adopciones</p>
+            <div class="stat-card stat-total">
+                <div class="stat-icon"><i class="fas fa-list"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.TotalAdopciones</h3>
+                    <p>Total en Período</p>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box stat-warning">
-                <h3>@ViewBag.Pendientes</h3>
-                <p>Pendientes</p>
+            <div class="stat-card stat-success">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.Aprobadas</h3>
+                    <p>Aprobadas</p>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box stat-success">
-                <h3>@ViewBag.Aprobadas</h3>
-                <p>Aprobadas</p>
+            <div class="stat-card stat-warning">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.Pendientes</h3>
+                    <p>Pendientes</p>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box stat-primary">
-                <h3>@ViewBag.Finalizadas</h3>
-                <p>Finalizadas</p>
+            <div class="stat-card stat-danger">
+                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="stat-info">
+                    <h3>@ViewBag.Rechazadas</h3>
+                    <p>Rechazadas</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Tabla de datos -->
-    <div class="card mt-4">
+    <!-- Tasa de Aprobación -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="approval-rate-card">
+                <div class="rate-info">
+                    <span class="rate-label">Tasa de Aprobación</span>
+                    <span class="rate-value">@ViewBag.TasaAprobacion%</span>
+                </div>
+                <div class="rate-bar">
+                    <div class="rate-fill" style="width: @ViewBag.TasaAprobacion%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Datos -->
+    <div class="data-card">
+        <div class="card-header">
+            <h4><i class="fas fa-table"></i> Detalle de Adopciones (@(Model?.Count() ?? 0) registros)</h4>
+        </div>
         <div class="card-body">
-            @if (ViewBag.Adopciones != null && ((IEnumerable<dynamic>)ViewBag.Adopciones).Any())
+            @if (Model != null && Model.Any())
             {
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Usuario</th>
-                            <th>Mascota</th>
-                            <th>Estado</th>
-                            <th>Motivo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var adopcion in ViewBag.Adopciones)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
                             <tr>
-                                <td><strong>#@adopcion.Id</strong></td>
-                                <td>@((DateTime)adopcion.FechaAdopcion).ToString("dd/MM/yyyy")</td>
-                                <td>@adopcion.Usuario?.Nombre</td>
-                                <td>@adopcion.Mascota?.Nombre</td>
-                                <td>
-                                    @if (adopcion.Estado == "Pendiente")
-                                    {
-                                        <span class="label label-warning">@adopcion.Estado</span>
-                                    }
-                                    else if (adopcion.Estado == "Aprobada")
-                                    {
-                                        <span class="label label-success">@adopcion.Estado</span>
-                                    }
-                                    else if (adopcion.Estado == "Rechazada")
-                                    {
-                                        <span class="label label-danger">@adopcion.Estado</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-info">@adopcion.Estado</span>
-                                    }
-                                </td>
-                                <td>@(adopcion.Motivo?.Length > 50 ? adopcion.Motivo.Substring(0, 50) + "..." : adopcion.Motivo)</td>
+                                <th>ID</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Mascota</th>
+                                <th>Solicitante</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var adopcion in Model)
+                            {
+                                var labelClass = "default";
+                                switch (adopcion.Estado)
+                                {
+                                    case "Aprobada":
+                                    case "Completada":
+                                    case "Finalizada":
+                                        labelClass = "success";
+                                        break;
+                                    case "Pendiente":
+                                    case "En Revisión":
+                                    case "En Proceso":
+                                        labelClass = "warning";
+                                        break;
+                                    case "Rechazada":
+                                    case "Cancelada":
+                                        labelClass = "danger";
+                                        break;
+                                }
+                                <tr>
+                                    <td><strong>#@adopcion.Id</strong></td>
+                                    <td>@adopcion.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (adopcion.Mascotas != null)
+                                        {
+                                            <span class="mascota-badge">
+                                                <i class="fas fa-paw"></i> @adopcion.Mascotas.Nombre
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@adopcion.NombreSolicitante</td>
+                                    <td><small>@adopcion.Email</small></td>
+                                    <td>@adopcion.Telefono</td>
+                                    <td><span class="label label-@labelClass">@adopcion.Estado</span></td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Adopciones", new { area = "Admin", id = adopcion.Id })" 
+                                           class="btn btn-xs btn-info" title="Ver Detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
             else
             {
-                <div class="alert alert-info text-center">
-                    <h4>No hay datos para mostrar con los filtros aplicados</h4>
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h4>No hay adopciones en el período seleccionado</h4>
+                    <p>Intenta ajustar los filtros de búsqueda</p>
                 </div>
             }
         </div>
@@ -133,17 +186,97 @@
 </div>
 
 <style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .card-body { padding: 20px; }
-    table thead th { background-color: #BBFA8C; color: #000; }
-    .stat-box { color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
-    .stat-box h3 { font-size: 36px; margin: 0; }
-    .stat-box p { margin: 5px 0 0 0; font-size: 14px; }
-    .stat-info { background: #8CFAA4; color: #000; }
-    .stat-warning { background: #FAA88C; color: #000; }
-    .stat-success { background: #BBFA8C; color: #000; }
-    .stat-primary { background: #93A597; color: #000; }
-    .mb-3 { margin-bottom: 15px; }
-    .mb-4 { margin-bottom: 20px; }
-    .mt-4 { margin-top: 20px; }
+    .report-header {
+        background: linear-gradient(135deg, #BBFA8C 0%, #8CFAA4 100%);
+        padding: 25px 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+    .report-header h2 { margin: 0 0 5px 0; color: #2c3e50; font-weight: 700; }
+    .report-header .subtitle { margin: 0; color: #34495e; }
+
+    .filter-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+    }
+    .filter-group { display: inline-block; margin-right: 15px; margin-bottom: 10px; }
+    .filter-group label { font-weight: 600; margin-right: 8px; color: #555; }
+
+    .stats-row { margin-bottom: 20px; }
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 15px;
+        border-left: 4px solid #ddd;
+    }
+    .stat-total { border-left-color: #3498db; }
+    .stat-success { border-left-color: #8CFAA4; }
+    .stat-warning { border-left-color: #FAA88C; }
+    .stat-danger { border-left-color: #FA8C99; }
+
+    .stat-icon {
+        width: 50px; height: 50px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+    .stat-total .stat-icon { background: #e8f4fc; color: #3498db; }
+    .stat-success .stat-icon { background: #e8fce8; color: #27ae60; }
+    .stat-warning .stat-icon { background: #fef0eb; color: #e67e22; }
+    .stat-danger .stat-icon { background: #fdeaea; color: #e74c3c; }
+
+    .stat-info h3 { margin: 0; font-size: 28px; font-weight: 700; color: #2c3e50; }
+    .stat-info p { margin: 0; color: #7f8c8d; font-size: 13px; }
+
+    .approval-rate-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+    }
+    .rate-info { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .rate-label { font-weight: 600; color: #555; }
+    .rate-value { font-size: 24px; font-weight: 700; color: #27ae60; }
+    .rate-bar { height: 12px; background: #ecf0f1; border-radius: 6px; overflow: hidden; }
+    .rate-fill { height: 100%; background: linear-gradient(90deg, #8CFAA4, #BBFA8C); border-radius: 6px; transition: width 0.5s; }
+
+    .data-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
+    .data-card .card-header {
+        background: linear-gradient(135deg, #4a7c5c, #3d6b4f);
+        color: #BBFA8C;
+        padding: 15px 20px;
+    }
+    .data-card .card-header h4 { margin: 0; font-weight: 600; }
+    .data-card .card-body { padding: 0; }
+
+    .mascota-badge {
+        background: #e8fce8;
+        color: #27ae60;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #95a5a6;
+    }
+    .empty-state i { font-size: 50px; margin-bottom: 15px; }
+    .empty-state h4 { color: #7f8c8d; }
 </style>

@@ -322,12 +322,11 @@ namespace Integrador.Areas.Admin.Controllers
             ViewBag.FechaDesde = fechaDesde;
             ViewBag.FechaHasta = fechaHasta;
 
-            var modelo = new {
-                UsuariosBloqueados = usuariosBloqueados,
-                UsuariosConIntentos = usuariosConIntentos
-            };
+            // Pasar las listas via ViewBag para evitar problemas con objetos anónimos
+            ViewBag.UsuariosBloqueados = usuariosBloqueados;
+            ViewBag.UsuariosConIntentos = usuariosConIntentos;
 
-            return View(modelo);
+            return View();
         }
 
         // Métodos de exportación

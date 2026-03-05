@@ -1,132 +1,223 @@
 @{
     ViewBag.Title = "Reportes y Estadísticas";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+
+    var totalMascotas = ViewBag.TotalMascotas ?? 0;
+    var totalAdopciones = ViewBag.TotalAdopciones ?? 0;
+    var solicitudesPendientes = ViewBag.SolicitudesPendientes ?? 0;
+    var totalUsuarios = ViewBag.TotalUsuarios ?? 0;
 }
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-chart-bar me-2"></i>Reportes y Estadísticas</h2>
+            <p class="text-muted mb-0">Panel de control y análisis del sistema de adopciones</p>
+        </div>
+    </div>
+
+    <!-- KPIs Principales -->
     <div class="row mb-4">
-        <div class="col-md-12">
-            <h2><i class="glyphicon glyphicon-stats"></i> Reportes y Estadísticas del Sistema</h2>
-        </div>
-    </div>
-
-    <!-- Tarjetas de Estadísticas -->
-    <div class="row">
         <div class="col-md-3">
-            <div class="stat-card stat-mascotas">
-                <div class="stat-icon"><i class="glyphicon glyphicon-heart"></i></div>
-                <div class="stat-info">
-                    <h3>@ViewBag.TotalMascotas</h3>
-                    <p>Mascotas Registradas</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-adopciones">
-                <div class="stat-icon"><i class="glyphicon glyphicon-home"></i></div>
-                <div class="stat-info">
-                    <h3>@ViewBag.TotalAdopciones</h3>
-                    <p>Adopciones Exitosas</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-pendientes">
-                <div class="stat-icon"><i class="glyphicon glyphicon-time"></i></div>
-                <div class="stat-info">
-                    <h3>@ViewBag.SolicitudesPendientes</h3>
-                    <p>Solicitudes Pendientes</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-usuarios">
-                <div class="stat-icon"><i class="glyphicon glyphicon-user"></i></div>
-                <div class="stat-info">
-                    <h3>@ViewBag.TotalUsuarios</h3>
-                    <p>Usuarios Activos</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Accesos Rápidos a Reportes -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Reportes Disponibles</h3>
-                </div>
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #8CFAA4 !important;">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-list-alt"></i> Reporte de Adopciones</h4>
-                                <p>Listado completo de adopciones realizadas con filtros por fecha y estado</p>
-                                <a href="@Url.Action("Adopciones")" class="btn btn-primary">Ver Reporte</a>
-                                <a href="@Url.Action("ExportarAdopciones")" class="btn btn-success">
-                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                                </a>
-                            </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Mascotas Registradas</h6>
+                            <h2 class="mb-0 fw-bold text-success">@totalMascotas</h2>
                         </div>
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-heart"></i> Reporte de Mascotas</h4>
-                                <p>Estadísticas de mascotas disponibles, adoptadas y en proceso</p>
-                                <a href="@Url.Action("Mascotas")" class="btn btn-primary">Ver Reporte</a>
-                                <a href="@Url.Action("ExportarMascotas")" class="btn btn-success">
-                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                                </a>
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-paw fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #BBFA8C !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Adopciones Exitosas</h6>
+                            <h2 class="mb-0 fw-bold text-primary">@totalAdopciones</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-home fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #FAA88C !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Solicitudes Pendientes</h6>
+                            <h2 class="mb-0 fw-bold text-warning">@solicitudesPendientes</h2>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-clock fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #93A597 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Usuarios Activos</h6>
+                            <h2 class="mb-0 fw-bold text-info">@totalUsuarios</h2>
+                        </div>
+                        <div class="bg-info bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-users fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reportes Disponibles -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-folder-open me-2 text-primary"></i>Reportes Disponibles</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <!-- Reporte de Adopciones -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #BBFA8C !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-success bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-file-alt fa-2x text-success"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Reporte de Adopciones</h5>
+                                <p class="text-muted mb-3">Listado completo de adopciones realizadas con filtros por fecha y estado</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Adopciones", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                    <a href="@Url.Action("Adopciones", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-csv me-1"></i> CSV
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-file"></i> Reporte de Solicitudes</h4>
-                                <p>Análisis de solicitudes por estado (pendientes, aprobadas, rechazadas)</p>
-                                <a href="@Url.Action("Solicitudes")" class="btn btn-primary">Ver Reporte</a>
-                                <a href="@Url.Action("ExportarSolicitudes")" class="btn btn-success">
-                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                                </a>
+                </div>
+
+                <!-- Reporte de Mascotas -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #8CFAA4 !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-info bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-paw fa-2x text-info"></i>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-user"></i> Reporte de Usuarios</h4>
-                                <p>Listado de usuarios registrados y estadísticas de adopción por usuario</p>
-                                <a href="@Url.Action("Usuarios")" class="btn btn-primary">Ver Reporte</a>
-                                <a href="@Url.Action("ExportarUsuarios")" class="btn btn-success">
-                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-eye-open"></i> Post-Seguimiento de Mascotas</h4>
-                                <p>Control y seguimiento post-adopción de mascotas adoptadas</p>
-                                <a href="@Url.Action("PostSeguimiento")" class="btn btn-primary">Ver Reporte</a>
-                                <a href="@Url.Action("PostSeguimiento", new { formato = "csv" })" class="btn btn-success">
-                                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-lock"></i> Auditoría de Seguridad</h4>
-                                <p>Registro de intentos fallidos de login y usuarios bloqueados</p>
-                                <a href="@Url.Action("Auditoria")" class="btn btn-primary">Ver Reporte</a>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Reporte de Mascotas</h5>
+                                <p class="text-muted mb-3">Estadísticas de mascotas disponibles, adoptadas y en proceso</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Mascotas", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                    <a href="@Url.Action("Mascotas", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-csv me-1"></i> CSV
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="reporte-item">
-                                <h4><i class="glyphicon glyphicon-dashboard"></i> Estadísticas Generales</h4>
-                                <p>Dashboard con gráficos y métricas clave del sistema</p>
-                                <a href="@Url.Action("Estadisticas")" class="btn btn-primary">Ver Estadísticas</a>
+                </div>
+
+                <!-- Reporte de Solicitudes -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #FAA88C !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-warning bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-file-signature fa-2x text-warning"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Reporte de Solicitudes</h5>
+                                <p class="text-muted mb-3">Análisis de solicitudes por estado (pendientes, aprobadas, rechazadas)</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Solicitudes", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                    <a href="@Url.Action("Solicitudes", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-csv me-1"></i> CSV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reporte de Usuarios -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #93A597 !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-secondary bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-users fa-2x text-secondary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Reporte de Usuarios</h5>
+                                <p class="text-muted mb-3">Listado de usuarios registrados y estadísticas de adopción por usuario</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Usuarios", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                    <a href="@Url.Action("Usuarios", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-csv me-1"></i> CSV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post-Seguimiento -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #0dcaf0 !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-info bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-clipboard-check fa-2x text-info"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Post-Seguimiento de Mascotas</h5>
+                                <p class="text-muted mb-3">Control y seguimiento post-adopción de mascotas adoptadas</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("PostSeguimiento", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                    <a href="@Url.Action("PostSeguimiento", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-csv me-1"></i> CSV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auditoría de Seguridad -->
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-left: 4px solid #dc3545 !important;">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-danger bg-opacity-10 rounded p-3 me-3">
+                                <i class="fas fa-shield-alt fa-2x text-danger"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-2">Auditoría de Seguridad</h5>
+                                <p class="text-muted mb-3">Registro de intentos fallidos de login y usuarios bloqueados</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Auditoria", "Reportes", new { area = "Admin" })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Ver Reporte
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -135,79 +226,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .stat-card {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    .stat-icon {
-        font-size: 40px;
-        margin-right: 15px;
-        width: 70px;
-        height: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-    }
-    .stat-mascotas { border-left: 4px solid #8CFAA4; }
-    .stat-mascotas .stat-icon { background: #e8fbe8; color: #8CFAA4; }
-    .stat-adopciones { border-left: 4px solid #BBFA8C; }
-    .stat-adopciones .stat-icon { background: #f0fde8; color: #6ab04c; }
-    .stat-pendientes { border-left: 4px solid #FAA88C; }
-    .stat-pendientes .stat-icon { background: #fef0eb; color: #FAA88C; }
-    .stat-usuarios { border-left: 4px solid #93A597; }
-    .stat-usuarios .stat-icon { background: #eef2ef; color: #93A597; }
-    .stat-info h3 {
-        margin: 0;
-        font-size: 32px;
-        font-weight: bold;
-        color: #333;
-    }
-    .stat-info p {
-        margin: 0;
-        color: #777;
-        font-size: 14px;
-    }
-    .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .card-header {
-        background-color: #BBFA8C;
-        padding: 15px 20px;
-        border-bottom: 1px solid #93A597;
-        border-radius: 8px 8px 0 0;
-    }
-    .card-header h3 {
-        margin: 0;
-        color: #000;
-    }
-    .card-body {
-        padding: 30px;
-    }
-    .reporte-item {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 4px solid #8CFAA4;
-    }
-    .reporte-item h4 {
-        margin-top: 0;
-        color: #333;
-    }
-    .reporte-item p {
-        color: #777;
-        margin-bottom: 15px;
-    }
-    .mt-3 { margin-top: 15px; }
-    .mt-4 { margin-top: 20px; }
-    .mb-4 { margin-bottom: 20px; }
-</style>

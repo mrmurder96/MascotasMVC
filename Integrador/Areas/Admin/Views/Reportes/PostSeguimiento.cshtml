@@ -2,181 +2,340 @@
 @{
     ViewBag.Title = "Reporte de Post-Seguimiento";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+
+    var totalSeguimientos = ViewBag.TotalSeguimientos ?? Model?.Count ?? 0;
+    var seguimientosExcelente = ViewBag.SeguimientosExcelente ?? 0;
+    var seguimientosBueno = ViewBag.SeguimientosBueno ?? 0;
+    var seguimientosRegular = ViewBag.SeguimientosRegular ?? 0;
+    var seguimientosCritico = ViewBag.SeguimientosCritico ?? 0;
+    var adopcionesSinSeguimiento = ViewBag.AdopcionesSinSeguimiento ?? 0;
+    var totalAdopcionesActivas = ViewBag.TotalAdopcionesActivas ?? 0;
+    var porTipo = ViewBag.PorTipo as IEnumerable<dynamic>;
 }
 
-<div class="container-fluid">
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h2><i class="glyphicon glyphicon-eye-open"></i> Reporte de Post-Seguimiento de Mascotas</h2>
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-clipboard-check me-2"></i>Reporte de Post-Seguimiento</h2>
+            <p class="text-muted mb-0">Monitoreo del bienestar de mascotas adoptadas</p>
+        </div>
+        <div>
+            <a href="@Url.Action("PostSeguimiento", "Reportes", new { area = "Admin", fechaDesde = ViewBag.FechaDesde, fechaHasta = ViewBag.FechaHasta, estadoMascota = ViewBag.EstadoMascotaSeleccionado, formato = "csv" })" class="btn btn-success">
+                <i class="fas fa-file-csv me-1"></i> Exportar CSV
+            </a>
+            <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+            </a>
+        </div>
     </div>
-</div>
-
-    @Html.Partial("_AlertMessages")
 
     <!-- Filtros -->
-    <div class="card mb-3">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
-            @using (Html.BeginForm("PostSeguimiento", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
-            {
-                <div class="form-group">
-                    <label>Desde:</label>
-                    <input type="date" name="fechaDesde" class="form-control" value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-calendar me-1"></i>Desde</label>
+                    <input type="date" name="fechaDesde" class="form-control" 
+                           value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
                 </div>
-                <div class="form-group">
-                    <label>Hasta:</label>
-                    <input type="date" name="fechaHasta" class="form-control" value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-calendar-alt me-1"></i>Hasta</label>
+                    <input type="date" name="fechaHasta" class="form-control" 
+                           value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
                 </div>
-                <div class="form-group">
-                    <label>Estado Mascota:</label>
-                    @Html.DropDownList("estadoMascota", (SelectList)ViewBag.EstadosMascota, new { @class = "form-control" })
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="glyphicon glyphicon-search"></i> Filtrar
-                </button>
-                <a href="@Url.Action("PostSeguimiento", "Reportes", new { area = "Admin", fechaDesde = ViewBag.FechaDesde, fechaHasta = ViewBag.FechaHasta, estadoMascota = ViewBag.EstadoMascotaSeleccionado, formato = "csv" })" 
-                   class="btn btn-success">
-                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                </a>
-            }
-        </div>
-    </div>
-
-    <!-- Estadísticas -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>@ViewBag.TotalSeguimientos</h4>
-                    <p>Total Seguimientos</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h4>@ViewBag.SeguimientosExcelente / @ViewBag.SeguimientosBueno</h4>
-                    <p>Excelente / Bueno</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="panel panel-warning">
-                <div class="panel-heading">
-                    <h4>@ViewBag.SeguimientosRegular</h4>
-                    <p>Regular</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="panel panel-danger">
-                <div class="panel-heading">
-                    <h4>@ViewBag.SeguimientosCritico</h4>
-                    <p>Requiere Atención / Crítico</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Adopciones sin seguimiento reciente (30 días)</strong>
-                </div>
-                <div class="panel-body">
-                    <h3>@ViewBag.AdopcionesSinSeguimiento <small>de @ViewBag.TotalAdopcionesActivas adopciones activas</small></h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Seguimientos por Tipo</strong>
-                </div>
-                <div class="panel-body">
-                    @if (ViewBag.PorTipo != null)
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-heart me-1"></i>Estado Mascota</label>
+                    @if (ViewBag.EstadosMascota != null)
                     {
-                        <ul class="list-group">
-                            @foreach (var item in (IEnumerable<dynamic>)ViewBag.PorTipo)
+                        @Html.DropDownList("estadoMascota", (SelectList)ViewBag.EstadosMascota, new { @class = "form-select" })
+                    }
+                    else
+                    {
+                        <select name="estadoMascota" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="Excelente">Excelente</option>
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Requiere Atención">Requiere Atención</option>
+                            <option value="Crítico">Crítico</option>
+                        </select>
+                    }
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-clipboard-list fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@totalSeguimientos</h3>
+                    <small class="opacity-75">Total Seguimientos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-star fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@seguimientosExcelente</h3>
+                    <small class="opacity-75">Excelente</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-thumbs-up fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@seguimientosBueno</h3>
+                    <small class="opacity-75">Bueno</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-exclamation fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@seguimientosRegular</h3>
+                    <small class="opacity-75">Regular</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@seguimientosCritico</h3>
+                    <small class="opacity-75">Crítico</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-secondary text-white shadow">
+                <div class="card-body text-center py-3">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">@adopcionesSinSeguimiento</h3>
+                    <small class="opacity-75">Sin Seguimiento</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paneles de estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-primary"></i>Estado de Mascotas</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartEstados" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-list me-2 text-success"></i>Seguimientos por Tipo</h5>
+                </div>
+                <div class="card-body">
+                    @if (porTipo != null && porTipo.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in porTipo)
                             {
-                                <li class="list-group-item">
-                                    <span class="badge">@item.Cantidad</span>
-                                    @item.Tipo
+                                var tipo = item.Tipo?.ToString() ?? "Sin tipo";
+                                var cantidad = Convert.ToInt32(item.Cantidad);
+                                var porcentaje = Convert.ToInt32(totalSeguimientos) > 0 
+                                    ? Math.Round((decimal)cantidad / Convert.ToInt32(totalSeguimientos) * 100, 1) 
+                                    : 0;
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-tag me-2 text-muted"></i>@tipo</span>
+                                    <div>
+                                        <span class="badge bg-primary rounded-pill me-2">@cantidad</span>
+                                        <small class="text-muted">@porcentaje%</small>
+                                    </div>
                                 </li>
                             }
                         </ul>
                     }
+                    else
+                    {
+                        <p class="text-muted text-center mb-0">No hay datos de tipos</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2 text-warning"></i>Alertas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock fa-2x me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Adopciones sin seguimiento (30 días)</h6>
+                                <h3 class="mb-0">@adopcionesSinSeguimiento <small class="fs-6">de @totalAdopcionesActivas activas</small></h3>
+                            </div>
+                        </div>
+                    </div>
+                    @{
+                        var porcentajeSinSeguimiento = Convert.ToInt32(totalAdopcionesActivas) > 0
+                            ? Math.Round((decimal)Convert.ToInt32(adopcionesSinSeguimiento) / Convert.ToInt32(totalAdopcionesActivas) * 100, 1)
+                            : 0;
+                        var alertClass = porcentajeSinSeguimiento > 50 ? "danger" : porcentajeSinSeguimiento > 25 ? "warning" : "success";
+                    }
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-@alertClass" role="progressbar" style="width: @porcentajeSinSeguimiento%">
+                            @porcentajeSinSeguimiento% pendientes
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 small">
+                        <i class="fas fa-lightbulb me-1"></i>
+                        Se recomienda realizar seguimiento mensual a todas las adopciones activas.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Tabla de Seguimientos -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong>Detalle de Seguimientos</strong>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-table me-2 text-primary"></i>Detalle de Seguimientos</h5>
+            <span class="badge bg-secondary">@(Model?.Count ?? 0) registros</span>
         </div>
-        <div class="panel-body">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Mascota</th>
-                        <th>Adoptante</th>
-                        <th>Tipo Seguimiento</th>
-                        <th>Fecha</th>
-                        <th>Estado Mascota</th>
-                        <th>Observaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var item in Model)
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                            <th><i class="fas fa-paw me-1"></i>Mascota</th>
+                            <th><i class="fas fa-user me-1"></i>Adoptante</th>
+                            <th><i class="fas fa-tag me-1"></i>Tipo</th>
+                            <th><i class="fas fa-calendar me-1"></i>Fecha</th>
+                            <th class="text-center"><i class="fas fa-heart me-1"></i>Estado</th>
+                            <th><i class="fas fa-comment me-1"></i>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
                         {
-                            var estadoClass = "";
-                            switch (item.EstadoMascota)
+                            foreach (var item in Model)
                             {
-                                case "Excelente": estadoClass = "success"; break;
-                                case "Bueno": estadoClass = "info"; break;
-                                case "Regular": estadoClass = "warning"; break;
-                                default: estadoClass = "danger"; break;
+                                var estadoClass = "secondary";
+                                var estadoIcon = "fa-question";
+                                switch (item.EstadoMascota)
+                                {
+                                    case "Excelente":
+                                        estadoClass = "success";
+                                        estadoIcon = "fa-star";
+                                        break;
+                                    case "Bueno":
+                                        estadoClass = "primary";
+                                        estadoIcon = "fa-thumbs-up";
+                                        break;
+                                    case "Regular":
+                                        estadoClass = "warning";
+                                        estadoIcon = "fa-exclamation";
+                                        break;
+                                    case "Requiere Atención":
+                                        estadoClass = "danger";
+                                        estadoIcon = "fa-exclamation-triangle";
+                                        break;
+                                    case "Crítico":
+                                        estadoClass = "danger";
+                                        estadoIcon = "fa-times-circle";
+                                        break;
+                                }
+                                <tr>
+                                    <td><span class="badge bg-dark">@item.Id</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
+                                                <i class="fas fa-paw text-success"></i>
+                                            </div>
+                                            <strong>@(item.Adopciones?.Mascotas?.Nombre ?? "N/A")</strong>
+                                        </div>
+                                    </td>
+                                    <td>@(item.Adopciones?.NombreSolicitante ?? "N/A")</td>
+                                    <td><span class="badge bg-secondary">@item.TipoSeguimiento</span></td>
+                                    <td>@item.FechaSeguimiento.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-@estadoClass">
+                                            <i class="fas @estadoIcon me-1"></i>
+                                            @item.EstadoMascota
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Observaciones))
+                                        {
+                                            if (item.Observaciones.Length > 50)
+                                            {
+                                                <span title="@item.Observaciones">@item.Observaciones.Substring(0, 47)...</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Observaciones
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Sin observaciones</span>
+                                        }
+                                    </td>
+                                </tr>
                             }
+                        }
+                        else
+                        {
                             <tr>
-                                <td>@item.Id</td>
-                                <td>@(item.Adopciones?.Mascotas?.Nombre ?? "N/A")</td>
-                                <td>@(item.Adopciones?.NombreSolicitante ?? "N/A")</td>
-                                <td>@item.TipoSeguimiento</td>
-                                <td>@item.FechaSeguimiento.ToString("dd/MM/yyyy")</td>
-                                <td><span class="label label-@estadoClass">@item.EstadoMascota</span></td>
-                                <td>@(item.Observaciones != null && item.Observaciones.Length > 50 ? item.Observaciones.Substring(0, 47) + "..." : item.Observaciones)</td>
+                                <td colspan="7" class="text-center py-4">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
+                                    <p class="text-muted mb-0">No se encontraron seguimientos en el periodo seleccionado</p>
+                                </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="7" class="text-center">No se encontraron seguimientos en el periodo seleccionado</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="btn btn-default">
-                <i class="glyphicon glyphicon-arrow-left"></i> Volver a Reportes
-            </a>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .card-body { padding: 20px; }
-    .mb-3 { margin-bottom: 15px; }
-    .mb-4 { margin-bottom: 20px; }
-    .table th { background-color: #BBFA8C; color: #000; font-weight: 600; }
-</style>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gráfico de Estados
+            new Chart(document.getElementById('chartEstados'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Excelente', 'Bueno', 'Regular', 'Crítico'],
+                    datasets: [{
+                        data: [@seguimientosExcelente, @seguimientosBueno, @seguimientosRegular, @seguimientosCritico],
+                        backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+}

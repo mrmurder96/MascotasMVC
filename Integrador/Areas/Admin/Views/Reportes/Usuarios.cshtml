@@ -1,137 +1,207 @@
+@model IEnumerable<Integrador.Models.Usuarios>
 @{
     ViewBag.Title = "Reporte de Usuarios";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+
+    var lista = Model != null ? Model.ToList() : new List<Integrador.Models.Usuarios>();
+    var totalUsuarios = lista.Count;
+    var usuariosActivos = lista.Count(u => u.EstaActivo);
+    var usuariosBloqueados = lista.Count(u => u.Bloqueado);
+    var inactivos = totalUsuarios - usuariosActivos;
+
+    var porRol = lista.GroupBy(u => u.Rol ?? "Sin Rol")
+        .Select(g => new { Rol = g.Key, Cantidad = g.Count() })
+        .OrderByDescending(x => x.Cantidad)
+        .ToList();
 }
 
-<div class="container-fluid">
-<h2><i class="glyphicon glyphicon-stats"></i> Reporte de Usuarios</h2>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-users me-2"></i>Reporte de Usuarios</h2>
+            <p class="text-muted mb-0">Analisis completo de usuarios registrados</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Usuarios", "Reportes", new { area = "Admin", formato = "csv" })" class="btn btn-success">
+                <i class="fas fa-file-csv me-1"></i> Exportar CSV
+            </a>
+            <a href="@Url.Action("Index", "Reportes", new { area = "Admin" })" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+            </a>
+        </div>
+    </div>
 
-    @Html.Partial("_AlertMessages")
-
-    <div class="card mb-3">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
-            @using (Html.BeginForm("Usuarios", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
-            {
-                <div class="form-group">
-                    <label>Rol:</label>
-                    <select name="rol" class="form-control">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Rol</label>
+                    <select name="rol" class="form-select">
                         <option value="">Todos</option>
                         <option value="Administrador">Administrador</option>
                         <option value="Ciudadano">Ciudadano</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Estado:</label>
-                    <select name="bloqueado" class="form-control">
+                <div class="col-md-4">
+                    <label class="form-label">Solo Activos</label>
+                    <select name="soloActivos" class="form-select">
                         <option value="">Todos</option>
-                        <option value="false">Activos</option>
-                        <option value="true">Bloqueados</option>
+                        <option value="true">Solo activos</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Filtrar</button>
-                <a href="@Url.Action("ExportarUsuarios", new { rol = Request.QueryString["rol"], bloqueado = Request.QueryString["bloqueado"] })" 
-                   class="btn btn-success">
-                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                </a>
-            }
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i> Filtrar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-md-3">
-            <div class="stat-box bg-info">
-                <h3>@ViewBag.TotalUsuarios</h3>
-                <p>Total Usuarios</p>
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h3 class="mb-0">@totalUsuarios</h3>
+                    <small>Total Usuarios</small>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-success">
-                <h3>@ViewBag.Activos</h3>
-                <p>Usuarios Activos</p>
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-check fa-2x mb-2"></i>
+                    <h3 class="mb-0">@usuariosActivos</h3>
+                    <small>Activos</small>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-danger">
-                <h3>@ViewBag.Bloqueados</h3>
-                <p>Usuarios Bloqueados</p>
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-times fa-2x mb-2"></i>
+                    <h3 class="mb-0">@inactivos</h3>
+                    <small>Inactivos</small>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-primary">
-                <h3>@ViewBag.ConAdopciones</h3>
-                <p>Con Adopciones</p>
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-lock fa-2x mb-2"></i>
+                    <h3 class="mb-0">@usuariosBloqueados</h3>
+                    <small>Bloqueados</small>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            @if (ViewBag.Usuarios != null && ((IEnumerable<dynamic>)ViewBag.Usuarios).Any())
-            {
-                <table class="table table-striped">
-                    <thead>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Distribucion por Rol</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartRoles" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Resumen por Rol</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in porRol)
+                    {
+                        var pct = totalUsuarios > 0 ? Math.Round((decimal)item.Cantidad / totalUsuarios * 100, 1) : 0;
+                        var cls = item.Rol == "Administrador" ? "danger" : "primary";
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge bg-@cls">@item.Rol</span>
+                                <span>@item.Cantidad (@pct%)</span>
+                            </div>
+                            <div class="progress mt-1" style="height:6px;">
+                                <div class="progress-bar bg-@cls" style="width:@pct%"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between">
+            <h5 class="mb-0"><i class="fas fa-table me-2"></i>Listado de Usuarios</h5>
+            <span class="badge bg-secondary">@totalUsuarios registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Email</th>
                             <th>Rol</th>
-                            <th>Teléfono</th>
                             <th>Estado</th>
-                            <th>Fecha Registro</th>
+                            <th>Bloqueado</th>
+                            <th>Registro</th>
+                            <th>Intentos</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var usuario in ViewBag.Usuarios)
+                        @foreach (var u in lista)
+                        {
+                            var ec = u.EstaActivo ? "success" : "secondary";
+                            var bc = u.Bloqueado ? "danger" : "success";
+                            var rc = u.Rol == "Administrador" ? "danger" : "primary";
+                            <tr>
+                                <td><span class="badge bg-dark">@u.Id</span></td>
+                                <td><strong>@u.Nombres @u.Apellidos</strong></td>
+                                <td><small>@u.Email</small></td>
+                                <td><span class="badge bg-@rc">@u.Rol</span></td>
+                                <td><span class="badge bg-@ec">@(u.EstaActivo ? "Activo" : "Inactivo")</span></td>
+                                <td><span class="badge bg-@bc">@(u.Bloqueado ? "Si" : "No")</span></td>
+                                <td>@u.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                                <td><span class="badge bg-@(u.IntentosFallidos > 0 ? "warning text-dark" : "light text-dark")">@u.IntentosFallidos</span></td>
+                            </tr>
+                        }
+                        @if (!lista.Any())
                         {
                             <tr>
-                                <td>@usuario.Id</td>
-                                <td><strong>@usuario.Nombre</strong></td>
-                                <td>@usuario.Email</td>
-                                <td>
-                                    @if (usuario.Rol == "Administrador")
-                                    {
-                                        <span class="label label-primary">@usuario.Rol</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-default">@usuario.Rol</span>
-                                    }
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    <i class="fas fa-inbox fa-3x mb-2 d-block"></i>
+                                    Sin usuarios encontrados
                                 </td>
-                                <td>@usuario.Telefono</td>
-                                <td>
-                                    @if (usuario.Bloqueado)
-                                    {
-                                        <span class="label label-danger">Bloqueado</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-success">Activo</span>
-                                    }
-                                </td>
-                                <td>@((DateTime)usuario.FechaRegistro).ToString("dd/MM/yyyy")</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
-            else
-            {
-                <div class="alert alert-info text-center"><h4>No hay datos para mostrar</h4></div>
-            }
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .card-body { padding: 20px; }
-    .stat-box { color: white; padding: 20px; border-radius: 8px; text-align: center; }
-    .stat-box h3 { font-size: 36px; margin: 0; }
-    .stat-box p { margin: 5px 0 0 0; font-size: 14px; }
-    .stat-box.bg-info { background: #5bc0de; }
-    .stat-box.bg-success { background: #5cb85c; }
-    .stat-box.bg-danger { background: #d9534f; }
-    .stat-box.bg-primary { background: #337ab7; }
-    .mb-3 { margin-bottom: 15px; }
-    .mt-4 { margin-top: 20px; }
-</style>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var labels = [@Html.Raw(string.Join(",", porRol.Select(r => "'" + r.Rol + "'")))];
+            var data = [@Html.Raw(string.Join(",", porRol.Select(r => r.Cantidad)))];
+            var colors = labels.map(function(l) { return l.includes('Administrador') ? '#dc3545' : '#0d6efd'; });
+            
+            new Chart(document.getElementById('chartRoles'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: colors, borderWidth: 2 }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        });
+    </script>
+}

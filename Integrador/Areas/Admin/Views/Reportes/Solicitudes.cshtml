@@ -1,129 +1,287 @@
+@model IEnumerable<Integrador.Models.Adopciones>
 @{
     ViewBag.Title = "Reporte de Solicitudes";
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+
+    var lista = Model?.ToList() ?? new List<Integrador.Models.Adopciones>();
+    var total = lista.Count;
+    var pendientes = lista.Count(s => s.Estado == "Pendiente" || s.Estado == "En Revisi贸n" || s.Estado == "En Proceso");
+    var aprobadas = lista.Count(s => s.Estado == "Aprobada" || s.Estado == "Completada");
+    var rechazadas = lista.Count(s => s.Estado == "Rechazada");
+    var canceladas = lista.Count(s => s.Estado == "Cancelada");
+    var tiempoPromedio = ViewBag.TiempoPromedioAprobacion ?? 0;
+    var tasaAprobacion = total > 0 ? Math.Round((decimal)aprobadas / total * 100, 1) : 0;
+
+    var porEstado = lista.GroupBy(s => s.Estado)
+        .Select(g => new { Estado = g.Key, Cantidad = g.Count(), Porcentaje = total > 0 ? Math.Round((decimal)g.Count() / total * 100, 1) : 0 })
+        .OrderByDescending(x => x.Cantidad)
+        .ToList();
 }
 
-<div class="container-fluid">
-<h2><i class="glyphicon glyphicon-stats"></i> Reporte de Solicitudes de Adopci髇</h2>
-
-    @Html.Partial("_AlertMessages")
-
-    <div class="card mb-3">
-        <div class="card-body">
-            @using (Html.BeginForm("Solicitudes", "Reportes", new { area = "Admin" }, FormMethod.Get, new { @class = "form-inline" }))
-            {
-                <div class="form-group">
-                    <label>Desde:</label>
-                    <input type="date" name="fechaInicio" class="form-control" value="@Request.QueryString["fechaInicio"]" />
-                </div>
-                <div class="form-group">
-                    <label>Hasta:</label>
-                    <input type="date" name="fechaFin" class="form-control" value="@Request.QueryString["fechaFin"]" />
-                </div>
-                <div class="form-group">
-                    <label>Estado:</label>
-                    <select name="estado" class="form-control">
-                        <option value="">Todos</option>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Aprobada">Aprobada</option>
-                        <option value="Rechazada">Rechazada</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Filtrar</button>
-                <a href="@Url.Action("ExportarSolicitudes", new { fechaInicio = Request.QueryString["fechaInicio"], fechaFin = Request.QueryString["fechaFin"], estado = Request.QueryString["estado"] })" 
-                   class="btn btn-success">
-                    <i class="glyphicon glyphicon-download-alt"></i> Exportar CSV
-                </a>
-            }
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-file-alt me-2"></i>Reporte de Solicitudes</h2>
+            <p class="text-muted mb-0">An谩lisis de solicitudes de adopci贸n por estado y per铆odo</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Solicitudes", new { fechaDesde = ViewBag.FechaDesde, fechaHasta = ViewBag.FechaHasta, estado = ViewBag.EstadoSeleccionado, formato = "csv" })" 
+               class="btn btn-success">
+                <i class="fas fa-file-csv me-1"></i> Exportar CSV
+            </a>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+            </a>
         </div>
     </div>
 
-    <div class="row">
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-calendar me-1"></i>Desde</label>
+                    <input type="date" name="fechaDesde" class="form-control" 
+                           value="@(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-calendar-alt me-1"></i>Hasta</label>
+                    <input type="date" name="fechaHasta" class="form-control" 
+                           value="@(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label"><i class="fas fa-filter me-1"></i>Estado</label>
+                    @if (ViewBag.Estados != null)
+                    {
+                        @Html.DropDownList("estado", (SelectList)ViewBag.Estados, new { @class = "form-select" })
+                    }
+                    else
+                    {
+                        <select name="estado" class="form-select">
+                            <option value="">Todos</option>
+                        </select>
+                    }
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row mb-4">
         <div class="col-md-3">
-            <div class="stat-box bg-warning">
-                <h3>@ViewBag.Pendientes</h3>
-                <p>Pendientes</p>
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Pendientes</h6>
+                            <h2 class="mb-0 fw-bold">@pendientes</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-success">
-                <h3>@ViewBag.Aprobadas</h3>
-                <p>Aprobadas</p>
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Aprobadas</h6>
+                            <h2 class="mb-0 fw-bold">@aprobadas</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-danger">
-                <h3>@ViewBag.Rechazadas</h3>
-                <p>Rechazadas</p>
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Rechazadas</h6>
+                            <h2 class="mb-0 fw-bold">@rechazadas</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-times-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-box bg-info">
-                <h3>@ViewBag.TasaAprobacion%</h3>
-                <p>Tasa de Aprobaci髇</p>
+            <div class="card bg-info text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 opacity-75">Tiempo Promedio</h6>
+                            <h2 class="mb-0 fw-bold">@tiempoPromedio d铆as</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                            <i class="fas fa-stopwatch fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            @if (ViewBag.Solicitudes != null && ((IEnumerable<dynamic>)ViewBag.Solicitudes).Any())
-            {
-                <table class="table table-striped">
-                    <thead>
+    <!-- Distribuci贸n y Resumen -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-primary"></i>Distribuci贸n por Estado</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in porEstado)
+                    {
+                        var colorClass = "secondary";
+                        switch (item.Estado)
+                        {
+                            case "Aprobada":
+                            case "Completada":
+                            case "Finalizada":
+                                colorClass = "success";
+                                break;
+                            case "Pendiente":
+                            case "En Revisi贸n":
+                            case "En Proceso":
+                                colorClass = "warning";
+                                break;
+                            case "Rechazada":
+                            case "Cancelada":
+                                colorClass = "danger";
+                                break;
+                        }
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-@colorClass">@item.Estado</span>
+                                <span class="text-muted">@item.Cantidad (@item.Porcentaje%)</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-@colorClass" style="width: @item.Porcentaje%"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2 text-info"></i>Resumen del Per铆odo</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Per铆odo analizado:</span>
+                            <strong>
+                                @(ViewBag.FechaDesde != null ? ((DateTime)ViewBag.FechaDesde).ToString("dd/MM/yyyy") : "N/A")
+                                - @(ViewBag.FechaHasta != null ? ((DateTime)ViewBag.FechaHasta).ToString("dd/MM/yyyy") : "N/A")
+                            </strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total de solicitudes:</span>
+                            <strong class="text-primary">@total</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Tasa de aprobaci贸n:</span>
+                            <strong class="text-success">@tasaAprobacion%</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Tiempo promedio:</span>
+                            <strong>@tiempoPromedio d铆as</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Datos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-table me-2 text-primary"></i>Detalle de Solicitudes</h5>
+            <span class="badge bg-secondary">@total registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
                         <tr>
                             <th>ID</th>
                             <th>Fecha</th>
-                            <th>Usuario</th>
                             <th>Mascota</th>
+                            <th>Solicitante</th>
+                            <th>Email</th>
                             <th>Estado</th>
+                            <th class="text-center">D铆as</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var solicitud in ViewBag.Solicitudes)
+                        @if (lista.Any())
+                        {
+                            foreach (var solicitud in lista)
+                            {
+                                var labelClass = "secondary";
+                                switch (solicitud.Estado)
+                                {
+                                    case "Aprobada":
+                                    case "Completada":
+                                    case "Finalizada":
+                                        labelClass = "success";
+                                        break;
+                                    case "Pendiente":
+                                    case "En Revisi贸n":
+                                    case "En Proceso":
+                                        labelClass = "warning";
+                                        break;
+                                    case "Rechazada":
+                                    case "Cancelada":
+                                        labelClass = "danger";
+                                        break;
+                                }
+                                var dias = (DateTime.Now - solicitud.FechaSolicitud).Days;
+                                <tr>
+                                    <td><span class="badge bg-dark">@solicitud.Id</span></td>
+                                    <td>@solicitud.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <strong>@(solicitud.Mascotas?.Nombre ?? "N/A")</strong>
+                                    </td>
+                                    <td>@solicitud.NombreSolicitante</td>
+                                    <td><small>@solicitud.Email</small></td>
+                                    <td><span class="badge bg-@labelClass">@solicitud.Estado</span></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-@(dias > 30 ? "danger" : dias > 7 ? "warning" : "info") @(dias > 7 && dias <= 30 ? "text-dark" : "")">
+                                            @dias
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td><strong>#@solicitud.Id</strong></td>
-                                <td>@((DateTime)solicitud.FechaAdopcion).ToString("dd/MM/yyyy")</td>
-                                <td>@solicitud.Usuario?.Nombre</td>
-                                <td>@solicitud.Mascota?.Nombre</td>
-                                <td>
-                                    @if (solicitud.Estado == "Pendiente")
-                                    {
-                                        <span class="label label-warning">@solicitud.Estado</span>
-                                    }
-                                    else if (solicitud.Estado == "Aprobada")
-                                    {
-                                        <span class="label label-success">@solicitud.Estado</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-danger">@solicitud.Estado</span>
-                                    }
+                                <td colspan="7" class="text-center py-4">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
+                                    <p class="text-muted mb-0">No se encontraron solicitudes con los filtros seleccionados</p>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
-            else
-            {
-                <div class="alert alert-info text-center"><h4>No hay datos para mostrar</h4></div>
-            }
+            </div>
         </div>
     </div>
 </div>
-
-<style>
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .card-body { padding: 20px; }
-    .stat-box { color: white; padding: 20px; border-radius: 8px; text-align: center; }
-    .stat-box h3 { font-size: 36px; margin: 0; }
-    .stat-box p { margin: 5px 0 0 0; font-size: 14px; }
-    .stat-box.bg-warning { background: #f0ad4e; }
-    .stat-box.bg-success { background: #5cb85c; }
-    .stat-box.bg-danger { background: #d9534f; }
-    .stat-box.bg-info { background: #5bc0de; }
-    .mb-3 { margin-bottom: 15px; }
-    .mt-4 { margin-top: 20px; }
-</style>
