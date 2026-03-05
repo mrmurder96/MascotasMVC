@@ -18,31 +18,44 @@ namespace Integrador.Models
         public bool EstaDisponible => Estado?.Equals("Disponible", StringComparison.OrdinalIgnoreCase) == true;
 
         /// <summary>
-        /// Retorna el icono según el tipo de mascota (para vistas)
+        /// Retorna la clase de icono FontAwesome según el tipo de mascota
+        /// </summary>
+        [NotMapped]
+        public string IconoTipoClass
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Tipo)) return "fa-paw";
+
+                switch (Tipo.ToLower())
+                {
+                    case "perro":
+                        return "fa-dog";
+                    case "gato":
+                        return "fa-cat";
+                    case "ave":
+                    case "pájaro":
+                        return "fa-dove";
+                    case "conejo":
+                        return "fa-carrot";
+                    case "roedor":
+                        return "fa-otter";
+                    default:
+                        return "fa-paw";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retorna el icono según el tipo de mascota (para vistas) - Obsoleto, usar IconoTipoClass
         /// </summary>
         [NotMapped]
         public string IconoTipo
         {
             get
             {
-                if (string.IsNullOrEmpty(Tipo)) return "??";
-                
-                switch (Tipo.ToLower())
-                {
-                    case "perro":
-                        return "??";
-                    case "gato":
-                        return "??";
-                    case "ave":
-                    case "pájaro":
-                        return "??";
-                    case "conejo":
-                        return "??";
-                    case "roedor":
-                        return "??";
-                    default:
-                        return "??";
-                }
+                // Devolvemos cadena vacía - usar IconoTipoClass con FontAwesome
+                return "";
             }
         }
 

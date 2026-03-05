@@ -162,22 +162,23 @@
                 <div class="card-body">
                     @foreach (var item in porTipo)
                     {
-                        var icono = "🐾";
+                        var iconoClass = "fa-paw";
+                        var colorClass = "primary";
                         switch (item.Tipo)
                         {
-                            case "Perro": icono = "🐕"; break;
-                            case "Gato": icono = "🐱"; break;
-                            case "Ave": icono = "🐦"; break;
-                            case "Conejo": icono = "🐰"; break;
-                            case "Roedor": icono = "🐹"; break;
+                            case "Perro": iconoClass = "fa-dog"; colorClass = "warning"; break;
+                            case "Gato": iconoClass = "fa-cat"; colorClass = "info"; break;
+                            case "Ave": iconoClass = "fa-dove"; colorClass = "success"; break;
+                            case "Conejo": iconoClass = "fa-carrot"; colorClass = "danger"; break;
+                            case "Roedor": iconoClass = "fa-otter"; colorClass = "secondary"; break;
                         }
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span><span class="me-2">@icono</span>@item.Tipo</span>
+                                <span><i class="fas @iconoClass me-2 text-@colorClass"></i>@item.Tipo</span>
                                 <span class="text-muted">@item.Cantidad (@item.Porcentaje%)</span>
                             </div>
                             <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-success" style="width: @item.Porcentaje%"></div>
+                                <div class="progress-bar bg-@colorClass" style="width: @item.Porcentaje%"></div>
                             </div>
                         </div>
                     }
@@ -201,19 +202,19 @@
                     <hr />
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between">
-                            <span>🐣 Cachorros (0-1 año)</span>
+                            <span><i class="fas fa-baby text-primary me-2"></i>Cachorros (0-1 año)</span>
                             <strong class="text-primary">@cachorros</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span>🐕 Jóvenes (1-3 años)</span>
+                            <span><i class="fas fa-dog text-success me-2"></i>Jóvenes (1-3 años)</span>
                             <strong class="text-success">@jovenes</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span>🐕‍🦺 Adultos (3-7 años)</span>
+                            <span><i class="fas fa-paw text-info me-2"></i>Adultos (3-7 años)</span>
                             <strong class="text-info">@adultos</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span>🦮 Seniors (+7 años)</span>
+                            <span><i class="fas fa-heart text-secondary me-2"></i>Seniors (+7 años)</span>
                             <strong class="text-secondary">@seniors</strong>
                         </li>
                     </ul>
@@ -256,17 +257,10 @@
                                     case "En Proceso": labelClass = "warning"; break;
                                     case "No Disponible": labelClass = "danger"; break;
                                 }
-                                var icono = "🐾";
-                                switch (mascota.Tipo)
-                                {
-                                    case "Perro": icono = "🐕"; break;
-                                    case "Gato": icono = "🐱"; break;
-                                    case "Ave": icono = "🐦"; break;
-                                }
                                 <tr>
                                     <td><span class="badge bg-dark">@mascota.Id</span></td>
                                     <td>
-                                        <span class="me-1">@icono</span>
+                                        <i class="fas @mascota.IconoTipoClass me-1 text-success"></i>
                                         <strong>@mascota.Nombre</strong>
                                     </td>
                                     <td>@mascota.Tipo</td>

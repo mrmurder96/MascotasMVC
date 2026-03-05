@@ -152,8 +152,11 @@
                         <ul class="list-group list-group-flush">
                             @foreach (var item in porTipo)
                             {
-                                var tipo = item.Tipo?.ToString() ?? "Sin tipo";
-                                var cantidad = Convert.ToInt32(item.Cantidad);
+                                var itemType = item.GetType();
+                                var tipoProp = itemType.GetProperty("Tipo");
+                                var cantidadProp = itemType.GetProperty("Cantidad");
+                                var tipo = tipoProp != null ? tipoProp.GetValue(item)?.ToString() ?? "Sin tipo" : "Sin tipo";
+                                var cantidad = cantidadProp != null ? Convert.ToInt32(cantidadProp.GetValue(item)) : 0;
                                 var porcentaje = Convert.ToInt32(totalSeguimientos) > 0 
                                     ? Math.Round((decimal)cantidad / Convert.ToInt32(totalSeguimientos) * 100, 1) 
                                     : 0;
