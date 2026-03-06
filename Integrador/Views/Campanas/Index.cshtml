@@ -7,42 +7,50 @@
     var usuarioLogueado = Session["UsuarioId"] != null;
 }
 
-<div class="container py-4">
+<!-- Sección de Campañas de Adopción - Accesible -->
+<section class="container py-4" role="region" aria-label="Campañas de adopción">
     <div class="card">
         <div class="card-header">
-            <h2><i class="glyphicon glyphicon-bullhorn"></i> Campañas de Adopción</h2>
+            <h2>
+                <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+                Campañas de Adopción
+            </h2>
         </div>
         <div class="card-body">
             @if (usuarioLogueado)
             {
                 if (Model != null && Model.Any())
                 {
-                    <div class="row">
+                    <div class="row" role="list" aria-label="@Model.Count() campañas disponibles">
                         @foreach (var camp in Model)
                         {
-                            <div class="col-md-6 col-lg-4" style="margin-bottom: 20px;">
-                                <div class="panel panel-success">
+                            <div class="col-md-6 col-lg-4" style="margin-bottom: 20px;" role="listitem">
+                                <article class="panel panel-success" aria-label="Campaña @camp.Titulo, Estado: @(camp.Activa ? "Activa" : "Finalizada")">
                                     <div class="panel-heading">
-                                        <h4 style="margin: 0;">@camp.Titulo</h4>
+                                        <h3 style="margin: 0;">@camp.Titulo</h3>
                                     </div>
                                     @if (!string.IsNullOrEmpty(camp.ImagenUrl))
                                     {
                                         <div style="height: 200px; overflow: hidden;">
-                                            <img src="@camp.ImagenUrl" alt="@camp.Titulo" style="width: 100%; height: 100%; object-fit: cover;" />
+                                            <img src="@camp.ImagenUrl" 
+                                                 alt="Imagen de la campaña @camp.Titulo" 
+                                                 style="width: 100%; height: 100%; object-fit: cover;" />
                                         </div>
                                     }
                                     else
                                     {
-                                        <div style="height: 200px; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-                                            <i class="glyphicon glyphicon-picture" style="font-size: 50px; color: #ccc;"></i>
+                                        <div style="height: 200px; background: #f5f5f5; display: flex; align-items: center; justify-content: center;" 
+                                             role="img" aria-label="Sin imagen disponible para esta campaña">
+                                            <i class="glyphicon glyphicon-picture" style="font-size: 50px; color: #ccc;" aria-hidden="true"></i>
                                         </div>
                                     }
                                     <div class="panel-body">
-                                        <p style="height: 60px; overflow: hidden;">@camp.Descripcion</p>
+                                        <p style="height: 60px; overflow: hidden;" aria-label="Descripción: @camp.Descripcion">
+                                            @camp.Descripcion
+                                        </p>
                                         <p>
-                                            <small class="text-muted">
-                                                <i class="glyphicon glyphicon-calendar"></i>
-                                                Desde: @camp.FechaInicio.ToString("dd/MM/yyyy")
+                                            <small class="text-muted" aria-label="Fechas: desde @camp.FechaInicio.ToString("dd/MM/yyyy") @(camp.FechaFin.HasValue ? "hasta " + camp.FechaFin.Value.ToString("dd/MM/yyyy") : "")">
+                                                <span aria-hidden="true">📅</span> Desde: @camp.FechaInicio.ToString("dd/MM/yyyy")
                                                 @if (camp.FechaFin.HasValue)
                                                 {
                                                     <span> hasta @camp.FechaFin.Value.ToString("dd/MM/yyyy")</span>
@@ -51,41 +59,47 @@
                                         </p>
                                         @if (camp.Activa)
                                         {
-                                            <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Activa</span>
+                                            <span class="label label-success" role="status" aria-label="Campaña activa">
+                                                <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Activa
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="label label-default">Finalizada</span>
+                                            <span class="label label-default" role="status" aria-label="Campaña finalizada">
+                                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Finalizada
+                                            </span>
                                         }
                                     </div>
                                     <div class="panel-footer">
-                                        <a class="btn btn-primary btn-block" href="@Url.Action("Details", "Campanas", new { id = camp.Id })">
-                                            <i class="glyphicon glyphicon-eye-open"></i> Ver Detalles
+                                        <a class="btn btn-primary btn-block" 
+                                           href="@Url.Action("Details", "Campanas", new { id = camp.Id })"
+                                           aria-label="Ver detalles completos de la campaña @camp.Titulo">
+                                            <span aria-hidden="true">👁️</span> Ver Detalles
                                         </a>
                                     </div>
-                                </div>
+                                </article>
                             </div>
                         }
                     </div>
                 }
                 else
                 {
-                    <div class="alert alert-info text-center">
-                        <h4><i class="glyphicon glyphicon-info-sign"></i> No hay campañas activas</h4>
+                    <div class="alert alert-info text-center" role="status" aria-live="polite">
+                        <h3><span aria-hidden="true">ℹ️</span> No hay campañas activas</h3>
                         <p>Por el momento no hay campañas de adopción disponibles. ¡Vuelve pronto!</p>
                     </div>
                 }
             }
             else
             {
-                <div class="alert alert-warning text-center">
-                    <h4><i class="glyphicon glyphicon-lock"></i> Acceso Restringido</h4>
-                    <p>Debes <a href="@Url.Action("Login", "Account")">iniciar sesión</a> para ver las campañas.</p>
+                <div class="alert alert-warning text-center" role="status">
+                    <h3><span aria-hidden="true">🔒</span> Acceso Restringido</h3>
+                    <p>Debes <a href="@Url.Action("Login", "Account")" aria-label="Iniciar sesión para ver las campañas">iniciar sesión</a> para ver las campañas.</p>
                 </div>
             }
         </div>
     </div>
-</div>
+</section>
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }

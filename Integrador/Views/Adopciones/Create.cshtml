@@ -5,66 +5,80 @@
     ViewBag.Title = "Solicitud de adopción";
 }
 
-<h2>Solicitud de adopción ó @Html.Encode(Model.MascotaNombre)</h2>
+<main role="main" aria-label="Formulario de solicitud de adopción">
+    <h1 style="font-size: 24px;">Solicitud de adopción de @Html.Encode(Model.MascotaNombre)</h1>
 
-@using (Html.BeginForm("Create", "Adopciones", FormMethod.Post, new { @class = "mt-3" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.MascotaId)
-    @Html.HiddenFor(m => m.MascotaNombre)
+    @using (Html.BeginForm("Create", "Adopciones", FormMethod.Post, new { @class = "mt-3", aria_label = "Formulario de solicitud de adopción de " + Model.MascotaNombre }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.MascotaId)
+        @Html.HiddenFor(m => m.MascotaNombre)
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Nombre)
-        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
-    </div>
+        <fieldset>
+            <legend class="sr-only">Datos personales</legend>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Apellidos)
-        @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Nombre, new { id = "nombre-label" })
+                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", aria_required = "true" })
+            </div>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Apellidos, new { id = "apellidos-label" })
+                @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", aria_required = "true" })
+            </div>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Telefono)
-        @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Email, new { id = "email-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", aria_required = "true" })
+            </div>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Direccion)
-        @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Telefono, new { id = "telefono-label" })
+                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", aria_required = "true" })
+            </div>
 
-    <hr />
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Direccion, new { id = "direccion-label" })
+                @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", aria_required = "true" })
+            </div>
+        </fieldset>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.FechaPreferida, "Fecha preferida (opcional)")
-        @Html.TextBoxFor(m => m.FechaPreferida, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-    </div>
+        <hr aria-hidden="true" />
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Motivo, "¿Por quó quieres adoptar esta mascota?")
-        @Html.TextAreaFor(m => m.Motivo, 4, 80, new { @class = "form-control" })
-    </div>
+        <fieldset>
+            <legend class="sr-only">Información adicional sobre la adopción</legend>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Experiencia, "Experiencia previa con mascotas")
-        @Html.TextAreaFor(m => m.Experiencia, 3, 80, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.FechaPreferida, "Fecha preferida (opcional)", new { id = "fecha-label" })
+                @Html.TextBoxFor(m => m.FechaPreferida, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", aria_describedby = "fecha-help" })
+                <small id="fecha-help" class="sr-only">Campo opcional</small>
+            </div>
 
-    <div class="form-group mb-2">
-        @Html.LabelFor(m => m.Referencias, "Referencias (opcional)")
-        @Html.TextAreaFor(m => m.Referencias, 2, 80, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Motivo, "¿Por qué quieres adoptar esta mascota?", new { id = "motivo-label" })
+                @Html.TextAreaFor(m => m.Motivo, 4, 80, new { @class = "form-control", aria_required = "true" })
+            </div>
 
-    <div class="form-group mb-3">
-        @Html.LabelFor(m => m.Observaciones, "Observaciones adicionales")
-        @Html.TextAreaFor(m => m.Observaciones, 3, 80, new { @class = "form-control" })
-    </div>
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Experiencia, "Experiencia previa con mascotas", new { id = "experiencia-label" })
+                @Html.TextAreaFor(m => m.Experiencia, 3, 80, new { @class = "form-control" })
+            </div>
 
-    <button type="submit" class="btn btn-success">Enviar solicitud</button>
-    <a href="@Url.Action("Index", "Ciudadano")" class="btn btn-secondary ms-2">Cancelar</a>
-}
+            <div class="form-group mb-2">
+                @Html.LabelFor(m => m.Referencias, "Referencias (opcional)", new { id = "referencias-label" })
+                @Html.TextAreaFor(m => m.Referencias, 2, 80, new { @class = "form-control", aria_describedby = "referencias-help" })
+                <small id="referencias-help" class="sr-only">Campo opcional</small>
+            </div>
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(m => m.Observaciones, "Observaciones adicionales", new { id = "observaciones-label" })
+                @Html.TextAreaFor(m => m.Observaciones, 3, 80, new { @class = "form-control" })
+            </div>
+        </fieldset>
+
+        <div role="group" aria-label="Acciones del formulario">
+            <button type="submit" class="btn btn-success" aria-label="Enviar solicitud de adopción">Enviar solicitud</button>
+            <a href="@Url.Action("Index", "Ciudadano")" class="btn btn-secondary ms-2" aria-label="Cancelar y volver">Cancelar</a>
+        </div>
+    }
+</main>

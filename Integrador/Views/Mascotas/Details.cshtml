@@ -5,18 +5,18 @@
 }
 
 <!-- Hero Section -->
-<section class="detalle-hero">
+<section class="detalle-hero" role="banner" aria-label="Información principal de @Model.Nombre">
     <div class="hero-content">
-        <span class="badge-tipo @(Model.Tipo?.ToLower() == "gato" ? "gato" : Model.Tipo?.ToLower() == "perro" ? "perro" : "otro")">
-            @Model.Tipo
+        <span class="badge-tipo @(Model.Tipo?.ToLower() == "gato" ? "gato" : Model.Tipo?.ToLower() == "perro" ? "perro" : "otro")" role="status" aria-label="Tipo: @Model.Tipo">
+            <span aria-hidden="true">@Model.Tipo</span>
         </span>
         <h1>@Model.Nombre</h1>
-        <p class="subtitulo">@(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)</p>
+        <p class="subtitulo" aria-label="Raza: @(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)">@(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)</p>
     </div>
 </section>
 
 <!-- Contenido Principal -->
-<section class="detalle-content">
+<section class="detalle-content" role="main" aria-label="Detalles completos de @Model.Nombre">
     <div class="detalle-container">
         <div class="detalle-grid">
             <!-- Imagen -->
@@ -26,30 +26,30 @@
                     {
                         if (Model.FotoUrl.StartsWith("/") || Model.FotoUrl.StartsWith("~"))
                         {
-                            <img src="@Url.Content(Model.FotoUrl)" alt="@Model.Nombre" />
+                            <img src="@Url.Content(Model.FotoUrl)" alt="Foto de @Model.Nombre, @(Model.Tipo ?? "mascota") @(string.IsNullOrEmpty(Model.Raza) ? "mestizo" : Model.Raza)" />
                         }
                         else
                         {
-                            <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl)" alt="@Model.Nombre" />
+                            <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl)" alt="Foto de @Model.Nombre, @(Model.Tipo ?? "mascota") @(string.IsNullOrEmpty(Model.Raza) ? "mestizo" : Model.Raza)" />
                         }
                     }
                     else
                     {
-                        <div class="imagen-placeholder">🐾</div>
+                        <div class="imagen-placeholder" role="img" aria-label="Sin foto disponible de @Model.Nombre"><span aria-hidden="true">🐾</span></div>
                     }
                 </div>
-                <div class="estado-badge">
+                <div class="estado-badge" role="status" aria-live="polite">
                     @if (Model.Estado == "Disponible")
                     {
-                        <span class="badge-disponible">✓ Disponible para Adopción</span>
+                        <span class="badge-disponible" aria-label="Estado: Disponible para adopción"><span aria-hidden="true">✓</span> Disponible para Adopción</span>
                     }
                     else if (Model.Estado == "Adoptado")
                     {
-                        <span class="badge-adoptado">❤️ Adoptado</span>
+                        <span class="badge-adoptado" aria-label="Estado: Ya fue adoptado"><span aria-hidden="true">❤️</span> Adoptado</span>
                     }
                     else
                     {
-                        <span class="badge-otro">@Model.Estado</span>
+                        <span class="badge-otro" aria-label="Estado: @Model.Estado">@Model.Estado</span>
                     }
                 </div>
             </div>
@@ -58,44 +58,44 @@
             <div class="detalle-info">
                 <h2>Información de @Model.Nombre</h2>
 
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-icon">🏷️</span>
+                <div class="info-grid" role="list" aria-label="Características de @Model.Nombre">
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">🏷️</span>
                         <div class="info-content">
                             <label>Tipo</label>
                             <span>@Model.Tipo</span>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-icon">🐕</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">🐕</span>
                         <div class="info-content">
                             <label>Raza</label>
                             <span>@(string.IsNullOrEmpty(Model.Raza) ? "Mestizo" : Model.Raza)</span>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-icon">🎂</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">🎂</span>
                         <div class="info-content">
                             <label>Edad</label>
                             <span>@(Model.Edad.HasValue ? Model.Edad + " años" : "Desconocida")</span>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-icon">⚧</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">⚧</span>
                         <div class="info-content">
                             <label>Sexo</label>
                             <span>@(string.IsNullOrEmpty(Model.Sexo) ? "No especificado" : Model.Sexo)</span>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-icon">📏</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">📏</span>
                         <div class="info-content">
                             <label>Tamaño</label>
                             <span>@(string.IsNullOrEmpty(Model.Tamano) ? "No especificado" : Model.Tamano)</span>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-icon">📍</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">📍</span>
                         <div class="info-content">
                             <label>Ubicación</label>
                             <span>@(string.IsNullOrEmpty(Model.Ubicacion) ? "No especificada" : Model.Ubicacion)</span>
@@ -105,27 +105,27 @@
 
                 @if (!string.IsNullOrEmpty(Model.Descripcion))
                 {
-                    <div class="descripcion-box">
+                    <div class="descripcion-box" role="region" aria-label="Descripción de @Model.Nombre">
                         <h3>Acerca de @Model.Nombre</h3>
                         <p>@Model.Descripcion</p>
                     </div>
                 }
 
                 <!-- Acciones -->
-                <div class="acciones-box">
+                <div class="acciones-box" role="region" aria-label="Acciones disponibles">
                     @if (Model.Estado == "Disponible")
                     {
-                        <a href="@Url.Action("Adopt", new { id = Model.Id })" class="btn-adoptar-grande">
-                            ❤️ ¡Quiero Adoptar a @Model.Nombre!
+                        <a href="@Url.Action("Adopt", new { id = Model.Id })" class="btn-adoptar-grande" aria-label="Iniciar proceso de adopción de @Model.Nombre">
+                            <span aria-hidden="true">❤️</span> ¡Quiero Adoptar a @Model.Nombre!
                         </a>
                         <p class="info-adopcion">Al hacer clic iniciarás el proceso de solicitud de adopción.</p>
                     }
                     else
                     {
-                        <div class="no-disponible">
-                            <span class="no-disponible-icon">🚫</span>
+                        <div class="no-disponible" role="alert">
+                            <span class="no-disponible-icon" aria-hidden="true">🚫</span>
                             <p>Esta mascota ya no está disponible para adopción.</p>
-                            <a href="@Url.Action("Index")" class="btn-ver-otras">Ver otras mascotas</a>
+                            <a href="@Url.Action("Index")" class="btn-ver-otras" aria-label="Ver otras mascotas disponibles">Ver otras mascotas</a>
                         </div>
                     }
                 </div>

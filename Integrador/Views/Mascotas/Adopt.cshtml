@@ -247,89 +247,89 @@
     }
 </style>
 
-<div class="adopt-container">
-    <div class="adopt-header">
-        <h2><i class="fas fa-heart"></i> Solicitud de Adopcion</h2>
+<main class="adopt-container" role="main" aria-label="Formulario de solicitud de adopción">
+    <header class="adopt-header" role="banner">
+        <h1 style="font-size: 28px;"><span aria-hidden="true"><i class="fas fa-heart"></i></span> Solicitud de Adopcion</h1>
         <p>Completa el formulario para iniciar el proceso de adopcion</p>
-    </div>
+    </header>
 
     <!-- Vista previa de la mascota -->
-    <div class="pet-preview">
-        <img src="@(string.IsNullOrEmpty(Model.FotoUrl) ? "/Content/images/mascota-default.png" : Model.FotoUrl)" alt="@Model.Nombre" />
+    <section class="pet-preview" role="region" aria-label="Información de la mascota a adoptar">
+        <img src="@(string.IsNullOrEmpty(Model.FotoUrl) ? "/Content/images/mascota-default.png" : Model.FotoUrl)" alt="Foto de @Model.Nombre" />
         <div class="pet-preview-info">
-            <h4><i class="fas fa-paw" style="color:#8CFAA4;"></i> @Model.Nombre</h4>
+            <h2 style="font-size: 18px; margin: 0 0 5px 0;"><span aria-hidden="true"><i class="fas fa-paw" style="color:#8CFAA4;"></i></span> @Model.Nombre</h2>
             <p><strong>Tipo:</strong> @Model.Tipo | <strong>Edad:</strong> @Model.Edad anios | <strong>Ubicacion:</strong> @Model.Ubicacion</p>
         </div>
-    </div>
+    </section>
 
-    <div class="alert-info-custom">
-        <i class="fas fa-info-circle"></i>
+    <div class="alert-info-custom" role="status" aria-live="polite">
+        <span aria-hidden="true"><i class="fas fa-info-circle"></i></span>
         <strong>Importante:</strong> Por favor completa todos los campos requeridos. Nuestro equipo revisara tu solicitud y te contactara en un plazo de 24-48 horas.
     </div>
 
     @if (!ViewData.ModelState.IsValid)
     {
-        <div class="alert alert-danger" style="border-radius: 8px;">
+        <div class="alert alert-danger" style="border-radius: 8px;" role="alert" aria-live="assertive">
             @Html.ValidationSummary()
         </div>
     }
 
-    @using (Html.BeginForm("Adopt", "Mascotas", new { id = Model.Id }, FormMethod.Post))
+    @using (Html.BeginForm("Adopt", "Mascotas", new { id = Model.Id }, FormMethod.Post, new { aria_label = "Formulario de solicitud de adopción de " + Model.Nombre }))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.Id" />
 
         <!-- Seccion 1: Datos Personales -->
-        <div class="form-section">
-            <h4><i class="fas fa-user"></i> Datos Personales</h4>
+        <fieldset class="form-section">
+            <legend style="border: none; padding-bottom: 10px; border-bottom: 2px solid #8CFAA4; font-size: 18px; color: #333;"><span aria-hidden="true"><i class="fas fa-user"></i></span> Datos Personales</legend>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Nombre completo <span class="required">*</span></label>
-                    <input type="text" name="nombreSolicitante" class="form-control" placeholder="Ej: Maria Garcia Lopez" value="@ViewBag.NombreSolicitante" required />
+                    <label for="nombreSolicitante">Nombre completo <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <input type="text" name="nombreSolicitante" id="nombreSolicitante" class="form-control" placeholder="Ej: Maria Garcia Lopez" value="@ViewBag.NombreSolicitante" required aria-required="true" />
                 </div>
                 <div class="form-group">
-                    <label>Documento de identidad <span class="required">*</span></label>
-                    <input type="text" name="documento" id="documento" class="form-control" placeholder="Ej: 12345678" value="" required />
+                    <label for="documento">Documento de identidad <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <input type="text" name="documento" id="documento" class="form-control" placeholder="Ej: 12345678" value="" required aria-required="true" />
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Correo electronico <span class="required">*</span></label>
-                    <input type="email" name="email" class="form-control" placeholder="Ej: maria@email.com" value="@ViewBag.Email" required />
+                    <label for="email">Correo electronico <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Ej: maria@email.com" value="@ViewBag.Email" required aria-required="true" />
                 </div>
                 <div class="form-group">
-                    <label>Telefono de contacto <span class="required">*</span></label>
-                    <input type="tel" name="telefono" class="form-control" placeholder="Ej: 999-888-777" value="@ViewBag.Telefono" required />
+                    <label for="telefono">Telefono de contacto <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <input type="tel" name="telefono" id="telefono" class="form-control" placeholder="Ej: 999-888-777" value="@ViewBag.Telefono" required aria-required="true" />
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Direccion completa <span class="required">*</span></label>
-                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Ej: Av. Principal 123, Colonia Centro" value="" required />
+                <label for="direccion">Direccion completa <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Ej: Av. Principal 123, Colonia Centro" value="" required aria-required="true" />
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Ciudad <span class="required">*</span></label>
-                    <input type="text" name="ciudad" id="ciudad" class="form-control" placeholder="Ej: Ciudad de Mexico" value="" required />
+                    <label for="ciudad">Ciudad <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <input type="text" name="ciudad" id="ciudad" class="form-control" placeholder="Ej: Ciudad de Mexico" value="" required aria-required="true" />
                 </div>
                 <div class="form-group">
-                    <label>Codigo postal</label>
+                    <label for="codigoPostal">Codigo postal</label>
                     <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" placeholder="Ej: 12345" value="" />
                 </div>
             </div>
-        </div>
+        </fieldset>
 
         <!-- Seccion 2: Informacion del Hogar -->
-        <div class="form-section">
-            <h4><i class="fas fa-home"></i> Informacion del Hogar</h4>
+        <fieldset class="form-section">
+            <legend style="border: none; padding-bottom: 10px; border-bottom: 2px solid #8CFAA4; font-size: 18px; color: #333;"><span aria-hidden="true"><i class="fas fa-home"></i></span> Informacion del Hogar</legend>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Tipo de vivienda <span class="required">*</span></label>
-                    <select name="tipoVivienda" class="form-control" required>
+                    <label for="tipoVivienda">Tipo de vivienda <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <select name="tipoVivienda" id="tipoVivienda" class="form-control" required aria-required="true">
                         <option value="">Selecciona una opcion</option>
                         <option value="casa">Casa</option>
                         <option value="departamento">Departamento/Apartamento</option>
@@ -338,8 +338,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Es propietario o inquilino? <span class="required">*</span></label>
-                    <select name="propietarioInquilino" class="form-control" required>
+                    <label for="propietarioInquilino">Es propietario o inquilino? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                    <select name="propietarioInquilino" id="propietarioInquilino" class="form-control" required aria-required="true">
                         <option value="">Selecciona una opcion</option>
                         <option value="propietario">Propietario</option>
                         <option value="inquilino">Inquilino</option>
@@ -348,8 +348,8 @@
             </div>
 
             <div class="form-group">
-                <label>Si es inquilino, su arrendador permite mascotas?</label>
-                <div class="radio-group">
+                <label id="permiteMascotas-label">Si es inquilino, su arrendador permite mascotas?</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="permiteMascotas-label">
                     <label class="radio-item">
                         <input type="radio" name="permiteMascotas" value="si" /> Si
                     </label>
@@ -363,8 +363,8 @@
             </div>
 
             <div class="form-group">
-                <label>Cuenta con patio o area exterior?</label>
-                <div class="radio-group">
+                <label id="tienePatio-label">Cuenta con patio o area exterior?</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="tienePatio-label">
                     <label class="radio-item">
                         <input type="radio" name="tienePatio" value="si" /> Si
                     </label>
@@ -375,8 +375,8 @@
             </div>
 
             <div class="form-group">
-                <label>Cuantas personas viven en el hogar? <span class="required">*</span></label>
-                <select name="personasHogar" class="form-control" required>
+                <label for="personasHogar">Cuantas personas viven en el hogar? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <select name="personasHogar" id="personasHogar" class="form-control" required aria-required="true">
                     <option value="">Selecciona una opcion</option>
                     <option value="1">1 persona</option>
                     <option value="2">2 personas</option>
@@ -387,8 +387,8 @@
             </div>
 
             <div class="form-group">
-                <label>Hay ninos en el hogar?</label>
-                <div class="radio-group">
+                <label id="hayNinos-label">Hay ninos en el hogar?</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="hayNinos-label">
                     <label class="radio-item">
                         <input type="radio" name="hayNinos" value="si" /> Si
                     </label>
@@ -399,18 +399,18 @@
             </div>
 
             <div class="form-group">
-                <label>Si hay ninos, que edades tienen?</label>
-                <input type="text" name="edadesNinos" class="form-control" placeholder="Ej: 5 y 10 anios" />
+                <label for="edadesNinos">Si hay ninos, que edades tienen?</label>
+                <input type="text" name="edadesNinos" id="edadesNinos" class="form-control" placeholder="Ej: 5 y 10 anios" />
             </div>
-        </div>
+        </fieldset>
 
         <!-- Seccion 3: Experiencia con Mascotas -->
-        <div class="form-section">
-            <h4><i class="fas fa-paw"></i> Experiencia con Mascotas</h4>
+        <fieldset class="form-section">
+            <legend style="border: none; padding-bottom: 10px; border-bottom: 2px solid #8CFAA4; font-size: 18px; color: #333;"><span aria-hidden="true"><i class="fas fa-paw"></i></span> Experiencia con Mascotas</legend>
 
             <div class="form-group">
-                <label>Ha tenido mascotas anteriormente? <span class="required">*</span></label>
-                <div class="radio-group">
+                <label id="experienciaMascotas-label">Ha tenido mascotas anteriormente? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="experienciaMascotas-label" aria-required="true">
                     <label class="radio-item">
                         <input type="radio" name="experienciaMascotas" value="si" /> Si
                     </label>
@@ -421,13 +421,13 @@
             </div>
 
             <div class="form-group">
-                <label>Si tuvo mascotas, que paso con ellas?</label>
-                <textarea name="quepasoMascotas" class="form-control" rows="2" placeholder="Ej: Fallecio de vejez, la tengo actualmente, etc."></textarea>
+                <label for="quepasoMascotas">Si tuvo mascotas, que paso con ellas?</label>
+                <textarea name="quepasoMascotas" id="quepasoMascotas" class="form-control" rows="2" placeholder="Ej: Fallecio de vejez, la tengo actualmente, etc."></textarea>
             </div>
 
             <div class="form-group">
-                <label>Actualmente tiene otras mascotas en casa?</label>
-                <div class="radio-group">
+                <label id="otrasMascotas-label">Actualmente tiene otras mascotas en casa?</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="otrasMascotas-label">
                     <label class="radio-item">
                         <input type="radio" name="otrasMascotas" value="si" /> Si
                     </label>
@@ -438,18 +438,18 @@
             </div>
 
             <div class="form-group">
-                <label>Si tiene otras mascotas, describalas</label>
-                <textarea name="descripcionOtrasMascotas" class="form-control" rows="2" placeholder="Ej: Un perro labrador de 3 anios, muy sociable"></textarea>
+                <label for="descripcionOtrasMascotas">Si tiene otras mascotas, describalas</label>
+                <textarea name="descripcionOtrasMascotas" id="descripcionOtrasMascotas" class="form-control" rows="2" placeholder="Ej: Un perro labrador de 3 anios, muy sociable"></textarea>
             </div>
-        </div>
+        </fieldset>
 
         <!-- Seccion 4: Plan de Cuidado -->
-        <div class="form-section">
-            <h4><i class="fas fa-clipboard-check"></i> Plan de Cuidado</h4>
+        <fieldset class="form-section">
+            <legend style="border: none; padding-bottom: 10px; border-bottom: 2px solid #8CFAA4; font-size: 18px; color: #333;"><span aria-hidden="true"><i class="fas fa-clipboard-check"></i></span> Plan de Cuidado</legend>
 
             <div class="form-group">
-                <label>Cuantas horas al dia estara sola la mascota? <span class="required">*</span></label>
-                <select name="horasSola" class="form-control" required>
+                <label for="horasSola">Cuantas horas al dia estara sola la mascota? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <select name="horasSola" id="horasSola" class="form-control" required aria-required="true">
                     <option value="">Selecciona una opcion</option>
                     <option value="0-2">0-2 horas</option>
                     <option value="2-4">2-4 horas</option>
@@ -460,13 +460,13 @@
             </div>
 
             <div class="form-group">
-                <label>Donde dormira la mascota?</label>
-                <input type="text" name="lugardormir" class="form-control" placeholder="Ej: En su cama en la sala, en el patio, etc." />
+                <label for="lugardormir">Donde dormira la mascota?</label>
+                <input type="text" name="lugardormir" id="lugardormir" class="form-control" placeholder="Ej: En su cama en la sala, en el patio, etc." />
             </div>
 
             <div class="form-group">
-                <label>Tiene acceso a un veterinario?</label>
-                <div class="radio-group">
+                <label id="accesoVeterinario-label">Tiene acceso a un veterinario?</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="accesoVeterinario-label">
                     <label class="radio-item">
                         <input type="radio" name="accesoVeterinario" value="si" checked /> Si
                     </label>
@@ -477,8 +477,8 @@
             </div>
 
             <div class="form-group">
-                <label>Esta dispuesto a cubrir gastos veterinarios (vacunas, esterilizacion, emergencias)? <span class="required">*</span></label>
-                <div class="radio-group">
+                <label id="gastosVeterinarios-label">Esta dispuesto a cubrir gastos veterinarios (vacunas, esterilizacion, emergencias)? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="gastosVeterinarios-label" aria-required="true">
                     <label class="radio-item">
                         <input type="radio" name="gastosVeterinarios" value="si" checked /> Si
                     </label>
@@ -489,23 +489,23 @@
             </div>
 
             <div class="form-group">
-                <label>Que haria si tiene que mudarse y no puede llevar a la mascota?</label>
-                <textarea name="planMudanza" class="form-control" rows="2" placeholder="Describa su plan"></textarea>
+                <label for="planMudanza">Que haria si tiene que mudarse y no puede llevar a la mascota?</label>
+                <textarea name="planMudanza" id="planMudanza" class="form-control" rows="2" placeholder="Describa su plan"></textarea>
             </div>
-        </div>
+        </fieldset>
 
         <!-- Seccion 5: Motivacion -->
-        <div class="form-section">
-            <h4><i class="fas fa-heart"></i> Motivacion</h4>
+        <fieldset class="form-section">
+            <legend style="border: none; padding-bottom: 10px; border-bottom: 2px solid #8CFAA4; font-size: 18px; color: #333;"><span aria-hidden="true"><i class="fas fa-heart"></i></span> Motivacion</legend>
 
             <div class="form-group">
-                <label>Por que desea adoptar a @Model.Nombre? <span class="required">*</span></label>
-                <textarea name="motivacion" class="form-control" rows="4" placeholder="Cuentenos por que quiere adoptar y por que cree que seria un buen hogar para esta mascota..." required></textarea>
+                <label for="motivacion">Por que desea adoptar a @Model.Nombre? <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
+                <textarea name="motivacion" id="motivacion" class="form-control" rows="4" placeholder="Cuentenos por que quiere adoptar y por que cree que seria un buen hogar para esta mascota..." required aria-required="true"></textarea>
             </div>
 
             <div class="form-group">
-                <label>Como se entero de nosotros?</label>
-                <select name="comoSeEntero" class="form-control">
+                <label for="comoSeEntero">Como se entero de nosotros?</label>
+                <select name="comoSeEntero" id="comoSeEntero" class="form-control">
                     <option value="">Selecciona una opcion</option>
                     <option value="redes">Redes sociales</option>
                     <option value="amigo">Recomendacion de amigo/familiar</option>
@@ -514,36 +514,37 @@
                     <option value="otro">Otro</option>
                 </select>
             </div>
-        </div>
+        </fieldset>
 
         <!-- Terminos y Condiciones -->
-        <div class="terms-section">
+        <fieldset class="terms-section">
+            <legend class="sr-only">Términos y condiciones de adopción</legend>
             <p>
                 <strong>Compromiso de adopcion:</strong> Al enviar esta solicitud, me comprometo a proporcionar un hogar amoroso y responsable, 
                 atender las necesidades medicas y emocionales de la mascota, y no abandonarla bajo ninguna circunstancia. 
                 Entiendo que el refugio puede realizar visitas de seguimiento.
             </p>
             <div class="checkbox-item">
-                <input type="checkbox" name="aceptaTerminos" id="aceptaTerminos" required />
-                <label for="aceptaTerminos">Acepto los terminos y condiciones de adopcion <span class="required">*</span></label>
+                <input type="checkbox" name="aceptaTerminos" id="aceptaTerminos" required aria-required="true" />
+                <label for="aceptaTerminos">Acepto los terminos y condiciones de adopcion <span class="required" aria-hidden="true">*</span><span class="sr-only">(requerido)</span></label>
             </div>
             <div class="checkbox-item" style="margin-top: 10px;">
                 <input type="checkbox" name="aceptaVisitas" id="aceptaVisitas" />
                 <label for="aceptaVisitas">Acepto recibir visitas de seguimiento del refugio</label>
             </div>
-        </div>
+        </fieldset>
 
-        <button type="submit" class="btn-submit">
-            <i class="fas fa-paper-plane"></i> Enviar Solicitud de Adopcion
+        <button type="submit" class="btn-submit" aria-label="Enviar solicitud de adopción de @Model.Nombre">
+            <span aria-hidden="true"><i class="fas fa-paper-plane"></i></span> Enviar Solicitud de Adopcion
         </button>
     }
 
-    <div class="text-center" style="margin-top: 20px;">
-        <a href="@Url.Action("Index", "Mascotas")" class="text-muted">
-            <i class="fas fa-arrow-left"></i> Volver a mascotas disponibles
+    <nav class="text-center" style="margin-top: 20px;" aria-label="Navegación">
+        <a href="@Url.Action("Index", "Mascotas")" class="text-muted" aria-label="Volver a la lista de mascotas disponibles">
+            <span aria-hidden="true"><i class="fas fa-arrow-left"></i></span> Volver a mascotas disponibles
         </a>
-    </div>
-</div>
+    </nav>
+</main>
 
 @section scripts {
     <script>

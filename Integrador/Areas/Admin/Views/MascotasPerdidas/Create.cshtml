@@ -9,134 +9,158 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="glyphicon glyphicon-plus"></i> Reportar Mascota Perdida/Encontrada</h3>
+                    <h2>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Reportar Mascota Perdida/Encontrada
+                    </h2>
                 </div>
                 <div class="card-body">
                     @Html.Partial("_AlertMessages")
 
-                    @using (Html.BeginForm("Create", "MascotasPerdidas", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("Create", "MascotasPerdidas", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", aria_label = "Formulario para reportar mascota" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert", aria_live = "polite", aria_atomic = "true" })
 
-                        <h4 class="section-title">Tipo de Reporte</h4>
-                        <hr />
+                        <fieldset>
+                            <legend class="section-title">Tipo de Reporte</legend>
+                            <hr aria-hidden="true" />
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.TipoReporte, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.TipoReporte, new SelectList(new[] { "Perdida", "Encontrada" }), "Seleccione tipo...", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.TipoReporte, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.TipoReporte, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(m => m.TipoReporte, new SelectList(new[] { "Perdida", "Encontrada" }), "Seleccione tipo...", new { @class = "form-control", aria_required = "true", aria_describedby = "tipo-reporte-help" })
+                                    <small id="tipo-reporte-help" class="form-text text-muted d-block">¿Es una mascota perdida o encontrada?</small>
+                                    @Html.ValidationMessageFor(m => m.TipoReporte, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <h4 class="section-title">Información de la Mascota</h4>
-                        <hr />
+                        <fieldset>
+                            <legend class="section-title">Información de la Mascota</legend>
+                            <hr aria-hidden="true" />
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Nombre, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre (si se conoce)" })
-                                @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Nombre, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre (si se conoce)", aria_describedby = "nombre-help" })
+                                    <small id="nombre-help" class="form-text text-muted d-block">Opcional: Ingrese el nombre si lo conoce</small>
+                                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Tipo, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Tipo, new SelectList(new[] { "Perro", "Gato", "Ave", "Otro" }), "Seleccione tipo...", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Tipo, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(m => m.Tipo, new SelectList(new[] { "Perro", "Gato", "Ave", "Otro" }), "Seleccione tipo...", new { @class = "form-control", aria_required = "true", aria_describedby = "tipo-mascota-help" })
+                                    <small id="tipo-mascota-help" class="form-text text-muted d-block">Tipo de mascota (Perro, Gato, Ave, Otro)</small>
+                                    @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Raza, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.Raza, new { @class = "form-control", placeholder = "Raza o descripción física" })
-                                @Html.ValidationMessageFor(m => m.Raza, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Raza, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Raza, new { @class = "form-control", placeholder = "Raza o descripción física", aria_describedby = "raza-help" })
+                                    <small id="raza-help" class="form-text text-muted d-block">Ej: Labrador, mestizo, perro negro con manchas blancas</small>
+                                    @Html.ValidationMessageFor(m => m.Raza, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 4, placeholder = "Características físicas, colores, señas particulares..." })
-                                @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 4, placeholder = "Características físicas, colores, señas particulares...", aria_describedby = "descripcion-help" })
+                                    <small id="descripcion-help" class="form-text text-muted d-block">Describa características distintivas, colores, tamaño, etc.</small>
+                                    @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <h4 class="section-title">Ubicación y Fecha</h4>
-                        <hr />
+                        <fieldset>
+                            <legend class="section-title">Ubicación y Fecha</legend>
+                            <hr aria-hidden="true" />
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.FechaReporte, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-4">
-                                @Html.TextBoxFor(m => m.FechaReporte, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                                @Html.ValidationMessageFor(m => m.FechaReporte, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FechaReporte, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(m => m.FechaReporte, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", aria_required = "true", aria_describedby = "fecha-reporte-help" })
+                                    <small id="fecha-reporte-help" class="form-text text-muted d-block">Fecha en que se perdió o encontró la mascota</small>
+                                    @Html.ValidationMessageFor(m => m.FechaReporte, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Ubicacion, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.Ubicacion, new { @class = "form-control", placeholder = "Dirección o zona donde se perdió/encontró" })
-                                @Html.ValidationMessageFor(m => m.Ubicacion, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Ubicacion, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Ubicacion, new { @class = "form-control", placeholder = "Dirección o zona donde se perdió/encontró", aria_required = "true", aria_describedby = "ubicacion-help" })
+                                    <small id="ubicacion-help" class="form-text text-muted d-block">Ej: Avenida Principal 123, Barrio Centro, San José</small>
+                                    @Html.ValidationMessageFor(m => m.Ubicacion, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <h4 class="section-title">Información de Contacto</h4>
-                        <hr />
+                        <fieldset>
+                            <legend class="section-title">Información de Contacto</legend>
+                            <hr aria-hidden="true" />
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.NombreContacto, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.NombreContacto, new { @class = "form-control", placeholder = "Nombre de quien reporta" })
-                                @Html.ValidationMessageFor(m => m.NombreContacto, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.NombreContacto, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.NombreContacto, new { @class = "form-control", placeholder = "Nombre de quien reporta", aria_required = "true", aria_describedby = "nombre-contacto-help" })
+                                    <small id="nombre-contacto-help" class="form-text text-muted d-block">Nombre completo de la persona que reporta</small>
+                                    @Html.ValidationMessageFor(m => m.NombreContacto, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono de contacto" })
-                                @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Telefono, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono de contacto", aria_required = "true", aria_describedby = "telefono-help" })
+                                    <small id="telefono-help" class="form-text text-muted d-block">Número de teléfono para comunicarse</small>
+                                    @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Email de contacto" })
-                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Email de contacto", aria_required = "true", aria_describedby = "email-help" })
+                                    <small id="email-help" class="form-text text-muted d-block">Correo electrónico para contacto alternativo</small>
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <h4 class="section-title">Imagen</h4>
-                        <hr />
+                        <fieldset>
+                            <legend class="section-title">Imagen y Estado</legend>
+                            <hr aria-hidden="true" />
 
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Foto de la Mascota</label>
-                            <div class="col-md-9">
-                                <input type="file" name="ImagenFile" class="form-control" accept="image/*" />
-                                <small class="text-muted">Formatos: JPG, PNG. Tamaño máximo: 2MB</small>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="ImagenFile">Foto de la Mascota</label>
+                                <div class="col-md-9">
+                                    <input type="file" name="ImagenFile" id="ImagenFile" class="form-control" accept="image/*" aria-describedby="imagen-help" />
+                                    <small id="imagen-help" class="form-text text-muted d-block">Formatos: JPG, PNG. Tamaño máximo: 2MB</small>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Estado, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(m => m.Estado, new SelectList(new[] { "Activo", "Reunido", "Cerrado" }), new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Estado, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(m => m.Estado, new SelectList(new[] { "Activo", "Reunido", "Cerrado" }), new { @class = "form-control", aria_describedby = "estado-help" })
+                                    <small id="estado-help" class="form-text text-muted d-block">Estado del reporte: Activo (en búsqueda), Reunido (mascota encontrada), Cerrado</small>
+                                    @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger", role = "alert" })
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
 
                         <div class="form-group">
                             <div class="col-md-9 col-md-offset-3">
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Reporte
+                                <button type="submit" class="btn btn-success btn-lg" aria-label="Guardar reporte de mascota">
+                                    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar Reporte
                                 </button>
-                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
-                                    <i class="glyphicon glyphicon-arrow-left"></i> Cancelar
+                                <a href="@Url.Action("Index")" class="btn btn-default btn-lg" aria-label="Cancelar y volver al listado">
+                                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Cancelar
                                 </a>
                             </div>
                         </div>

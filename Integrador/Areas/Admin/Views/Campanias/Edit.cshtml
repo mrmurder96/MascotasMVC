@@ -5,52 +5,78 @@
 }
 
 <div class="container-fluid">
-    <h2><i class="glyphicon glyphicon-edit" style="color:#93A597"></i> Editar Campaña</h2>
+    <h2>
+        <span class="glyphicon glyphicon-edit" style="color:#93A597" aria-hidden="true"></span>
+        Editar Campaña de Adopción
+    </h2>
 
-    <div class="card">
+    <div class="card" role="region" aria-label="Formulario de edición de campaña">
         <div class="card-header">
-            <h4><i class="glyphicon glyphicon-edit"></i> Editar Información</h4>
+            <h3>
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                Editar Información
+            </h3>
         </div>
         <div class="card-body">
-            @using (Html.BeginForm())
+            @using (Html.BeginForm("Edit", "Campanias", FormMethod.Post, new { aria_label = "Formulario para editar campaña" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.Id)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert", aria_live = "polite", aria_atomic = "true" })
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Titulo)
-                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Descripcion)
-                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4 })
+                    @Html.LabelFor(model => model.Titulo, new { id = "titulo-label" })
+                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", required = "required", aria_required = "true", aria_describedby = "titulo-help" } })
+                    <small id="titulo-help" class="form-text text-muted">Campo requerido. Máximo 200 caracteres</small>
+                    @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.FechaInicio)
-                    @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.LabelFor(model => model.Descripcion, new { id = "descripcion-label" })
+                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4, aria_describedby = "descripcion-help" })
+                    <small id="descripcion-help" class="form-text text-muted">Proporcione detalles sobre la campaña de adopción</small>
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.FechaFin)
-                    @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.LabelFor(model => model.FechaInicio, new { id = "fecha-inicio-label" })
+                    @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date", required = "required", aria_required = "true", aria_describedby = "fecha-inicio-help" } })
+                    <small id="fecha-inicio-help" class="form-text text-muted">Fecha de inicio de la campaña</small>
+                    @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ImagenUrl)
-                    @Html.EditorFor(model => model.ImagenUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.LabelFor(model => model.FechaFin, new { id = "fecha-fin-label" })
+                    @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date", aria_describedby = "fecha-fin-help" } })
+                    <small id="fecha-fin-help" class="form-text text-muted">Fecha de fin (debe ser posterior a la fecha de inicio)</small>
+                    @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
-                <div class="checkbox">
-                    <label>
-                        @Html.CheckBoxFor(model => model.Activa)
-                        Activa
-                    </label>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImagenUrl, new { id = "imagen-label" })
+                    @Html.EditorFor(model => model.ImagenUrl, new { htmlAttributes = new { @class = "form-control", aria_describedby = "imagen-help" } })
+                    <small id="imagen-help" class="form-text text-muted">URL de la imagen para la campaña</small>
+                    @Html.ValidationMessageFor(model => model.ImagenUrl, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
-                <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-floppy-disk"></i> Actualizar</button>
-                <a href="@Url.Action("Index")" class="btn btn-default">Cancelar</a>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(model => model.Activa, new { aria_describedby = "campana-activa-help" })
+                            Campaña activa
+                        </label>
+                    </div>
+                    <small id="campana-activa-help" class="form-text text-muted">Si está marcado, la campaña estará visible</small>
+                </div>
+
+                <div class="form-group" role="group" aria-label="Acciones del formulario">
+                    <button type="submit" class="btn btn-warning" aria-label="Actualizar campaña">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Actualizar
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-default" aria-label="Cancelar y volver al listado">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
+                    </a>
+                </div>
             }
         </div>
     </div>

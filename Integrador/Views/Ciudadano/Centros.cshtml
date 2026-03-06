@@ -7,48 +7,48 @@
     var centersJson = Html.Raw(Json.Encode(Model));
 }
 
-<div class="container mt-4">
+<main class="container mt-4" role="main" aria-label="Centros de adopción disponibles">
     <div class="row">
         <div class="col-md-4">
-            <h4>Centros</h4>
+            <h1 style="font-size: 20px;">Centros</h1>
 
             @if (TempData["CentrosError"] != null)
             {
-                <div class="alert alert-danger">@TempData["CentrosError"]</div>
+                <div class="alert alert-danger" role="alert" aria-live="assertive">@TempData["CentrosError"]</div>
             }
 
             @if (!Model.Any())
             {
-                <div class="alert alert-info">No hay centros disponibles.</div>
+                <div class="alert alert-info" role="status">No hay centros disponibles.</div>
             }
             else
             {
-                <div class="list-group">
+                <nav class="list-group" role="list" aria-label="Lista de centros de adopción">
                     @foreach (var c in Model)
                     {
-                        <div class="list-group-item">
-                            <h5 class="mb-1">@c.Nombre</h5>
-                            <p class="small mb-1">@c.Direccion</p>
-                            <p class="small text-muted mb-1">Tel: @c.Telefono</p>
+                        <article class="list-group-item" role="listitem" aria-label="Centro @c.Nombre">
+                            <h2 class="mb-1" style="font-size: 16px;">@c.Nombre</h2>
+                            <p class="small mb-1" aria-label="Dirección: @c.Direccion">@c.Direccion</p>
+                            <p class="small text-muted mb-1" aria-label="Teléfono: @c.Telefono">Tel: @c.Telefono</p>
 
-                            @using (Html.BeginForm("SeleccionarCentro", "Ciudadano", FormMethod.Post))
+                            @using (Html.BeginForm("SeleccionarCentro", "Ciudadano", FormMethod.Post, new { aria_label = "Seleccionar centro " + c.Nombre }))
                             {
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@c.Id" />
-                                <button class="btn btn-sm btn-primary" type="submit">Seleccionar este centro</button>
+                                <button class="btn btn-sm btn-primary" type="submit" aria-label="Seleccionar @c.Nombre como centro de adopción">Seleccionar este centro</button>
                             }
-                        </div>
+                        </article>
                     }
-                </div>
+                </nav>
             }
         </div>
 
         <div class="col-md-8">
-            <h4>Mapa</h4>
-            <div id="map" style="width:100%;height:520px;border:1px solid #ddd;"></div>
+            <h2 style="font-size: 20px;">Mapa</h2>
+            <div id="map" style="width:100%;height:520px;border:1px solid #ddd;" role="application" aria-label="Mapa interactivo con ubicación de centros de adopción"></div>
         </div>
     </div>
-</div>
+</main>
 
 @section scripts {
     <script>

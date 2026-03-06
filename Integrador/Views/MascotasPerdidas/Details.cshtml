@@ -8,15 +8,15 @@
 }
 
 <!-- Hero Section -->
-<section class="detalle-hero @(Model.Encontrada ? "encontrada" : "perdida")">
+<section class="detalle-hero @(Model.Encontrada ? "encontrada" : "perdida")" role="banner" aria-label="Información de mascota @(Model.Encontrada ? "encontrada" : "perdida"): @Model.Nombre">
     <div class="hero-content">
         @if (Model.Encontrada)
         {
-            <span class="badge-estado">✅ Encontrada</span>
+            <span class="badge-estado" role="status" aria-label="Estado: Encontrada"><span aria-hidden="true">✅</span> Encontrada</span>
         }
         else
         {
-            <span class="badge-estado">🚨 Perdida</span>
+            <span class="badge-estado" role="status" aria-label="Estado: Perdida"><span aria-hidden="true">🚨</span> Perdida</span>
         }
         <h1>@Model.Nombre</h1>
         <p class="subtitulo">@(Model.Tipo ?? "Mascota") @(!string.IsNullOrEmpty(Model.Raza) ? "• " + Model.Raza : "")</p>
@@ -24,7 +24,7 @@
 </section>
 
 <!-- Contenido Principal -->
-<section class="detalle-content">
+<section class="detalle-content" role="main" aria-label="Detalles del reporte de @Model.Nombre">
     <div class="detalle-container">
         <div class="detalle-grid">
             <!-- Imagen -->
@@ -32,19 +32,19 @@
                 <div class="detalle-imagen">
                     @if (!string.IsNullOrEmpty(Model.FotoUrl))
                     {
-                        <img src="@Model.FotoUrl" alt="@Model.Nombre" />
+                        <img src="@Model.FotoUrl" alt="Foto de @Model.Nombre, mascota @(Model.Encontrada ? "encontrada" : "perdida")" />
                     }
                     else
                     {
-                        <div class="imagen-placeholder">🐾</div>
+                        <div class="imagen-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
                     }
                 </div>
 
                 <!-- Status Box -->
                 @if (Model.Encontrada)
                 {
-                    <div class="status-box encontrada">
-                        <span class="status-icon">🎉</span>
+                    <div class="status-box encontrada" role="status" aria-live="polite">
+                        <span class="status-icon" aria-hidden="true">🎉</span>
                         <div class="status-text">
                             <strong>¡Mascota Encontrada!</strong>
                             <p>Encontrada el @(Model.FechaEncontrada.HasValue ? Model.FechaEncontrada.Value.ToString("dd/MM/yyyy") : "N/A")</p>
@@ -53,8 +53,8 @@
                 }
                 else
                 {
-                    <div class="status-box perdida">
-                        <span class="status-icon">🚨</span>
+                    <div class="status-box perdida" role="alert">
+                        <span class="status-icon" aria-hidden="true">🚨</span>
                         <div class="status-text">
                             <strong>Mascota Perdida</strong>
                             <p>Si la has visto, por favor contacta al dueño</p>
@@ -67,9 +67,9 @@
             <div class="detalle-info">
                 <h2>Información de la Mascota</h2>
 
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-icon">🏷️</span>
+                <div class="info-grid" role="list" aria-label="Características de la mascota">
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">🏷️</span>
                         <div class="info-content">
                             <label>Tipo</label>
                             <span>@(Model.Tipo ?? "No especificado")</span>
@@ -77,8 +77,8 @@
                     </div>
                     @if (!string.IsNullOrEmpty(Model.Raza))
                     {
-                        <div class="info-item">
-                            <span class="info-icon">🐕</span>
+                        <div class="info-item" role="listitem">
+                            <span class="info-icon" aria-hidden="true">🐕</span>
                             <div class="info-content">
                                 <label>Raza</label>
                                 <span>@Model.Raza</span>
@@ -87,16 +87,16 @@
                     }
                     @if (!string.IsNullOrEmpty(Model.Color))
                     {
-                        <div class="info-item">
-                            <span class="info-icon">🎨</span>
+                        <div class="info-item" role="listitem">
+                            <span class="info-icon" aria-hidden="true">🎨</span>
                             <div class="info-content">
                                 <label>Color</label>
                                 <span>@Model.Color</span>
                             </div>
                         </div>
                     }
-                    <div class="info-item">
-                        <span class="info-icon">📅</span>
+                    <div class="info-item" role="listitem">
+                        <span class="info-icon" aria-hidden="true">📅</span>
                         <div class="info-content">
                             <label>Fecha de Reporte</label>
                             <span>@Model.FechaReporte.ToString("dd/MM/yyyy")</span>
@@ -104,8 +104,8 @@
                     </div>
                 </div>
 
-                <div class="ubicacion-box">
-                    <span class="ubicacion-icon">📍</span>
+                <div class="ubicacion-box" role="region" aria-label="Ubicación donde se perdió/encontró">
+                    <span class="ubicacion-icon" aria-hidden="true">📍</span>
                     <div class="ubicacion-content">
                         <label>Última Ubicación Conocida</label>
                         <span>@(Model.Ubicacion ?? "No especificada")</span>
@@ -114,35 +114,35 @@
 
                 @if (!string.IsNullOrEmpty(Model.Descripcion))
                 {
-                    <div class="descripcion-box">
+                    <div class="descripcion-box" role="region" aria-label="Descripción de la mascota">
                         <h3>Descripción</h3>
                         <p>@Model.Descripcion</p>
                     </div>
                 }
 
                 <!-- Contacto -->
-                <div class="contacto-box">
-                    <h3>📞 Información de Contacto</h3>
-                    <div class="contacto-items">
+                <div class="contacto-box" role="region" aria-label="Información de contacto del dueño">
+                    <h3><span aria-hidden="true">📞</span> Información de Contacto</h3>
+                    <div class="contacto-items" role="list">
                         @if (!string.IsNullOrEmpty(Model.NombreContacto))
                         {
-                            <div class="contacto-item">
-                                <span class="contacto-icon">👤</span>
+                            <div class="contacto-item" role="listitem">
+                                <span class="contacto-icon" aria-hidden="true">👤</span>
                                 <span>@Model.NombreContacto</span>
                             </div>
                         }
                         @if (!string.IsNullOrEmpty(Model.Telefono))
                         {
-                            <div class="contacto-item">
-                                <span class="contacto-icon">📱</span>
-                                <a href="tel:@Model.Telefono">@Model.Telefono</a>
+                            <div class="contacto-item" role="listitem">
+                                <span class="contacto-icon" aria-hidden="true">📱</span>
+                                <a href="tel:@Model.Telefono" aria-label="Llamar al @Model.Telefono">@Model.Telefono</a>
                             </div>
                         }
                         @if (!string.IsNullOrEmpty(Model.Email))
                         {
-                            <div class="contacto-item">
-                                <span class="contacto-icon">✉️</span>
-                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            <div class="contacto-item" role="listitem">
+                                <span class="contacto-icon" aria-hidden="true">✉️</span>
+                                <a href="mailto:@Model.Email" aria-label="Enviar email a @Model.Email">@Model.Email</a>
                             </div>
                         }
                     </div>
@@ -151,14 +151,14 @@
                 <!-- Acción: Marcar como encontrada -->
                 @if (!Model.Encontrada && Session["UsuarioId"] != null)
                 {
-                    <div class="accion-encontrada">
-                        <h4>🎯 ¿Encontraste a tu mascota?</h4>
+                    <div class="accion-encontrada" role="region" aria-label="Marcar mascota como encontrada">
+                        <h4><span aria-hidden="true">🎯</span> ¿Encontraste a tu mascota?</h4>
                         <p>Si encontraste a tu mascota, marca este reporte como "Encontrada" para que otros lo sepan.</p>
-                        @using (Html.BeginForm("MarcarEncontrada", "MascotasPerdidas", new { id = Model.Id }, FormMethod.Post))
+                        @using (Html.BeginForm("MarcarEncontrada", "MascotasPerdidas", new { id = Model.Id }, FormMethod.Post, new { aria_label = "Formulario para marcar mascota como encontrada" }))
                         {
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn-marcar-encontrada" onclick="return confirm('¿Estás seguro de que encontraste a tu mascota?')">
-                                ✅ Marcar como Encontrada
+                            <button type="submit" class="btn-marcar-encontrada" aria-label="Confirmar que la mascota fue encontrada" onclick="return confirm('¿Estás seguro de que encontraste a tu mascota?')">
+                                <span aria-hidden="true">✅</span> Marcar como Encontrada
                             </button>
                         }
                     </div>

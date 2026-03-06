@@ -7,28 +7,33 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="glyphicon glyphicon-bullhorn" style="color:#93A597"></i> Gestión de Campañas</h2>
+            <h2>
+                <span class="glyphicon glyphicon-bullhorn" style="color:#93A597" aria-hidden="true"></span>
+                Gestión de Campañas de Adopción
+            </h2>
         </div>
         <div class="col-md-6 text-right">
-            <a href="@Url.Action("Create")" class="btn btn-success">
-                <i class="glyphicon glyphicon-plus"></i> Nueva Campaña
+            <a href="@Url.Action("Create")" class="btn btn-success" aria-label="Crear nueva campaña de adopción">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Nueva Campaña
             </a>
         </div>
     </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong><i class="glyphicon glyphicon-ok-sign"></i></strong> @TempData["Success"]
+        <div class="alert alert-success alert-dismissible" role="alert" aria-live="polite" aria-atomic="true">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">&times;</button>
+            <strong><i class="glyphicon glyphicon-ok-sign" aria-hidden="true"></i></strong> 
+            <span>@TempData["Success"]</span>
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> @TempData["Error"]
+        <div class="alert alert-danger alert-dismissible" role="alert" aria-live="assertive" aria-atomic="true">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar mensaje">&times;</button>
+            <strong><i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i></strong> 
+            <span>@TempData["Error"]</span>
         </div>
     }
 
@@ -36,62 +41,77 @@
         <div class="card-body">
             @if (Model != null && Model.Any())
             {
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>Descripción</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th>Estado</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td><strong>@item.Titulo</strong></td>
-                                <td>@(item.Descripcion != null && item.Descripcion.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)</td>
-                                <td>@item.FechaInicio.ToString("dd/MM/yyyy")</td>
-                                <td>@(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "Sin fecha fin")</td>
-                                <td>
-                                    @if (item.Activa)
-                                    {
-                                        <span class="label label-success">Activa</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-default">Inactiva</span>
-                                    }
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                        <a href="@Url.Action("Details", new { id = item.Id })" 
-                                           class="btn btn-info btn-sm" title="Ver detalles">
-                                            <i class="glyphicon glyphicon-eye-open"></i>
-                                        </a>
-                                        <a href="@Url.Action("Edit", new { id = item.Id })" 
-                                           class="btn btn-warning btn-sm" title="Editar">
-                                            <i class="glyphicon glyphicon-edit"></i>
-                                        </a>
-                                        <a href="@Url.Action("Delete", new { id = item.Id })" 
-                                           class="btn btn-danger btn-sm" title="Eliminar">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" role="table" aria-label="Tabla de campañas de adopción">
+                        <caption class="sr-only">Listado completo de campañas con opciones de edición y eliminación</caption>
+                        <thead>
+                            <tr role="row">
+                                <th scope="col" role="columnheader" aria-label="Identificador de campaña">ID</th>
+                                <th scope="col" role="columnheader" aria-label="Título de la campaña">Título</th>
+                                <th scope="col" role="columnheader" aria-label="Descripción resumida de la campaña">Descripción</th>
+                                <th scope="col" role="columnheader" aria-label="Fecha de inicio de la campaña">Fecha Inicio</th>
+                                <th scope="col" role="columnheader" aria-label="Fecha de fin de la campaña">Fecha Fin</th>
+                                <th scope="col" role="columnheader" aria-label="Estado actual de la campaña">Estado</th>
+                                <th scope="col" role="columnheader" aria-label="Acciones disponibles para cada campaña" class="text-center">Acciones</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr role="row" aria-label="Campaña @item.Titulo, Estado: @(item.Activa ? "Activa" : "Inactiva")">
+                                    <td role="cell" aria-label="ID: @item.Id">@item.Id</td>
+                                    <td role="cell" aria-label="Título: @item.Titulo"><strong>@item.Titulo</strong></td>
+                                    <td role="cell" aria-label="Descripción: @(item.Descripcion != null && item.Descripcion.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)">
+                                        @(item.Descripcion != null && item.Descripcion.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)
+                                    </td>
+                                    <td role="cell" aria-label="Fecha de inicio: @item.FechaInicio.ToString("dd/MM/yyyy")">@item.FechaInicio.ToString("dd/MM/yyyy")</td>
+                                    <td role="cell" aria-label="Fecha de fin: @(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "Sin fecha fin")">
+                                        @(item.FechaFin.HasValue ? item.FechaFin.Value.ToString("dd/MM/yyyy") : "Sin fecha fin")
+                                    </td>
+                                    <td role="cell">
+                                        @if (item.Activa)
+                                        {
+                                            <span class="label label-success" role="status" aria-label="Campaña activa">
+                                                <i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Activa
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-default" role="status" aria-label="Campaña inactiva">
+                                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Inactiva
+                                            </span>
+                                        }
+                                    </td>
+                                    <td role="cell" class="text-center">
+                                        <div class="btn-group" role="group" aria-label="Acciones para campaña @item.Titulo">
+                                            <a href="@Url.Action("Details", new { id = item.Id })" 
+                                               class="btn btn-info btn-sm" title="Ver detalles" 
+                                               aria-label="Ver detalles de la campaña @item.Titulo">
+                                                <i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i> <span class="sr-only">Ver</span>
+                                            </a>
+                                            <a href="@Url.Action("Edit", new { id = item.Id })" 
+                                               class="btn btn-warning btn-sm" title="Editar" 
+                                               aria-label="Editar campaña @item.Titulo">
+                                                <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> <span class="sr-only">Editar</span>
+                                            </a>
+                                            <a href="@Url.Action("Delete", new { id = item.Id })" 
+                                               class="btn btn-danger btn-sm" title="Eliminar" 
+                                               aria-label="Eliminar campaña @item.Titulo">
+                                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> <span class="sr-only">Eliminar</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
             else
             {
-                <div class="alert alert-info">
-                    <i class="glyphicon glyphicon-info-sign"></i> No hay campañas registradas en el sistema.
+                <div class="alert alert-info" role="status" aria-live="polite">
+                    <i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+                    <span> No hay campañas registradas en el sistema.</span>
                 </div>
             }
         </div>

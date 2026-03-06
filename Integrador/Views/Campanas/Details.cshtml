@@ -5,83 +5,77 @@
     Layout = "~/Views/Shared/_LayoutMaster.cshtml";
 }
 
-<div class="container">
+<main class="container" role="main" aria-label="Detalles de la campaña @Model.Titulo">
     <div class="card">
         <div class="card-header">
-            <h2><i class="glyphicon glyphicon-bullhorn"></i> @Model.Titulo</h2>
+            <h1 style="font-size: 24px; margin: 0;"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> @Model.Titulo</h1>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-5">
                     @if (!string.IsNullOrEmpty(Model.ImagenUrl))
                     {
-                        <img src="@Model.ImagenUrl" class="img-thumbnail" alt="@Model.Titulo" style="width: 100%; max-height: 400px; object-fit: cover;" />
+                        <img src="@Model.ImagenUrl" class="img-thumbnail" alt="Imagen de la campaña @Model.Titulo" style="width: 100%; max-height: 400px; object-fit: cover;" />
                     }
                     else
                     {
-                        <div style="height: 300px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                            <i class="glyphicon glyphicon-picture" style="font-size: 80px; color: #ccc;"></i>
+                        <div style="height: 300px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: 8px;" role="img" aria-label="Sin imagen disponible para esta campaña">
+                            <span class="glyphicon glyphicon-picture" style="font-size: 80px; color: #ccc;" aria-hidden="true"></span>
                         </div>
                     }
                 </div>
                 <div class="col-md-7">
-                    <div class="panel panel-info">
+                    <section class="panel panel-info" aria-label="Información de la campaña">
                         <div class="panel-heading">
-                            <h4><i class="glyphicon glyphicon-info-sign"></i> Información de la Campaña</h4>
+                            <h2 style="font-size: 18px; margin: 0;"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Información de la Campaña</h2>
                         </div>
                         <div class="panel-body">
-                            <table class="table table-striped">
-                                <tr>
-                                    <td><strong>Fecha de Inicio:</strong></td>
-                                    <td>@Model.FechaInicio.ToString("dd/MM/yyyy")</td>
-                                </tr>
+                            <dl class="dl-horizontal">
+                                <dt>Fecha de Inicio:</dt>
+                                <dd>@Model.FechaInicio.ToString("dd/MM/yyyy")</dd>
                                 @if (Model.FechaFin.HasValue)
                                 {
-                                    <tr>
-                                        <td><strong>Fecha de Fin:</strong></td>
-                                        <td>@Model.FechaFin.Value.ToString("dd/MM/yyyy")</td>
-                                    </tr>
+                                    <dt>Fecha de Fin:</dt>
+                                    <dd>@Model.FechaFin.Value.ToString("dd/MM/yyyy")</dd>
                                 }
-                                <tr>
-                                    <td><strong>Estado:</strong></td>
-                                    <td>
-                                        @if (Model.Activa)
-                                        {
-                                            <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Activa</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-default">Finalizada</span>
-                                        }
-                                    </td>
-                                </tr>
-                            </table>
+                                <dt>Estado:</dt>
+                                <dd>
+                                    @if (Model.Activa)
+                                    {
+                                        <span class="label label-success" role="status" aria-label="Campaña activa"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Activa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-default" role="status" aria-label="Campaña finalizada">Finalizada</span>
+                                    }
+                                </dd>
+                            </dl>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
 
-            <hr />
+            <hr aria-hidden="true" />
 
-            <div class="panel panel-default">
+            <section class="panel panel-default" aria-label="Descripción de la campaña">
                 <div class="panel-heading">
-                    <h4><i class="glyphicon glyphicon-list-alt"></i> Descripción</h4>
+                    <h2 style="font-size: 18px; margin: 0;"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Descripción</h2>
                 </div>
                 <div class="panel-body">
                     <div class="well">
                         @Html.Raw(Model.Descripcion)
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="text-center" style="margin-top: 20px;">
-                <a href="@Url.Action("Index", "Campanas")" class="btn btn-default btn-lg">
-                    <i class="glyphicon glyphicon-arrow-left"></i> Volver a Campañas
+            <nav class="text-center" style="margin-top: 20px;" aria-label="Navegación">
+                <a href="@Url.Action("Index", "Campanas")" class="btn btn-default btn-lg" aria-label="Volver a la lista de campañas">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Volver a Campañas
                 </a>
-            </div>
+            </nav>
         </div>
     </div>
-</div>
+</main>
 
 <style>
     .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; margin-bottom: 20px; }

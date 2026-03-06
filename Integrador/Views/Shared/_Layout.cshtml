@@ -337,51 +337,63 @@
     </style>
 </head>
 <body>
-    <!-- Skip Link para accesibilidad -->
+    <!-- Skip Link para accesibilidad (NVDA compatible) -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
     <!-- Región de anuncios para lectores de pantalla -->
-    <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="announcements"></div>
+    <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="announcements" role="status"></div>
 
-    <!-- Navbar -->
-    <nav class="navbar" role="navigation" aria-label="Navegación principal">
-        <div style="display: flex; align-items: center; width: 100%; gap: 20px;">
-            <div class="logo">
-                @if (Session["Nombre"] != null)
-                {
-                    <a href="@Url.Action("Index", "Ciudadano")">
-                        <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía - Ir a página principal">
-                        <span aria-label="Pura Compañía - Plataforma de adopción de mascotas">Pura Compañía</span>
-                    </a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Landing", "Home")">
-                        <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía - Ir a página principal">
-                        <span aria-label="Pura Compañía - Plataforma de adopción de mascotas">Pura Compañía</span>
-                    </a>
-                }
+    <!-- Navbar - Header principal de la aplicación -->
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <div style="display: flex; align-items: center; width: 100%; gap: 20px;">
+                <div class="logo">
+                    @if (Session["Nombre"] != null)
+                    {
+                        <a href="@Url.Action("Index", "Ciudadano")" aria-label="Pura Compañía - Plataforma de adopción de mascotas - Ir a página de inicio">
+                            <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía">
+                            <span>Pura Compañía</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Landing", "Home")" aria-label="Pura Compañía - Plataforma de adopción de mascotas - Ir a página de inicio">
+                            <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía">
+                            <span>Pura Compañía</span>
+                        </a>
+                    }
+                </div>
+                <ul class="nav-links" role="menubar">
+                    <li role="none">
+                        <a href="@Url.Action("Index", "Mascotas")" role="menuitem" aria-label="Ver catálogo de mascotas disponibles para adopción">Mascotas</a>
+                    </li>
+                    <li role="none">
+                        <a href="@Url.Action("Soporte", "Home")" role="menuitem" aria-label="Contactarnos - Enviar mensaje o solicitar información">Contacto</a>
+                    </li>
+                </ul>
+                <div style="display: flex; align-items: center;">
+                    @if (Session["Nombre"] != null)
+                    {
+                        <a href="@Url.Action("Perfil", "Ciudadano")" class="btn-login" aria-label="Ir a mi perfil de usuario @Session["Nombre"]">Mi Perfil</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="btn-login" aria-label="Iniciar sesión en tu cuenta">Iniciar sesión</a>
+                    }
+                </div>
             </div>
-            <ul class="nav-links" role="menubar">
-                <li role="none"><a href="@Url.Action("Index", "Mascotas")" role="menuitem">Mascotas</a></li>
-                <li role="none"><a href="@Url.Action("Soporte", "Home")" role="menuitem">Contacto</a></li>
-            </ul>
-            <div style="display: flex; align-items: center;">
-                @if (Session["Nombre"] != null)
-                {
-                    <a href="@Url.Action("Perfil", "Ciudadano")" class="btn-login" aria-label="Ir a mi perfil de usuario">Mi Perfil</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Login", "Account")" class="btn-login" aria-label="Iniciar sesión en tu cuenta">Iniciar sesión</a>
-                }
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <main id="main-content">
+    <!-- Contenido principal de la página -->
+    <main id="main-content" role="main">
         @RenderBody()
     </main>
+
+    <!-- Footer - Información de la aplicación -->
+    <footer role="contentinfo" aria-label="Información de pie de página de Pura Compañía">
+        <div class="sr-only">Fin del contenido principal</div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

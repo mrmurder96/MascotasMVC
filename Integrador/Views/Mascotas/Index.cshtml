@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Hero Section -->
-<section class="mascotas-hero">
+<!-- Hero Section - Accesible con ARIA -->
+<section class="mascotas-hero" role="region" aria-label="Sección de bienvenida - Encontrar compañero perfecto">
     <div class="hero-content">
-        <h1>🐾 Encuentra a tu compañero perfecto</h1>
+        <h1><span aria-hidden="true">🐾</span> Encuentra a tu compañero perfecto</h1>
         <p class="subtitle">
             @if (Model != null && Model.Any())
             {
@@ -22,101 +22,112 @@
     </div>
 </section>
 
-<!-- Filtros Section -->
-<section class="filtros-section">
+<!-- Filtros Section - Accesible con ARIA -->
+<section class="filtros-section" role="region" aria-label="Filtros de búsqueda">
     <div class="filtros-container">
-        @using (Html.BeginForm("Index", "Mascotas", FormMethod.Get, new { @class = "filtros-form" }))
+        @using (Html.BeginForm("Index", "Mascotas", FormMethod.Get, new { @class = "filtros-form", role = "search", aria_label = "Formulario de búsqueda de mascotas" }))
         {
             <div class="filtro-group">
-                <label>🔍 Buscar</label>
-                <input type="text" name="buscar" class="filtro-input" value="@ViewBag.Buscar" placeholder="Nombre de mascota..." />
+                <label for="buscar-input" id="buscar-label"><span aria-hidden="true">🔍</span> Buscar mascota</label>
+                <input type="text" id="buscar-input" name="buscar" class="filtro-input" value="@ViewBag.Buscar" placeholder="Ingresa nombre de mascota..." aria-label="Campo de búsqueda por nombre de mascota" aria-describedby="buscar-help" />
+                <small id="buscar-help" class="sr-only">Escribe el nombre de la mascota que buscas</small>
             </div>
             <div class="filtro-group">
-                <label>🏷️ Tipo</label>
-                <select name="tipo" class="filtro-select">
-                    <option value="">Todos</option>
-                    <option value="Perro" @(ViewBag.TipoSeleccionado == "Perro" ? "selected" : "")>🐕 Perro</option>
-                    <option value="Gato" @(ViewBag.TipoSeleccionado == "Gato" ? "selected" : "")>🐱 Gato</option>
-                    <option value="Ave" @(ViewBag.TipoSeleccionado == "Ave" ? "selected" : "")>🐦 Ave</option>
-                    <option value="Conejo" @(ViewBag.TipoSeleccionado == "Conejo" ? "selected" : "")>🐰 Conejo</option>
-                    <option value="Otro" @(ViewBag.TipoSeleccionado == "Otro" ? "selected" : "")>🐾 Otro</option>
+                <label for="tipo-select" id="tipo-label"><span aria-hidden="true">🏷️</span> Tipo de mascota</label>
+                <select id="tipo-select" name="tipo" class="filtro-select" aria-label="Filtrar por tipo de mascota" aria-describedby="tipo-help">
+                    <option value="">Todos los tipos</option>
+                    <option value="Perro" @(ViewBag.TipoSeleccionado == "Perro" ? "selected" : "")>Perro</option>
+                    <option value="Gato" @(ViewBag.TipoSeleccionado == "Gato" ? "selected" : "")>Gato</option>
+                    <option value="Ave" @(ViewBag.TipoSeleccionado == "Ave" ? "selected" : "")>Ave</option>
+                    <option value="Conejo" @(ViewBag.TipoSeleccionado == "Conejo" ? "selected" : "")>Conejo</option>
+                    <option value="Otro" @(ViewBag.TipoSeleccionado == "Otro" ? "selected" : "")>Otro</option>
                 </select>
+                <small id="tipo-help" class="sr-only">Selecciona el tipo de mascota que deseas adoptar</small>
             </div>
             <div class="filtro-group">
-                <label>📏 Tamaño</label>
-                <select name="tamano" class="filtro-select">
-                    <option value="">Todos</option>
+                <label for="tamano-select" id="tamano-label"><span aria-hidden="true">📏</span> Tamaño</label>
+                <select id="tamano-select" name="tamano" class="filtro-select" aria-label="Filtrar por tamaño de mascota" aria-describedby="tamano-help">
+                    <option value="">Todos los tamaños</option>
                     <option value="Pequeño" @(ViewBag.TamanoSeleccionado == "Pequeño" ? "selected" : "")>Pequeño</option>
                     <option value="Mediano" @(ViewBag.TamanoSeleccionado == "Mediano" ? "selected" : "")>Mediano</option>
                     <option value="Grande" @(ViewBag.TamanoSeleccionado == "Grande" ? "selected" : "")>Grande</option>
                 </select>
+                <small id="tamano-help" class="sr-only">Selecciona el tamaño de mascota preferido</small>
             </div>
             <div class="filtro-buttons">
-                <button type="submit" class="btn-buscar">Buscar</button>
-                <a href="@Url.Action("Index")" class="btn-limpiar">Limpiar</a>
+                <button type="submit" class="btn-buscar" aria-label="Aplicar filtros de búsqueda">Buscar</button>
+                <a href="@Url.Action("Index")" class="btn-limpiar" aria-label="Limpiar todos los filtros de búsqueda">Limpiar filtros</a>
             </div>
         }
     </div>
 </section>
 
-<!-- Grid de Mascotas -->
-<section class="mascotas-section">
+<!-- Grid de Mascotas - Accesible con ARIA -->
+<section class="mascotas-section" role="region" aria-label="Listado de mascotas disponibles para adopción">
     @if (Model != null && Model.Any())
     {
-        <div class="mascotas-grid">
+        <div class="mascotas-grid" role="list" aria-label="@Model.Count() mascotas disponibles">
             @foreach (var mascota in Model)
             {
-                <div class="mascota-card">
-                    <div class="mascota-image-container">
-                        @if (!string.IsNullOrEmpty(mascota.FotoUrl))
-                        {
-                            if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
+                <div class="mascota-card" role="listitem" aria-label="Mascota @mascota.Nombre, @(mascota.Tipo ?? "Tipo desconocido"), @(mascota.Edad?.ToString() ?? "Edad desconocida") años">
+                    <article>
+                        <div class="mascota-image-container">
+                            @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                             {
-                                <img src="@Url.Content(mascota.FotoUrl)" alt="@mascota.Nombre" class="mascota-image" />
+                                if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
+                                {
+                                    <img src="@Url.Content(mascota.FotoUrl)" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" />
+                                }
                             }
                             else
                             {
-                                <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="@mascota.Nombre" class="mascota-image" />
+                                <div class="mascota-image-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
                             }
-                        }
-                        else
-                        {
-                            <div class="mascota-image-placeholder">🐾</div>
-                        }
-                        <span class="mascota-badge-disponible">Disponible</span>
-                    </div>
-                    <div class="mascota-info">
-                        <div class="mascota-header">
-                            <h3>@mascota.Nombre</h3>
-                            <span class="mascota-tag @(mascota.Tipo?.ToLower() == "gato" ? "gato" : mascota.Tipo?.ToLower() == "perro" ? "perro" : "otro")">
-                                @mascota.Tipo
-                            </span>
+                            <span class="mascota-badge-disponible" aria-label="Mascota disponible para adopción">Disponible</span>
                         </div>
-                        <p class="mascota-raza">@(string.IsNullOrEmpty(mascota.Raza) ? "Mestizo" : mascota.Raza)</p>
-                        <p class="mascota-edad">@(mascota.Edad.HasValue ? mascota.Edad + " años" : "Edad desconocida") @(!string.IsNullOrEmpty(mascota.Sexo) ? "• " + mascota.Sexo : "")</p>
-                        @if (!string.IsNullOrEmpty(mascota.Descripcion))
-                        {
-                            <p class="mascota-descripcion">
-                                @(mascota.Descripcion.Length > 80 ? mascota.Descripcion.Substring(0, 77) + "..." : mascota.Descripcion)
+                        <div class="mascota-info">
+                            <div class="mascota-header">
+                                <h3>@mascota.Nombre</h3>
+                                <span class="mascota-tag @(mascota.Tipo?.ToLower() == "gato" ? "gato" : mascota.Tipo?.ToLower() == "perro" ? "perro" : "otro")" role="status" aria-label="Tipo: @(mascota.Tipo ?? "Desconocido")">
+                                    @mascota.Tipo
+                                </span>
+                            </div>
+                            <p class="mascota-raza" aria-label="Raza: @(string.IsNullOrEmpty(mascota.Raza) ? "Mestizo" : mascota.Raza)">
+                                @(string.IsNullOrEmpty(mascota.Raza) ? "Mestizo" : mascota.Raza)
                             </p>
-                        }
-                        <p class="mascota-ubicacion">📍 @(string.IsNullOrEmpty(mascota.Ubicacion) ? "Sin ubicación" : mascota.Ubicacion)</p>
-                        <div class="mascota-buttons">
-                            <a href="@Url.Action("Adopt", new { id = mascota.Id })" class="btn-adoptar">❤️ Adoptar</a>
-                            <a href="@Url.Action("Details", new { id = mascota.Id })" class="btn-ver-mas">Ver más</a>
+                            <p class="mascota-edad" aria-label="Edad: @(mascota.Edad?.ToString() ?? "Desconocida") años @(!string.IsNullOrEmpty(mascota.Sexo) ? ", Sexo: " + mascota.Sexo : "")">
+                                @(mascota.Edad.HasValue ? mascota.Edad + " años" : "Edad desconocida") @(!string.IsNullOrEmpty(mascota.Sexo) ? "• " + mascota.Sexo : "")
+                            </p>
+                            @if (!string.IsNullOrEmpty(mascota.Descripcion))
+                            {
+                                <p class="mascota-descripcion" aria-label="Descripción: @mascota.Descripcion">
+                                    @(mascota.Descripcion.Length > 80 ? mascota.Descripcion.Substring(0, 77) + "..." : mascota.Descripcion)
+                                </p>
+                            }
+                            <p class="mascota-ubicacion" aria-label="Ubicación: @(string.IsNullOrEmpty(mascota.Ubicacion) ? "Sin ubicación" : mascota.Ubicacion)">
+                                <span aria-hidden="true">📍</span> @(string.IsNullOrEmpty(mascota.Ubicacion) ? "Sin ubicación" : mascota.Ubicacion)
+                            </p>
+                            <div class="mascota-buttons">
+                                <a href="@Url.Action("Adopt", new { id = mascota.Id })" class="btn-adoptar" aria-label="Adoptar a @mascota.Nombre"><span aria-hidden="true">❤️</span> Adoptar</a>
+                                <a href="@Url.Action("Details", new { id = mascota.Id })" class="btn-ver-mas" aria-label="Ver detalles completos de @mascota.Nombre">Ver más</a>
+                            </div>
                         </div>
-                    </div>
+                    </article>
                 </div>
             }
         </div>
     }
     else
     {
-        <div class="no-mascotas">
-            <div class="no-mascotas-icon">🐾</div>
+        <div class="no-mascotas" role="status" aria-label="No hay mascotas disponibles">
+            <div class="no-mascotas-icon" aria-hidden="true">🐾</div>
             <h3>No hay mascotas disponibles en este momento</h3>
             <p>Vuelve pronto, constantemente recibimos nuevas mascotas buscando un hogar.</p>
-            <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn-alternativo">Ver Mascotas Perdidas</a>
+            <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn-alternativo" aria-label="Ver listado de mascotas perdidas">Ver Mascotas Perdidas</a>
         </div>
     }
 </section>

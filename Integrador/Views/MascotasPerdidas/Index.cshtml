@@ -8,95 +8,105 @@
         : "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Hero Section -->
-<section class="perdidas-hero">
+<!-- Hero Section - Accesible -->
+<section class="perdidas-hero" role="region" aria-label="Sección de mascotas perdidas">
     <div class="hero-content">
-        <h1>🔍 Mascotas Perdidas</h1>
+        <h1><span aria-hidden="true">🔍</span> Mascotas Perdidas y Encontradas</h1>
         <p class="subtitle">Ayúdanos a reunir a las mascotas con sus familias</p>
         @if (Session["UsuarioId"] != null)
         {
-            <a href="@Url.Action("Create", "MascotasPerdidas")" class="btn-reportar">
-                ➕ Reportar Mascota Perdida
+            <a href="@Url.Action("Create", "MascotasPerdidas")" class="btn-reportar" aria-label="Reportar una mascota perdida">
+                <span aria-hidden="true">➕</span> Reportar Mascota Perdida
             </a>
         }
     </div>
 </section>
 
-<!-- Filtros Section -->
-<section class="filtros-section">
+<!-- Filtros Section - Accesible -->
+<section class="filtros-section" role="region" aria-label="Filtros de estado">
     <div class="filtros-container">
-        <div class="filter-tabs">
-            <button class="filter-tab active" onclick="filtrarMascotas('todas', this)">
-                📋 Todas
+        <div class="filter-tabs" role="tablist" aria-label="Filtrar mascotas por estado">
+            <button class="filter-tab active" role="tab" aria-selected="true" aria-controls="todas-tab" onclick="filtrarMascotas('todas', this)" id="tab-todas" aria-label="Mostrar todas las mascotas">
+                <span aria-hidden="true">📋</span> Todas
             </button>
-            <button class="filter-tab" onclick="filtrarMascotas('perdidas', this)">
-                🚨 Perdidas
+            <button class="filter-tab" role="tab" aria-selected="false" aria-controls="perdidas-tab" onclick="filtrarMascotas('perdidas', this)" id="tab-perdidas" aria-label="Mostrar solo mascotas perdidas">
+                <span aria-hidden="true">🚨</span> Perdidas
             </button>
-            <button class="filter-tab" onclick="filtrarMascotas('encontradas', this)">
-                ✅ Encontradas
+            <button class="filter-tab" role="tab" aria-selected="false" aria-controls="encontradas-tab" onclick="filtrarMascotas('encontradas', this)" id="tab-encontradas" aria-label="Mostrar solo mascotas encontradas">
+                <span aria-hidden="true">✅</span> Encontradas
             </button>
         </div>
     </div>
 </section>
 
-<!-- Grid de Mascotas Perdidas -->
-<section class="perdidas-section">
+<!-- Grid de Mascotas Perdidas - Accesible -->
+<section class="perdidas-section" role="region" aria-label="Listado de reportes de mascotas perdidas y encontradas">
     @if (Model != null && Model.Any())
     {
-        <div class="perdidas-grid" id="mascotasGrid">
+        <div class="perdidas-grid" id="mascotasGrid" role="list" aria-label="@Model.Count() reportes de mascotas">
             @foreach (var mascota in Model)
             {
-                <div class="perdida-card" data-estado="@(mascota.Encontrada ? "encontrada" : "perdida")">
+                <article class="perdida-card" role="listitem" data-estado="@(mascota.Encontrada ? "encontrada" : "perdida")" aria-label="Reporte de mascota @mascota.Nombre, Estado: @(mascota.Encontrada ? "Encontrada" : "Perdida")">
                     <div class="perdida-image-container">
                         @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                         {
-                            <img src="@mascota.FotoUrl" alt="@mascota.Nombre" class="perdida-image" />
+                            <img src="@mascota.FotoUrl" alt="Foto de @mascota.Nombre reportado como @(mascota.Encontrada ? "encontrado" : "perdido")" class="perdida-image" />
                         }
                         else
                         {
-                            <div class="perdida-image-placeholder">🐾</div>
+                            <div class="perdida-image-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
                         }
                         @if (mascota.Encontrada)
                         {
-                            <span class="badge-estado encontrada">✅ Encontrada</span>
+                            <span class="badge-estado encontrada" role="status" aria-label="Estado: Encontrada">
+                                <span aria-hidden="true">✅</span> Encontrada
+                            </span>
                         }
                         else
                         {
-                            <span class="badge-estado perdida">🚨 Perdida</span>
+                            <span class="badge-estado perdida" role="status" aria-label="Estado: Perdida">
+                                <span aria-hidden="true">🚨</span> Perdida
+                            </span>
                         }
                     </div>
                     <div class="perdida-info">
                         <h3>@mascota.Nombre</h3>
                         <div class="perdida-detalles">
-                            <span class="detalle-item">🏷️ @(mascota.Tipo ?? "No especificado")</span>
+                            <span class="detalle-item" aria-label="Tipo: @(mascota.Tipo ?? "No especificado")">
+                                <span aria-hidden="true">🏷️</span> @(mascota.Tipo ?? "No especificado")
+                            </span>
                             @if (!string.IsNullOrEmpty(mascota.Raza))
                             {
-                                <span class="detalle-item">🐕 @mascota.Raza</span>
+                                <span class="detalle-item" aria-label="Raza: @mascota.Raza">
+                                    <span aria-hidden="true">🐕</span> @mascota.Raza
+                                </span>
                             }
                         </div>
-                        <p class="perdida-fecha">📅 Reportado: @mascota.FechaReporte.ToString("dd/MM/yyyy")</p>
-                        <div class="perdida-ubicacion">
-                            <strong>📍 Última ubicación:</strong><br />
+                        <p class="perdida-fecha" aria-label="Reportado el @mascota.FechaReporte.ToString("dd/MM/yyyy")">
+                            <span aria-hidden="true">📅</span> Reportado: @mascota.FechaReporte.ToString("dd/MM/yyyy")
+                        </p>
+                        <div class="perdida-ubicacion" aria-label="Última ubicación reportada: @(mascota.Ubicacion ?? "No especificada")">
+                            <strong><span aria-hidden="true">📍</span> Última ubicación:</strong><br />
                             @(mascota.Ubicacion ?? "No especificada")
                         </div>
                         @if (!string.IsNullOrEmpty(mascota.Descripcion))
                         {
-                            <p class="perdida-descripcion">
+                            <p class="perdida-descripcion" aria-label="Descripción: @mascota.Descripcion">
                                 @(mascota.Descripcion.Length > 100 ? mascota.Descripcion.Substring(0, 100) + "..." : mascota.Descripcion)
                             </p>
                         }
-                        <a href="@Url.Action("Details", "MascotasPerdidas", new { id = mascota.Id })" class="btn-ver-detalles">
+                        <a href="@Url.Action("Details", "MascotasPerdidas", new { id = mascota.Id })" class="btn-ver-detalles" aria-label="Ver detalles completos del reporte de @mascota.Nombre">
                             Ver Detalles
                         </a>
                     </div>
-                </div>
+                </article>
             }
         </div>
     }
     else
     {
-        <div class="empty-state">
-            <div class="empty-icon">🐾</div>
+        <div class="empty-state" role="status" aria-label="No hay reportes de mascotas perdidas">
+            <div class="empty-icon" aria-hidden="true">🐾</div>
             <h3>No hay reportes de mascotas perdidas</h3>
             <p>¡Eso es una buena noticia!</p>
         </div>

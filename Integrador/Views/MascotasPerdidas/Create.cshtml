@@ -77,115 +77,117 @@
     }
 </style>
 
-<div class="form-container">
-    <div class="form-header">
-        <h2 style="margin: 0; font-size: 32px; font-weight: 700;">?? Reportar Mascota Perdida</h2>
+<main class="form-container" role="main" aria-label="Formulario para reportar mascota perdida">
+    <header class="form-header" role="banner">
+        <h1 style="margin: 0; font-size: 32px; font-weight: 700;"><span aria-hidden="true">🚨</span> Reportar Mascota Perdida</h1>
         <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.95;">
             Complete el formulario con la mayor información posible para ayudarnos a encontrar a su mascota
         </p>
-    </div>
-    
+    </header>
+
     <div class="form-content">
-        @using (Html.BeginForm("Create", "MascotasPerdidas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Create", "MascotasPerdidas", FormMethod.Post, new { enctype = "multipart/form-data", aria_label = "Formulario de reporte de mascota perdida" }))
         {
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert", aria_live = "assertive" })
 
                 <!-- Campo oculto para TipoReporte -->
                 @Html.Hidden("TipoReporte", "Perdida")
 
                 <div class="form-group">
-                    <label class="required-field">Nombre de la Mascota</label>
-                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", placeholder = "Ej: Max, Luna, Bobby..." })
-                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    <label for="Nombre" class="required-field">Nombre de la Mascota</label>
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", placeholder = "Ej: Max, Luna, Bobby...", aria_required = "true", aria_describedby = "nombre-help" })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
-                    <label class="required-field">Tipo de Mascota</label>
-                    @Html.DropDownListFor(model => model.TipoMascota, new SelectList(new[] { "Perro", "Gato", "Otro" }), "Seleccione un tipo", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.TipoMascota, "", new { @class = "text-danger" })
+                    <label for="TipoMascota" class="required-field">Tipo de Mascota</label>
+                    @Html.DropDownListFor(model => model.TipoMascota, new SelectList(new[] { "Perro", "Gato", "Otro" }), "Seleccione un tipo", new { @class = "form-control", aria_required = "true" })
+                    @Html.ValidationMessageFor(model => model.TipoMascota, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
-                    <label>Raza</label>
-                    @Html.TextBoxFor(model => model.Raza, new { @class = "form-control", placeholder = "Ej: Labrador, Siamés..." })
-                    <small class="help-text">Si no conoce la raza exacta, puede dejarlo en blanco</small>
+                    <label for="Raza">Raza</label>
+                    @Html.TextBoxFor(model => model.Raza, new { @class = "form-control", placeholder = "Ej: Labrador, Siamés...", aria_describedby = "raza-help" })
+                    <small id="raza-help" class="help-text">Si no conoce la raza exacta, puede dejarlo en blanco</small>
                 </div>
 
                 <div class="form-group">
-                    <label>Color (en descripción)</label>
-                    <input type="text" name="Color" class="form-control" placeholder="Ej: Café, Negro, Blanco..." />
+                    <label for="Color">Color (en descripción)</label>
+                    <input type="text" name="Color" id="Color" class="form-control" placeholder="Ej: Café, Negro, Blanco..." />
                 </div>
 
                 <div class="form-group">
-                    <label class="required-field">Descripción</label>
-                    @Html.TextAreaFor(model => model.Descripcion, 5, 40, new { @class = "form-control", placeholder = "Describa características físicas, comportamiento, señas particulares..." })
-                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
-                    <small class="help-text">Sea lo más detallado posible: tamaño, marcas, collar, chip, etc.</small>
+                    <label for="Descripcion" class="required-field">Descripción</label>
+                    @Html.TextAreaFor(model => model.Descripcion, 5, 40, new { @class = "form-control", placeholder = "Describa características físicas, comportamiento, señas particulares...", aria_required = "true", aria_describedby = "descripcion-help" })
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger", role = "alert" })
+                    <small id="descripcion-help" class="help-text">Sea lo más detallado posible: tamaño, marcas, collar, chip, etc.</small>
                 </div>
 
                 <div class="form-group">
-                    <label class="required-field">Última Ubicación Conocida</label>
-                    @Html.TextBoxFor(model => model.UbicacionReporte, new { @class = "form-control", placeholder = "Ej: Parque Central, cerca de la 5ta Avenida..." })
-                    @Html.ValidationMessageFor(model => model.UbicacionReporte, "", new { @class = "text-danger" })
-                    <small class="help-text">Indique lugar, barrio, referencias cercanas</small>
+                    <label for="UbicacionReporte" class="required-field">Última Ubicación Conocida</label>
+                    @Html.TextBoxFor(model => model.UbicacionReporte, new { @class = "form-control", placeholder = "Ej: Parque Central, cerca de la 5ta Avenida...", aria_required = "true", aria_describedby = "ubicacion-help" })
+                    @Html.ValidationMessageFor(model => model.UbicacionReporte, "", new { @class = "text-danger", role = "alert" })
+                    <small id="ubicacion-help" class="help-text">Indique lugar, barrio, referencias cercanas</small>
                 </div>
 
                 <div class="form-group">
-                    <label>Foto de la Mascota</label>
-                    <input type="file" name="foto" accept="image/*" class="form-control" />
-                    <small class="help-text">Formato JPG, PNG o GIF. Tamaño máximo: 5 MB</small>
+                    <label for="foto">Foto de la Mascota</label>
+                    <input type="file" name="foto" id="foto" accept="image/*" class="form-control" aria-describedby="foto-help" />
+                    <small id="foto-help" class="help-text">Formato JPG, PNG o GIF. Tamaño máximo: 5 MB</small>
                 </div>
 
-                <hr style="margin: 30px 0;" />
+                <hr style="margin: 30px 0;" aria-hidden="true" />
 
-                <h4 style="color: #2c3e50; margin-bottom: 20px;">📞 Información de Contacto</h4>
+                <fieldset>
+                    <legend style="color: #2c3e50; margin-bottom: 20px; border: none; font-size: 18px;"><span aria-hidden="true">📞</span> Información de Contacto</legend>
 
-                <div class="form-group">
-                    <label class="required-field">Nombre de Contacto</label>
-                    @Html.TextBoxFor(model => model.NombreReportante, new { @class = "form-control", placeholder = "Su nombre completo" })
-                    @Html.ValidationMessageFor(model => model.NombreReportante, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        <label for="NombreReportante" class="required-field">Nombre de Contacto</label>
+                        @Html.TextBoxFor(model => model.NombreReportante, new { @class = "form-control", placeholder = "Su nombre completo", aria_required = "true" })
+                        @Html.ValidationMessageFor(model => model.NombreReportante, "", new { @class = "text-danger", role = "alert" })
+                    </div>
 
-                <div class="form-group">
-                    <label class="required-field">Teléfono</label>
-                    @Html.TextBoxFor(model => model.TelefonoContacto, new { @class = "form-control", placeholder = "Ej: +57 300 123 4567", type = "tel" })
-                    @Html.ValidationMessageFor(model => model.TelefonoContacto, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        <label for="TelefonoContacto" class="required-field">Teléfono</label>
+                        @Html.TextBoxFor(model => model.TelefonoContacto, new { @class = "form-control", placeholder = "Ej: +57 300 123 4567", type = "tel", aria_required = "true" })
+                        @Html.ValidationMessageFor(model => model.TelefonoContacto, "", new { @class = "text-danger", role = "alert" })
+                    </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    @Html.TextBoxFor(model => model.EmailContacto, new { @class = "form-control", placeholder = "su.email@ejemplo.com", type = "email" })
-                    @Html.ValidationMessageFor(model => model.EmailContacto, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        <label for="EmailContacto">Email</label>
+                        @Html.TextBoxFor(model => model.EmailContacto, new { @class = "form-control", placeholder = "su.email@ejemplo.com", type = "email" })
+                        @Html.ValidationMessageFor(model => model.EmailContacto, "", new { @class = "text-danger", role = "alert" })
+                    </div>
+                </fieldset>
 
-                <div style="background: #e8f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h5 style="margin: 0 0 10px 0; color: #2c3e50;">ℹ️ Información Importante</h5>
+                <aside style="background: #e8f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;" role="note" aria-label="Información importante sobre el reporte">
+                    <h2 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;"><span aria-hidden="true">ℹ️</span> Información Importante</h2>
                     <ul style="margin: 0; padding-left: 20px; color: #555;">
                         <li>Su información de contacto será visible públicamente para que puedan contactarlo si encuentran a su mascota</li>
                         <li>Mantenga su teléfono disponible para recibir llamadas</li>
                         <li>Revise su email regularmente</li>
                         <li>Una vez encuentre a su mascota, puede marcar el reporte como "Encontrada"</li>
                     </ul>
-                </div>
+                </aside>
 
                 <div class="form-group">
-                    <button type="submit" class="btn-submit">
-                        <i class="glyphicon glyphicon-ok"></i> Publicar Reporte
+                    <button type="submit" class="btn-submit" aria-label="Publicar reporte de mascota perdida">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Publicar Reporte
                     </button>
                 </div>
 
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-default btn-lg">
-                        <i class="glyphicon glyphicon-remove"></i> Cancelar
+                <nav style="text-align: center; margin-top: 20px;" aria-label="Navegación">
+                    <a href="@Url.Action("Index", "MascotasPerdidas")" class="btn btn-default btn-lg" aria-label="Cancelar y volver al listado de mascotas perdidas">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
                     </a>
-                </div>
+                </nav>
             </div>
         }
     </div>
-</div>
+</main>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
