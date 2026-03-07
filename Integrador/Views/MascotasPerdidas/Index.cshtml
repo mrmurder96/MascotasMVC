@@ -50,11 +50,12 @@
                     <div class="perdida-image-container">
                         @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                         {
-                            <img src="@mascota.FotoUrl" alt="Foto de @mascota.Nombre reportado como @(mascota.Encontrada ? "encontrado" : "perdido")" class="perdida-image" />
+                            var pubPerdidaSrc = mascota.FotoUrl.StartsWith("~") ? Url.Content(mascota.FotoUrl) : mascota.FotoUrl.StartsWith("/") ? Url.Content("~" + mascota.FotoUrl) : Url.Content("~/Content/uploads/perdidas/" + mascota.FotoUrl);
+                            <img src="@pubPerdidaSrc" alt="Foto de @mascota.Nombre reportado como @(mascota.Encontrada ? "encontrado" : "perdido")" class="perdida-image" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                         }
                         else
                         {
-                            <div class="perdida-image-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
+                            <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Foto de @mascota.Nombre" class="perdida-image" />
                         }
                         @if (mascota.Encontrada)
                         {

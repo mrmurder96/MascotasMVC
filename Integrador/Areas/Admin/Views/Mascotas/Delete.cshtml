@@ -18,16 +18,35 @@
 
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            @if (!string.IsNullOrEmpty(Model.Imagen))
+                            @if (string.Equals(Model.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                             {
-                                <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Imagen)" 
+                                <img src="@Url.Content("~/Content/images/golden.webp")" 
+                                     alt="Foto de @Model.Nombre" 
+                                     class="img-thumbnail" />
+                            }
+                            else if (string.Equals(Model.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <img src="@Url.Content("~/Content/images/bulldog1.jpg")" 
+                                     alt="Foto de @Model.Nombre" 
+                                     class="img-thumbnail" />
+                            }
+                            else if (string.Equals(Model.Raza, "Labrador", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" 
+                                     alt="Foto de @Model.Nombre" 
+                                     class="img-thumbnail" />
+                            }
+                            else if (!string.IsNullOrEmpty(Model.FotoUrl))
+                            {
+                                var delImgSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
+                                <img src="@delImgSrc" 
                                      alt="Foto de @Model.Nombre" 
                                      class="img-thumbnail" 
                                      style="max-width: 100%;" />
                             }
                             else
                             {
-                                <img src="@Url.Content("~/Content/images/no-image.png")" 
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" 
                                      alt="Sin imagen" 
                                      class="img-thumbnail" />
                             }

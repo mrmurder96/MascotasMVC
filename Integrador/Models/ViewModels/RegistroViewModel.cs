@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
+using Integrador.Validations;
 
 namespace Integrador.Models.ViewModels
 {
@@ -21,9 +23,26 @@ namespace Integrador.Models.ViewModels
 
         [Required(ErrorMessage = "Ingrese email")]
         [EmailAddress(ErrorMessage = "Email no válido")]
-        [StringLength(50, ErrorMessage = "El email no puede exceder 50 caracteres")]
+        [StringLength(150, ErrorMessage = "El email no puede exceder 150 caracteres")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
+
+        [StringLength(10, ErrorMessage = "La cédula no puede exceder 10 caracteres")]
+        [Display(Name = "Cédula")]
+        public string Cedula { get; set; }
+
+        [StringLength(15, ErrorMessage = "El teléfono no puede exceder 15 caracteres")]
+        [Display(Name = "Teléfono")]
+        public string Telefono { get; set; }
+
+        [StringLength(250, ErrorMessage = "La dirección no puede exceder 250 caracteres")]
+        [Display(Name = "Dirección")]
+        public string Direccion { get; set; }
+
+        [Display(Name = "Fecha de nacimiento")]
+        [DataType(DataType.Date)]
+        [EdadEntre(ErrorMessage = "Debe tener entre 18 y 70 años. La fecha no puede ser hoy ni futura.")]
+        public DateTime? FechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "Ingrese contraseña")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "La contraseña debe tener entre 6 y 20 caracteres")]

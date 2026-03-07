@@ -16,16 +16,18 @@
 
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            @if (!string.IsNullOrEmpty(Model.Imagen))
+                            @if (!string.IsNullOrEmpty(Model.FotoUrl))
                             {
-                                <img src="@Url.Content("~/Content/uploads/perdidas/" + Model.Imagen)" 
+                                var perdidaDetSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/perdidas/" + Model.FotoUrl);
+                                <img src="@perdidaDetSrc" 
                                      alt="Foto de la mascota" 
                                      class="img-thumbnail" 
-                                     style="max-width: 100%;" />
+                                     style="max-width: 100%;" 
+                                     onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                             }
                             else
                             {
-                                <img src="@Url.Content("~/Content/images/no-image.png")" 
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" 
                                      alt="Sin imagen" 
                                      class="img-thumbnail" />
                             }

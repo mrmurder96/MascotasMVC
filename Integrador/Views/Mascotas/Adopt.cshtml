@@ -255,7 +255,11 @@
 
     <!-- Vista previa de la mascota -->
     <section class="pet-preview" role="region" aria-label="Información de la mascota a adoptar">
-        <img src="@(string.IsNullOrEmpty(Model.FotoUrl) ? "/Content/images/mascota-default.png" : Model.FotoUrl)" alt="Foto de @Model.Nombre" />
+        @{ 
+                            var adoptFotoUrl = string.IsNullOrEmpty(Model.FotoUrl) ? null : (Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl));
+                            var adoptImg = string.Equals(Model.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/Content/images/golden.webp") : string.Equals(Model.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/Content/images/bulldog1.jpg") : (adoptFotoUrl ?? Url.Content("~/Content/images/labrador.jpg")); 
+                        }
+        <img src="@adoptImg" alt="Foto de @Model.Nombre" />
         <div class="pet-preview-info">
             <h2 style="font-size: 18px; margin: 0 0 5px 0;"><span aria-hidden="true"><i class="fas fa-paw" style="color:#8CFAA4;"></i></span> @Model.Nombre</h2>
             <p><strong>Tipo:</strong> @Model.Tipo | <strong>Edad:</strong> @Model.Edad anios | <strong>Ubicacion:</strong> @Model.Ubicacion</p>

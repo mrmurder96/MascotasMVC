@@ -22,20 +22,22 @@
             <!-- Imagen -->
             <div class="detalle-imagen-wrapper">
                 <div class="detalle-imagen">
-                    @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                    @if (string.Equals(Model.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (Model.FotoUrl.StartsWith("/") || Model.FotoUrl.StartsWith("~"))
-                        {
-                            <img src="@Url.Content(Model.FotoUrl)" alt="Foto de @Model.Nombre, @(Model.Tipo ?? "mascota") @(string.IsNullOrEmpty(Model.Raza) ? "mestizo" : Model.Raza)" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl)" alt="Foto de @Model.Nombre, @(Model.Tipo ?? "mascota") @(string.IsNullOrEmpty(Model.Raza) ? "mestizo" : Model.Raza)" />
-                        }
+                        <img src="@Url.Content("~/Content/images/golden.webp")" alt="Foto de @Model.Nombre, Golden Retriever" />
+                    }
+                    else if (string.Equals(Model.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="Foto de @Model.Nombre, Bulldog" />
+                    }
+                    else if (!string.IsNullOrEmpty(Model.FotoUrl))
+                    {
+                        var fotoSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
+                        <img src="@fotoSrc" alt="Foto de @Model.Nombre, @(Model.Tipo ?? "mascota") @(string.IsNullOrEmpty(Model.Raza) ? "mestizo" : Model.Raza)" />
                     }
                     else
                     {
-                        <div class="imagen-placeholder" role="img" aria-label="Sin foto disponible de @Model.Nombre"><span aria-hidden="true">🐾</span></div>
+                        <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Foto de @Model.Nombre" />
                     }
                 </div>
                 <div class="estado-badge" role="status" aria-live="polite">

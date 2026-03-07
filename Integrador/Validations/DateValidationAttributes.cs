@@ -161,6 +161,55 @@ namespace Integrador.Validations
     }
 
     /// <summary>
+    /// Valida que la persona sea mayor de edad (mínimo 18 años) y no supere 70 años.
+    /// La fecha de nacimiento no puede ser hoy ni futura.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    public class EdadEntreAttribute : ValidationAttribute
+    {
+        public int EdadMinima { get; set; } = 18;
+        public int EdadMaxima { get; set; } = 70;
+
+        public EdadEntreAttribute() : base("Debe tener entre 18 y 70 años.")
+        {
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value == null)
+                return ValidationResult.Success;
+
+            DateTime fecha;
+            if (value is DateTime)
+                fecha = (DateTime)value;
+            else if (value is DateTime?)
+            {
+                var nullableDate = (DateTime?)value;
+                if (!nullableDate.HasValue)
+                    return ValidationResult.Success;
+                fecha = nullableDate.Value;
+            }
+            else
+                return new ValidationResult("Valor de fecha inválido");
+
+            var hoy = DateTime.Today;
+            if (fecha.Date >= hoy)
+                return new ValidationResult(ErrorMessage ?? "La fecha de nacimiento no puede ser hoy ni futura.");
+
+            var fechaMaximaPermitida = hoy.AddYears(-EdadMinima);
+            var fechaMinimaPermitida = hoy.AddYears(-EdadMaxima);
+
+            if (fecha.Date > fechaMaximaPermitida)
+                return new ValidationResult(ErrorMessage ?? "Debe ser mayor de edad (al menos 18 años).");
+
+            if (fecha.Date < fechaMinimaPermitida)
+                return new ValidationResult(ErrorMessage ?? "La edad no puede superar los 70 años.");
+
+            return ValidationResult.Success;
+        }
+    }
+
+    /// <summary>
     /// Valida que una fecha de reporte no sea futura y no sea muy antigua
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]

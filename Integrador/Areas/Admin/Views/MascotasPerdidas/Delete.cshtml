@@ -18,12 +18,17 @@
 
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            @if (!string.IsNullOrEmpty(Model.Imagen))
+                            @if (!string.IsNullOrEmpty(Model.FotoUrl))
                             {
-                                <img src="@Url.Content("~/Content/uploads/perdidas/" + Model.Imagen)" 
+                                var delPerdidaSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/perdidas/" + Model.FotoUrl);
+                                <img src="@delPerdidaSrc" 
                                      alt="Foto" 
                                      class="img-thumbnail" 
                                      style="max-width: 100%;" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Sin imagen" class="img-thumbnail" style="max-width: 100%;" />
                             }
                         </div>
 

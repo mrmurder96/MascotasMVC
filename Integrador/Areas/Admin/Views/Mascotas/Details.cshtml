@@ -18,21 +18,44 @@
                         <!-- Imagen de la mascota -->
                         <div class="col-md-4">
                             <div class="mascota-imagen-detail">
-                                @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                                @if (string.Equals(Model.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    var imgSrc = Model.FotoUrl.StartsWith("/") || Model.FotoUrl.StartsWith("~") 
-                                        ? Url.Content(Model.FotoUrl) 
-                                        : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
-                                    <img src="@imgSrc" 
-                                         alt="Foto de @Model.Nombre, @Model.Tipo @Model.Raza" 
+                                    <img src="@Url.Content("~/Content/images/golden.webp")" 
+                                         alt="Foto de @Model.Nombre, Golden Retriever" 
                                          class="img-responsive img-thumbnail" 
                                          aria-describedby="mascotaImagenDesc" />
                                     <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
                                 }
+                                else if (string.Equals(Model.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <img src="@Url.Content("~/Content/images/bulldog1.jpg")" 
+                                         alt="Foto de @Model.Nombre, Bulldog" 
+                                         class="img-responsive img-thumbnail" 
+                                         aria-describedby="mascotaImagenDesc" />
+                                    <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
+                                }
+                                else if (string.Equals(Model.Raza, "Labrador", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <img src="@Url.Content("~/Content/images/labrador.jpg")" 
+                                         alt="Foto de @Model.Nombre, Labrador" 
+                                         class="img-responsive img-thumbnail" 
+                                         aria-describedby="mascotaImagenDesc" />
+                                    <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
+                                }
+                                else if (!string.IsNullOrEmpty(Model.FotoUrl))
+                                {
+                                    var imgSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
+                                    <img src="@imgSrc" 
+                                         alt="Foto de @Model.Nombre, @Model.Tipo @Model.Raza" 
+                                         class="img-responsive img-thumbnail" 
+                                         aria-describedby="mascotaImagenDesc" 
+                                         onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
+                                    <span id="mascotaImagenDesc" class="sr-only">Fotografía de la mascota @Model.Nombre</span>
+                                }
                                 else
                                 {
-                                    <img src="https://via.placeholder.com/300x250?text=Sin+Imagen" 
-                                         alt="Sin imagen disponible" 
+<img src="@Url.Content("~/Content/images/labrador.jpg")"
+                                         alt="Sin imagen disponible"
                                          class="img-responsive img-thumbnail" />
                                 }
                                 <div class="estado-badge" role="status" aria-label="Estado actual de la mascota: @Model.Estado">

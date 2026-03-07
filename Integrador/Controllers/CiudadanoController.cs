@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -81,8 +81,10 @@ namespace Integrador.Controllers
                 Nombres = usuario.Nombres,
                 Apellidos = usuario.Apellidos,
                 Email = usuario.Email,
+                Cedula = usuario.Cedula,
                 Telefono = usuario.Telefono,
                 Direccion = usuario.Direccion,
+                FechaNacimiento = usuario.FechaNacimiento,
                 FotoPerfilRuta = string.IsNullOrEmpty(usuario.FotoPerfilRuta) ? "/Content/images/default-avatar.png" : usuario.FotoPerfilRuta
             };
 
@@ -207,8 +209,10 @@ namespace Integrador.Controllers
             usuario.Nombres = model.Nombres;
             usuario.Apellidos = model.Apellidos;
             usuario.Email = model.Email;
+            usuario.Cedula = model.Cedula;
             usuario.Telefono = model.Telefono;
             usuario.Direccion = model.Direccion;
+            usuario.FechaNacimiento = model.FechaNacimiento;
 
             db.SaveChanges();
 

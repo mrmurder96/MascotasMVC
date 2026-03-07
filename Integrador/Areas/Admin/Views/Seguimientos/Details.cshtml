@@ -42,22 +42,22 @@
                     @if (Model.Mascotas != null)
                     {
                         <div class="mascota-preview">
-                            @if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
+                            @if (Model.Mascotas != null && string.Equals(Model.Mascotas.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (Model.Mascotas.FotoUrl.StartsWith("/") || Model.Mascotas.FotoUrl.StartsWith("~"))
-                                {
-                                    <img src="@Url.Content(Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" />
-                                }
-                                else
-                                {
-                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Mascotas.FotoUrl)" alt="@Model.Mascotas.Nombre" />
-                                }
+                                <img src="@Url.Content("~/Content/images/golden.webp")" alt="@Model.Mascotas.Nombre" />
+                            }
+                            else if (Model.Mascotas != null && string.Equals(Model.Mascotas.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="@Model.Mascotas.Nombre" />
+                            }
+                            else if (!string.IsNullOrEmpty(Model.Mascotas.FotoUrl))
+                            {
+                                var segDetSrc = Model.Mascotas.FotoUrl.StartsWith("~") ? Url.Content(Model.Mascotas.FotoUrl) : Model.Mascotas.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.Mascotas.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.Mascotas.FotoUrl);
+                                <img src="@segDetSrc" alt="@Model.Mascotas.Nombre" />
                             }
                             else
                             {
-                                <div class="no-image">
-                                    <i class="glyphicon glyphicon-picture"></i>
-                                </div>
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="@Model.Mascotas.Nombre" />
                             }
                         </div>
                         <h4 class="mascota-nombre">@Model.Mascotas.Nombre</h4>

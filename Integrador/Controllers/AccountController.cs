@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Data.Entity.Core.EntityClient;
@@ -168,6 +168,10 @@ namespace Integrador.Controllers
                 Nombres = model.Nombres,
                 Apellidos = model.Apellidos,
                 Email = model.Email,
+                Cedula = model.Cedula,
+                Telefono = model.Telefono,
+                Direccion = model.Direccion,
+                FechaNacimiento = model.FechaNacimiento,
                 ClaveHash = passwordCifrada,
                 Salt = salt,
                 Rol = "Ciudadano",
@@ -235,7 +239,7 @@ namespace Integrador.Controllers
             return RedirectToAction("Login");
         }
 
-        // --- RECUPERACIÓN: ahora usa verificación en dos pasos (código) ---
+        // --- RECUPERACIÓN: envía contraseña temporal + código por correo; Verify2FA valida el código; luego ResetPassword ---
         public ActionResult ForgotPassword()
         {
             return View();
@@ -254,49 +258,61 @@ namespace Integrador.Controllers
             var usuario = db.Usuarios.FirstOrDefault(u => u.Email == email && u.EstaActivo);
             if (usuario == null)
             {
-                // No indicar existencia; mostrar mensaje genérico
-                TempData["ForgotInfo"] = "Si el email existe en nuestro sistema, recibirás instrucciones para recuperar la contraseña.";
+                TempData["ForgotInfo"] = "Si el email existe en nuestro sistema, recibirás una contraseña temporal y un código de verificación por correo.";
                 return RedirectToAction("Login");
             }
 
-            // Generar código numérico para verificación (2 pasos en recuperación)
+            string claveAes = ConfigurationManager.AppSettings["ClaveAES"] ?? "";
+            string tempPasswordPlain = GenerateTemporaryPassword(8);
             string code = GenerateNumericCode(6);
+
+            usuario.ClaveHash = AesEncryption.Encrypt(tempPasswordPlain, claveAes);
             usuario.TokenRecuperacion = code;
-            usuario.TokenExpiracion = DateTime.Now.AddMinutes(10); // válido 10 min
+            usuario.TokenExpiracion = DateTime.Now.AddHours(24); // contraseña y código válidos 24 h
             db.SaveChanges();
 
-            // Guardar en sesión el id pendiente de recuperación
             Session["RecoverUserId"] = usuario.Id;
 
-            // Enviar código por correo
             try
             {
                 var from = ConfigurationManager.AppSettings["MailFrom"] ?? "no-reply@example.com";
-                var subject = "Código de recuperación de contraseña";
+                var subject = "Recuperación de contraseña - Pura Compañía";
+                var verifyPath = Url.Action("Verify2FA", "Account");
+                var verifyUrl = Request.Url != null
+                    ? new Uri(Request.Url, verifyPath).ToString()
+                    : (verifyPath ?? "/Account/Verify2FA");
                 var sb = new StringBuilder();
                 sb.AppendLine($"Hola {usuario.Nombres},");
                 sb.AppendLine();
-                sb.AppendLine("Has solicitado recuperar tu contraseña. Ingresa el siguiente código en la pantalla de verificación para continuar:");
+                sb.AppendLine("Has solicitado recuperar tu contraseña.");
                 sb.AppendLine();
-                sb.AppendLine($"Código: {code}");
+                sb.AppendLine("1) Tu contraseña temporal es:");
+                sb.AppendLine($"   {tempPasswordPlain}");
                 sb.AppendLine();
-                sb.AppendLine("El código expira en 10 minutos. Si no solicitaste esto, ignora el mensaje.");
+                sb.AppendLine("2) Tu código de verificación (ingrésalo en la siguiente pantalla) es:");
+                sb.AppendLine($"   {code}");
+                sb.AppendLine();
+                sb.AppendLine("Ingresa el código en la pantalla de verificación para poder restablecer tu contraseña. La contraseña temporal y el código son válidos por 24 horas.");
+                sb.AppendLine();
+                sb.AppendLine("Si no solicitaste esto, ignora el mensaje.");
+                sb.AppendLine();
+                sb.AppendLine("Pantalla de verificación: " + verifyUrl);
                 var body = sb.ToString();
 
                 using (var msg = new MailMessage(from, usuario.Email, subject, body))
-                using (var smtp = new SmtpClient())
+                using (var smtp = CrearSmtpClient())
                 {
                     smtp.Send(msg);
                 }
 
-                TempData["ForgotInfo"] = "Si el email existe en nuestro sistema, recibirás instrucciones para recuperar la contraseña.";
+                TempData["VerifyInfo"] = "Revisa tu correo: te enviamos una contraseña temporal y un código. Ingresa el código a continuación para continuar.";
             }
             catch (Exception ex)
             {
-                TempData["ForgotWarning"] = "Error al enviar correo. Contacta con soporte. (" + ex.Message + ")";
+                TempData["ForgotWarning"] = "Error al enviar el correo. Contacta con soporte. (" + ex.Message + ")";
+                return RedirectToAction("Login");
             }
 
-            // Llevar a la página de verificación (Verify2FA) para introducir el código
             return RedirectToAction("Verify2FA");
         }
 
@@ -328,23 +344,23 @@ namespace Integrador.Controllers
 
             if (resend)
             {
-                // Regenerar código y reenviar
+                // Regenerar código y reenviar por correo
                 string newCode = GenerateNumericCode(6);
                 usuario.TokenRecuperacion = newCode;
-                usuario.TokenExpiracion = DateTime.Now.AddMinutes(10);
+                usuario.TokenExpiracion = DateTime.Now.AddHours(24); // mismo margen que en ForgotPassword
                 db.SaveChanges();
 
                 try
                 {
                     var from = ConfigurationManager.AppSettings["MailFrom"] ?? "no-reply@example.com";
-                    var subject = "Código de recuperación (reenvío)";
-                    var body = $"Hola {usuario.Nombres},\n\nTu nuevo código: {newCode}\n\nExpira en 10 minutos.";
+                    var subject = "Nuevo código de verificación - Pura Compañía";
+                    var body = $"Hola {usuario.Nombres},\n\nTu nuevo código de verificación es: {newCode}\n\nIngrésalo en la pantalla de verificación para continuar al restablecimiento de contraseña. El código es válido por 24 horas.\n\nSi no solicitaste el reenvío, ignora este mensaje.";
                     using (var msg = new MailMessage(from, usuario.Email, subject, body))
-                    using (var smtp = new SmtpClient())
+                    using (var smtp = CrearSmtpClient())
                     {
                         smtp.Send(msg);
                     }
-                    TempData["VerifyInfo"] = "Se ha reenviado el código a tu email.";
+                    TempData["VerifyInfo"] = "Se ha reenviado el código a tu correo.";
                 }
                 catch
                 {
@@ -512,6 +528,32 @@ namespace Integrador.Controllers
         }
 
         // Helpers
+        /// <summary>
+        /// Crea un SmtpClient configurado desde Web.config (system.net/mailSettings o appSettings).
+        /// Permite envío de correo por SMTP para recuperación de contraseña.
+        /// </summary>
+        private static SmtpClient CrearSmtpClient()
+        {
+            var smtp = new SmtpClient();
+            var host = ConfigurationManager.AppSettings["SmtpHost"];
+            var portStr = ConfigurationManager.AppSettings["SmtpPort"];
+            var user = ConfigurationManager.AppSettings["SmtpUser"];
+            var pass = ConfigurationManager.AppSettings["SmtpPass"];
+            var enableSslStr = ConfigurationManager.AppSettings["SmtpEnableSsl"];
+
+            if (!string.IsNullOrWhiteSpace(host))
+            {
+                smtp.Host = host;
+                if (!string.IsNullOrWhiteSpace(portStr) && int.TryParse(portStr, out int port))
+                    smtp.Port = port;
+                if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(pass))
+                    smtp.Credentials = new System.Net.NetworkCredential(user, pass);
+                if (!string.IsNullOrWhiteSpace(enableSslStr) && bool.TryParse(enableSslStr, out bool enableSsl))
+                    smtp.EnableSsl = enableSsl;
+            }
+            return smtp;
+        }
+
         private string GenerateNumericCode(int digits = 6)
         {
             var rnd = new Random();

@@ -12,7 +12,7 @@ using Integrador.Models;
 namespace Integrador.Areas.Admin.Controllers
 {
     /// <summary>
-    /// Controlador para gestiÛn completa de Mascotas (RF-09, RF-12, RF-13)
+    /// Controlador para gestiùn completa de Mascotas (RF-09, RF-12, RF-13)
     /// </summary>
     [AdminAuthorize]
     [CargarPermisos]
@@ -26,7 +26,7 @@ namespace Integrador.Areas.Admin.Controllers
         {
             var mascotas = db.Mascotas.AsQueryable();
 
-            // Filtro por b˙squeda
+            // Filtro por bùsqueda
             if (!string.IsNullOrEmpty(buscar))
             {
                 mascotas = mascotas.Where(m => 
@@ -96,7 +96,7 @@ namespace Integrador.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Procesar imagen si se cargÛ
+                // Procesar imagen si se cargù
                 if (foto != null && foto.ContentLength > 0)
                 {
                     var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -104,7 +104,7 @@ namespace Integrador.Areas.Admin.Controllers
 
                     if (!allowedExtensions.Contains(extension))
                     {
-                        ModelState.AddModelError("", "Solo se permiten im·genes JPG, PNG o GIF");
+                        ModelState.AddModelError("", "Solo se permiten imùgenes JPG, PNG o GIF");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "No Disponible", "En Cuarentena", "En Tratamiento" });
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" });
                         CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
@@ -131,12 +131,12 @@ namespace Integrador.Areas.Admin.Controllers
                     var filePath = Path.Combine(uploadsPath, fileName);
                     foto.SaveAs(filePath);
 
-                    mascota.FotoUrl = "/Content/uploads/mascotas/" + fileName;
+                    mascota.FotoUrl = "~/Content/uploads/mascotas/" + fileName;
                 }
                 else
                 {
                     // Imagen por defecto
-                    mascota.FotoUrl = "/Content/images/mascota-default.png";
+                    mascota.FotoUrl = "~/Content/images/mascota-default.png";
                 }
 
                 db.Mascotas.Add(mascota);
@@ -189,7 +189,7 @@ namespace Integrador.Areas.Admin.Controllers
                     mascota.FechaCreacion = mascotaOriginal.FechaCreacion;
                 }
 
-                // Si se cargÛ una nueva imagen
+                // Si se cargù una nueva imagen
                 if (foto != null && foto.ContentLength > 0)
                 {
                     var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -197,7 +197,7 @@ namespace Integrador.Areas.Admin.Controllers
 
                     if (!allowedExtensions.Contains(extension))
                     {
-                        ModelState.AddModelError("", "Solo se permiten im·genes JPG, PNG o GIF");
+                        ModelState.AddModelError("", "Solo se permiten imùgenes JPG, PNG o GIF");
                         ViewBag.Estados = new SelectList(new[] { "Disponible", "Adoptado", "En Proceso", "No Disponible" }, mascota.Estado);
                         ViewBag.Tipos = new SelectList(new[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil", "Otro" }, mascota.Tipo);
                         CargarDropdowns(mascota.CategoriaId, mascota.RefugioId);
@@ -216,7 +216,8 @@ namespace Integrador.Areas.Admin.Controllers
                     // Eliminar imagen anterior si no es la por defecto
                     if (!string.IsNullOrEmpty(mascota.FotoUrl) && !mascota.FotoUrl.Contains("default"))
                     {
-                        var oldImagePath = Server.MapPath("~" + mascota.FotoUrl);
+                        var pathForMap = mascota.FotoUrl.StartsWith("~") ? mascota.FotoUrl : "~" + mascota.FotoUrl;
+                        var oldImagePath = Server.MapPath(pathForMap);
                         if (System.IO.File.Exists(oldImagePath))
                         {
                             System.IO.File.Delete(oldImagePath);
@@ -234,7 +235,7 @@ namespace Integrador.Areas.Admin.Controllers
                     var filePath = Path.Combine(uploadsPath, fileName);
                     foto.SaveAs(filePath);
 
-                    mascota.FotoUrl = "/Content/uploads/mascotas/" + fileName;
+                    mascota.FotoUrl = "~/Content/uploads/mascotas/" + fileName;
                 }
 
                 db.Entry(mascota).State = EntityState.Modified;
@@ -284,14 +285,15 @@ namespace Integrador.Areas.Admin.Controllers
             var tieneAdopciones = db.Adopciones.Any(a => a.MascotaId == id);
             if (tieneAdopciones)
             {
-                TempData["Error"] = "No se puede eliminar la mascota porque tiene solicitudes de adopciÛn asociadas";
+                TempData["Error"] = "No se puede eliminar la mascota porque tiene solicitudes de adopciùn asociadas";
                 return RedirectToAction("Index");
             }
 
             // Eliminar imagen fÌsica si no es la por defecto
             if (!string.IsNullOrEmpty(mascota.FotoUrl) && !mascota.FotoUrl.Contains("default"))
             {
-                var imagePath = Server.MapPath("~" + mascota.FotoUrl);
+                var pathForMap = mascota.FotoUrl.StartsWith("~") ? mascota.FotoUrl : "~" + mascota.FotoUrl;
+                var imagePath = Server.MapPath(pathForMap);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);
@@ -305,7 +307,7 @@ namespace Integrador.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        // AcciÛn para cambiar disponibilidad r·pidamente (RF-13)
+        // Acciùn para cambiar disponibilidad rùpidamente (RF-13)
         [HttpPost]
         [ValidarPermisoCrud(ControllerName = "Mascotas", Operacion = "Actualizar")]
         public JsonResult CambiarEstado(int id, string nuevoEstado)

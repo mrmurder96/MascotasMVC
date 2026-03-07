@@ -114,27 +114,38 @@
                         <hr />
 
                         <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                @if (!string.IsNullOrEmpty(Model.Imagen))
+                            <label class="col-md-3 control-label">Foto actual</label>
+                            <div class="col-md-9">
+                                @if (string.Equals(Model.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + Model.Imagen)" 
-                                         alt="Foto actual de @Model.Nombre" 
-                                         class="img-thumbnail" 
-                                         style="max-width: 300px; margin-bottom: 15px;" />
-                                    <p class="text-muted">Imagen actual: @Model.Imagen</p>
+                                    <img src="@Url.Content("~/Content/images/golden.webp")" alt="Foto de @Model.Nombre" class="img-thumbnail" style="max-width: 300px; margin-bottom: 15px;" />
+                                }
+                                else if (string.Equals(Model.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="Foto de @Model.Nombre" class="img-thumbnail" style="max-width: 300px; margin-bottom: 15px;" />
+                                }
+                                else if (string.Equals(Model.Raza, "Labrador", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Foto de @Model.Nombre" class="img-thumbnail" style="max-width: 300px; margin-bottom: 15px;" />
+                                }
+                                else if (!string.IsNullOrEmpty(Model.FotoUrl))
+                                {
+                                    var imgSrcEdit = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + Model.FotoUrl);
+                                    <img src="@imgSrcEdit" alt="Foto de @Model.Nombre" class="img-thumbnail" style="max-width: 300px; margin-bottom: 15px;" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                                 }
                                 else
                                 {
-                                    <p class="text-muted">No hay imagen cargada</p>
+                                    <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Sin imagen" class="img-thumbnail" style="max-width: 300px; margin-bottom: 15px;" />
                                 }
+                                <p class="text-muted">Suba una nueva imagen abajo para reemplazarla.</p>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label">Cambiar Foto</label>
                             <div class="col-md-9">
-                                <input type="file" name="ImagenFile" class="form-control" accept="image/*" aria-describedby="imagenHelp" />
-                                <small id="imagenHelp" class="text-muted">Dejar vacío para mantener la imagen actual. Formatos: JPG, PNG. Máximo: 2MB</small>
+                                <input type="file" name="foto" class="form-control" accept="image/jpeg,image/jpg,image/png,image/gif" aria-describedby="imagenHelp" />
+                                <small id="imagenHelp" class="text-muted">Dejar vacío para mantener la imagen actual. Formatos: JPG, PNG, GIF. Máximo: 5 MB</small>
                             </div>
                         </div>
 

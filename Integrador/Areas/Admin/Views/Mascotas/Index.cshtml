@@ -78,20 +78,26 @@
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="mascota-card">
                                 <div class="mascota-imagen">
-                                    @if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                                    @if (string.Equals(mascota.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
-                                        {
-                                            <img src="@Url.Content(mascota.FotoUrl)" alt="@mascota.Nombre" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="@mascota.Nombre" />
-                                        }
+                                        <img src="@Url.Content("~/Content/images/golden.webp")" alt="@mascota.Nombre" />
+                                    }
+                                    else if (string.Equals(mascota.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="@mascota.Nombre" />
+                                    }
+                                    else if (string.Equals(mascota.Raza, "Labrador", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="@mascota.Nombre" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                                    {
+                                        var fotoSrc = mascota.FotoUrl.StartsWith("~") ? Url.Content(mascota.FotoUrl) : mascota.FotoUrl.StartsWith("/") ? Url.Content("~" + mascota.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl);
+                                        <img src="@fotoSrc" alt="@mascota.Nombre" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                                     }
                                     else
                                     {
-                                        <img src="https://via.placeholder.com/300x250?text=Sin+Imagen" alt="Sin imagen" />
+                                        <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="@mascota.Nombre" />
                                     }
                                     <div class="mascota-estado">
                                         @if (mascota.Estado == "Disponible")

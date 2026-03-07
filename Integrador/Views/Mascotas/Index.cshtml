@@ -72,20 +72,22 @@
                 <div class="mascota-card" role="listitem" aria-label="Mascota @mascota.Nombre, @(mascota.Tipo ?? "Tipo desconocido"), @(mascota.Edad?.ToString() ?? "Edad desconocida") años">
                     <article>
                         <div class="mascota-image-container">
-                            @if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                            @if (string.Equals(mascota.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (mascota.FotoUrl.StartsWith("/") || mascota.FotoUrl.StartsWith("~"))
-                                {
-                                    <img src="@Url.Content(mascota.FotoUrl)" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" />
-                                }
-                                else
-                                {
-                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl)" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" />
-                                }
+                                <img src="@Url.Content("~/Content/images/golden.webp")" alt="Foto de @mascota.Nombre, Golden Retriever" class="mascota-image" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
+                            }
+                            else if (string.Equals(mascota.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="Foto de @mascota.Nombre, Bulldog" class="mascota-image" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
+                            }
+                            else if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                            {
+                                var fotoSrc = mascota.FotoUrl.StartsWith("~") ? Url.Content(mascota.FotoUrl) : mascota.FotoUrl.StartsWith("/") ? Url.Content("~" + mascota.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + mascota.FotoUrl);
+                                <img src="@fotoSrc" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                             }
                             else
                             {
-                                <div class="mascota-image-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Foto de @mascota.Nombre, @(mascota.Tipo ?? "mascota")" class="mascota-image" />
                             }
                             <span class="mascota-badge-disponible" aria-label="Mascota disponible para adopción">Disponible</span>
                         </div>

@@ -351,14 +351,14 @@
                     @if (Session["Nombre"] != null)
                     {
                         <a href="@Url.Action("Index", "Ciudadano")" aria-label="Pura Compañía - Plataforma de adopción de mascotas - Ir a página de inicio">
-                            <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía">
+                            <img src="@Url.Content("~/Content/images/logo.png")" alt="Logo de Pura Compañía">
                             <span>Pura Compañía</span>
                         </a>
                     }
                     else
                     {
                         <a href="@Url.Action("Landing", "Home")" aria-label="Pura Compañía - Plataforma de adopción de mascotas - Ir a página de inicio">
-                            <img src="https://via.placeholder.com/94x75/FAA88C/333?text=Logo" alt="Logo de Pura Compañía">
+                            <img src="@Url.Content("~/Content/images/logo.png")" alt="Logo de Pura Compañía">
                             <span>Pura Compañía</span>
                         </a>
                     }

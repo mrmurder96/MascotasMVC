@@ -128,15 +128,32 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(m => m.Cedula)
+            @Html.TextBoxFor(m => m.Cedula, new { @class = "form-control", placeholder = "Cédula", maxlength = "10" })
+            @Html.ValidationMessageFor(m => m.Cedula, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(m => m.Telefono)
-            @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono" })
+            @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono", maxlength = "15" })
             @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Direccion)
-            @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", placeholder = "Dirección" })
+            @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", placeholder = "Dirección", maxlength = "250" })
             @Html.ValidationMessageFor(m => m.Direccion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaNacimiento)
+            @{
+                var hoyM = DateTime.Today;
+                var maxFechaNacM = hoyM.AddYears(-18).ToString("yyyy-MM-dd");
+                var minFechaNacM = hoyM.AddYears(-70).ToString("yyyy-MM-dd");
+            }
+            @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", max = maxFechaNacM, min = minFechaNacM })
+            @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "text-danger" })
         </div>
 
         <button type="submit" class="btn-primary"><i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i> Guardar Cambios</button>

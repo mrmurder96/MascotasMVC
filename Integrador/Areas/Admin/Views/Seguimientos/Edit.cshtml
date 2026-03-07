@@ -47,14 +47,8 @@
                                 <div class="info-preview">
                                     @if (!string.IsNullOrEmpty(adopcion.Mascotas.FotoUrl))
                                     {
-                                        if (adopcion.Mascotas.FotoUrl.StartsWith("/") || adopcion.Mascotas.FotoUrl.StartsWith("~"))
-                                        {
-                                            <img src="@Url.Content(adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
-                                        }
+                                        var segEditSrc = adopcion.Mascotas.FotoUrl.StartsWith("~") ? Url.Content(adopcion.Mascotas.FotoUrl) : adopcion.Mascotas.FotoUrl.StartsWith("/") ? Url.Content("~" + adopcion.Mascotas.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl);
+                                        <img src="@segEditSrc" alt="@adopcion.Mascotas.Nombre" />
                                     }
                                     <div class="info-nombre">@adopcion.Mascotas.Nombre</div>
                                     <div class="info-tipo">@adopcion.Mascotas.Tipo @(!string.IsNullOrEmpty(adopcion.Mascotas.Raza) ? "- " + adopcion.Mascotas.Raza : "")</div>

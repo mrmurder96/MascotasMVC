@@ -84,14 +84,16 @@
                                     }
                                 </div>
                                 <div class="perdida-imagen">
-                                    @if (!string.IsNullOrEmpty(mascota.Imagen))
+                                    @if (!string.IsNullOrEmpty(mascota.FotoUrl))
                                     {
-                                        <img src="@Url.Content("~/Content/uploads/perdidas/" + mascota.Imagen)" 
-                                             alt="Foto de mascota @mascota.TipoReporte" />
+                                        var perdidaImgSrc = mascota.FotoUrl.StartsWith("~") ? Url.Content(mascota.FotoUrl) : mascota.FotoUrl.StartsWith("/") ? Url.Content("~" + mascota.FotoUrl) : Url.Content("~/Content/uploads/perdidas/" + mascota.FotoUrl);
+                                        <img src="@perdidaImgSrc" 
+                                             alt="Foto de mascota @mascota.TipoReporte" 
+                                             onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                                     }
                                     else
                                     {
-                                        <img src="@Url.Content("~/Content/images/no-image.png")" alt="Sin imagen" />
+                                        <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Sin imagen" />
                                     }
                                 </div>
                                 <div class="perdida-info">

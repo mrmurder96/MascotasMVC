@@ -135,7 +135,7 @@ namespace Integrador.Areas.Admin.Controllers
                     var filePath = Path.Combine(uploadsPath, fileName);
                     foto.SaveAs(filePath);
 
-                    reporte.FotoUrl = "/Content/uploads/perdidas/" + fileName;
+                    reporte.FotoUrl = "~/Content/uploads/perdidas/" + fileName;
                 }
 
                 reporte.FechaReporte = DateTime.Now;
@@ -242,7 +242,7 @@ namespace Integrador.Areas.Admin.Controllers
                         var filePath = Path.Combine(uploadsPath, fileName);
                         foto.SaveAs(filePath);
 
-                        reporte.FotoUrl = "/Content/uploads/perdidas/" + fileName;
+                        reporte.FotoUrl = "~/Content/uploads/perdidas/" + fileName;
                     }
                 }
 

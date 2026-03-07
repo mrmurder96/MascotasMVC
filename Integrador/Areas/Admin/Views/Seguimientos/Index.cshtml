@@ -113,20 +113,22 @@
                     <div class="seguimiento-card">
                         <!-- Cabecera con foto de mascota -->
                         <div class="seguimiento-header">
-                            @if (adopcion.Mascotas != null && !string.IsNullOrEmpty(adopcion.Mascotas.FotoUrl))
+                            @if (adopcion.Mascotas != null && string.Equals(adopcion.Mascotas.Raza, "Golden Retriever", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (adopcion.Mascotas.FotoUrl.StartsWith("/") || adopcion.Mascotas.FotoUrl.StartsWith("~"))
-                                {
-                                    <img src="@Url.Content(adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
-                                }
-                                else
-                                {
-                                    <img src="@Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl)" alt="@adopcion.Mascotas.Nombre" />
-                                }
+                                <img src="@Url.Content("~/Content/images/golden.webp")" alt="@adopcion.Mascotas.Nombre" />
+                            }
+                            else if (adopcion.Mascotas != null && string.Equals(adopcion.Mascotas.Raza, "Bulldog", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <img src="@Url.Content("~/Content/images/bulldog1.jpg")" alt="@adopcion.Mascotas.Nombre" />
+                            }
+                            else if (adopcion.Mascotas != null && !string.IsNullOrEmpty(adopcion.Mascotas.FotoUrl))
+                            {
+                                var segFotoSrc = adopcion.Mascotas.FotoUrl.StartsWith("~") ? Url.Content(adopcion.Mascotas.FotoUrl) : adopcion.Mascotas.FotoUrl.StartsWith("/") ? Url.Content("~" + adopcion.Mascotas.FotoUrl) : Url.Content("~/Content/uploads/mascotas/" + adopcion.Mascotas.FotoUrl);
+                                <img src="@segFotoSrc" alt="@adopcion.Mascotas.Nombre" />
                             }
                             else
                             {
-                                <img src="https://via.placeholder.com/300x150?text=🐾" alt="Sin imagen" />
+                                <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Sin imagen" />
                             }
                             <div class="estado-overlay">
                                 @if (adopcion.Estado == "Aprobada")

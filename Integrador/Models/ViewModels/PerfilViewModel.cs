@@ -1,5 +1,7 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
+using Integrador.Validations;
 
 namespace Integrador.Models.ViewModels
 {
@@ -18,19 +20,28 @@ namespace Integrador.Models.ViewModels
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "Ingrese email")]
-        [EmailAddress(ErrorMessage = "Email no v·lido")]
+        [EmailAddress(ErrorMessage = "Email no vùlido")]
         [StringLength(50, ErrorMessage = "El email no puede exceder 50 caracteres")]
-        [Display(Name = "Correo electrÛnico")]
+        [Display(Name = "Correo electrùnico")]
         public string Email { get; set; }
 
-        [StringLength(15, ErrorMessage = "El telÈfono no puede exceder 15 caracteres")]
-        [RegularExpression(@"^[\d\s\-\+\(\)]+$", ErrorMessage = "El telÈfono solo puede contener n˙meros, espacios, guiones y parÈntesis")]
-        [Display(Name = "TelÈfono")]
+        [StringLength(15, ErrorMessage = "El telùfono no puede exceder 15 caracteres")]
+        [RegularExpression(@"^[\d\s\-\+\(\)]+$", ErrorMessage = "El telùfono solo puede contener nùmeros, espacios, guiones y parùntesis")]
+        [Display(Name = "Telùfono")]
         public string Telefono { get; set; }
 
-        [StringLength(200, ErrorMessage = "La direcciÛn no puede exceder 200 caracteres")]
-        [Display(Name = "DirecciÛn")]
+        [StringLength(10, ErrorMessage = "La cùdula no puede exceder 10 caracteres")]
+        [Display(Name = "Cùdula")]
+        public string Cedula { get; set; }
+
+        [StringLength(250, ErrorMessage = "La direcciùn no puede exceder 250 caracteres")]
+        [Display(Name = "Direcciùn")]
         public string Direccion { get; set; }
+
+        [Display(Name = "Fecha de nacimiento")]
+        [DataType(DataType.Date)]
+        [EdadEntre(ErrorMessage = "Debe tener entre 18 y 70 aÒos. La fecha no puede ser hoy ni futura.")]
+        public DateTime? FechaNacimiento { get; set; }
 
         // Url a la imagen de perfil (puede ser /Account/ObtenerImagen?id=...)
         public string FotoPerfilRuta { get; set; }

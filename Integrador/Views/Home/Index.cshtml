@@ -6,7 +6,7 @@
 <style>
         /* Hero Section */
         .hero {
-            background: url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1920') center/cover;
+            background: url('@Url.Content("~/Content/images/hero.jpg")') center/cover no-repeat;
             height: 600px;
             display: flex;
             align-items: flex-start;
@@ -18,7 +18,7 @@
 
         .hero-content {
             position: absolute;
-            top: 50%;
+            top: 70%;
             left: 80px;
             transform: translateY(-50%);
             z-index: 10;
@@ -761,48 +761,48 @@
                         <h3 id="mascota-max">Max</h3>
                         <span class="mascota-tag" aria-label="Tipo: Perro">Perro</span>
                     </div>
-                    <div class="mascota-raza" aria-label="Raza: Golden Retriever">Golden Retriever</div>
+                    <div class="mascota-raza" aria-label="Raza: Pug">Pug</div>
                     <div class="mascota-edad" aria-label="Edad: 2 años">2 años</div>
                     <p class="mascota-descripcion">Amigable y juguetón, perfecto para familias</p>
-                    <div class="mascota-ubicacion" aria-label="Ubicación: Madrid"><span aria-hidden="true">📍</span> Madrid</div>
+                    <div class="mascota-ubicacion" aria-label="Ubicación: Guayaquil"><span aria-hidden="true">📍</span> Guayaquil</div>
                 </div>
                 <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Max">Ver más</a>
             </article>
 
             <article class="mascota-card" role="listitem" aria-labelledby="mascota-luna">
-                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=484&h=563&fit=crop" alt="Fotografía de Luna, una gata mestiza de pelo corto" class="mascota-image">
+                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=484&h=563&fit=crop" alt="Fotografía de Luna, una perra mestiza" class="mascota-image">
                 <button class="like-btn" aria-label="Agregar Luna a favoritos" data-mascota="Luna" onclick="toggleLike(this)">
                     <span aria-hidden="true">♡</span>
                 </button>
                 <div class="mascota-info">
                     <div class="mascota-header">
                         <h3 id="mascota-luna">Luna</h3>
-                        <span class="mascota-tag gato" aria-label="Tipo: Gato">Gato</span>
+                        <span class="mascota-tag" aria-label="Tipo: Perro">Perro</span>
                     </div>
                     <div class="mascota-raza" aria-label="Raza: Mestiza">Mestiza</div>
                     <div class="mascota-edad" aria-label="Edad: 1 año">1 año</div>
                     <p class="mascota-descripcion">Tranquila y cariñosa, ideal para apartamentos</p>
-                    <div class="mascota-ubicacion" aria-label="Ubicación: Barcelona"><span aria-hidden="true">📍</span> Barcelona</div>
+                    <div class="mascota-ubicacion" aria-label="Ubicación: Quito"><span aria-hidden="true">📍</span> Quito</div>
                 </div>
                 <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Luna">Ver más</a>
             </article>
 
-            <article class="mascota-card" role="listitem" aria-labelledby="mascota-rocky">
-                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=484&h=563&fit=crop" alt="Fotografía de Rocky, un perro Border Collie cachorro" class="mascota-image">
-                <button class="like-btn" aria-label="Agregar Rocky a favoritos" data-mascota="Rocky" onclick="toggleLike(this)">
+            <article class="mascota-card" role="listitem" aria-labelledby="mascota-manchitas">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=484&h=563&fit=crop" alt="Fotografía de Manchitas, un gato mestizo" class="mascota-image">
+                <button class="like-btn" aria-label="Agregar Manchitas a favoritos" data-mascota="Manchitas" onclick="toggleLike(this)">
                     <span aria-hidden="true">♡</span>
                 </button>
                 <div class="mascota-info">
                     <div class="mascota-header">
-                        <h3 id="mascota-rocky">Rocky</h3>
-                        <span class="mascota-tag perro-azul" aria-label="Tipo: Perro">Perro</span>
+                        <h3 id="mascota-manchitas">Manchitas</h3>
+                        <span class="mascota-tag gato" aria-label="Tipo: Gato">Gato</span>
                     </div>
-                    <div class="mascota-raza" aria-label="Raza: Border Collie">Border Collie</div>
+                    <div class="mascota-raza" aria-label="Raza: Mestizo">Mestizo</div>
                     <div class="mascota-edad" aria-label="Edad: 6 meses">6 meses</div>
                     <p class="mascota-descripcion">Enérgico y muy inteligente, busca familia activa</p>
-                    <div class="mascota-ubicacion" aria-label="Ubicación: Valencia"><span aria-hidden="true">📍</span> Valencia</div>
+                    <div class="mascota-ubicacion" aria-label="Ubicación: Quito"><span aria-hidden="true">📍</span> Quito</div>
                 </div>
-                <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Rocky">Ver más</a>
+                <a href="@Url.Action("Index", "Mascotas")" class="btn-ver-mas" aria-label="Ver más información sobre Manchitas">Ver más</a>
             </article>
         </div>
 

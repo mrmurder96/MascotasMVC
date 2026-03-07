@@ -39,25 +39,35 @@
         /* Botón Regresar */
         .btn-back {
             position: absolute;
-            top: -50px;
-            left: 0;
-            background: transparent;
-            border: none;
+            top: 24px;
+            left: 24px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(61, 40, 23, 0.15);
+            border-radius: 50%;
             color: #3D2817;
-            font-family: 'Nunito Sans', sans-serif;
-            font-weight: 900;
-            font-size: 16px;
+            font-size: 1.35rem;
+            font-weight: 800;
             cursor: pointer;
             text-decoration: none;
-            transition: opacity 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
             z-index: 100;
+            line-height: 1;
         }
 
         .btn-back:hover {
-            opacity: 0.7;
+            background: rgba(250, 140, 153, 0.35);
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-back:active {
+            transform: scale(0.98);
         }
 
         /* Panel de Confirmación */
@@ -251,8 +261,8 @@
             }
 
             .btn-back {
-                top: -40px;
-                left: 10px;
+                top: 20px;
+                left: 16px;
                 font-size: 15px;
             }
 
@@ -306,8 +316,8 @@
             }
 
             .btn-back {
-                top: -35px;
-                left: 10px;
+                top: 16px;
+                left: 16px;
                 font-size: 14px;
             }
 
@@ -371,9 +381,7 @@
 </head>
 <body>
     <div class="verify-container">
-        <a href="@Url.Action("Login", "Account")" class="btn-back" aria-label="Regresar al inicio de sesión">
-            ← Regresar
-        </a>
+        <a href="@Url.Action("Login", "Account")" class="btn-back" aria-label="Regresar al inicio de sesión" title="Regresar">←</a>
 
         <!-- Mensaje de Confirmación -->
         <div class="confirmation-message" role="status" aria-live="polite">

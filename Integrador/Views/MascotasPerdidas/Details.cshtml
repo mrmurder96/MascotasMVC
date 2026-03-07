@@ -32,11 +32,12 @@
                 <div class="detalle-imagen">
                     @if (!string.IsNullOrEmpty(Model.FotoUrl))
                     {
-                        <img src="@Model.FotoUrl" alt="Foto de @Model.Nombre, mascota @(Model.Encontrada ? "encontrada" : "perdida")" />
+                        var pubDetSrc = Model.FotoUrl.StartsWith("~") ? Url.Content(Model.FotoUrl) : Model.FotoUrl.StartsWith("/") ? Url.Content("~" + Model.FotoUrl) : Url.Content("~/Content/uploads/perdidas/" + Model.FotoUrl);
+                        <img src="@pubDetSrc" alt="Foto de @Model.Nombre, mascota @(Model.Encontrada ? "encontrada" : "perdida")" onerror="this.onerror=null; this.src='@Url.Content("~/Content/images/labrador.jpg")';" />
                     }
                     else
                     {
-                        <div class="imagen-placeholder" role="img" aria-label="Sin foto disponible"><span aria-hidden="true">🐾</span></div>
+                        <img src="@Url.Content("~/Content/images/labrador.jpg")" alt="Foto de @Model.Nombre" />
                     }
                 </div>
 
