@@ -858,12 +858,25 @@
         (function () {
             var path = window.location.pathname.toLowerCase();
             var items = document.querySelectorAll('.menu-item');
+
+            // Array para almacenar coincidencias con su longitud
+            var matches = [];
+
             items.forEach(function (item) {
                 var href = (item.getAttribute('href') || '').toLowerCase();
                 if (href && href !== '/' && path.indexOf(href) === 0) {
-                    item.classList.add('active');
+                    matches.push({
+                        item: item,
+                        length: href.length
+                    });
                 }
             });
+
+            // Activar solo el menú con la coincidencia más larga (más específica)
+            if (matches.length > 0) {
+                matches.sort(function(a, b) { return b.length - a.length; });
+                matches[0].item.classList.add('active');
+            }
         })();
 
         // Cargar contador de notificaciones para ciudadanos
