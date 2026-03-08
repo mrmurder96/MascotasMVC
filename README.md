@@ -1,4 +1,4 @@
-﻿# Pura Compañía - Sistema de Adopción de Mascotas
+# Pura Compañía - Sistema de Adopción de Mascotas
 
 Sistema web completo para la gestión de adopción de mascotas, desarrollado con ASP.NET MVC 5 y Entity Framework 6.
 
@@ -28,14 +28,3 @@ Sistema web completo para la gestión de adopción de mascotas, desarrollado con
 3. Configurar cadena de conexión en Web.config
 4. Restaurar paquetes NuGet
 5. Compilar y ejecutar (F5)
-
-## Credenciales
-
-Admin: admin@puracompania.com / Admin123!
-Ciudadano: ciudadano@ejemplo.com / Usuario123!
-
-## Autores
-
-- Ericka - Desarrolladora Principal
-- MrMurder - Desarrollador Backend
-
