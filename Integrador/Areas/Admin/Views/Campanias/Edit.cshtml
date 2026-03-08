@@ -18,62 +18,99 @@
             </h3>
         </div>
         <div class="card-body">
-            @using (Html.BeginForm("Edit", "Campanias", FormMethod.Post, new { aria_label = "Formulario para editar campaña" }))
+            @using (Html.BeginForm("Edit", "Campanias", FormMethod.Post, new { enctype = "multipart/form-data", aria_label = "Formulario para editar campaña" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.ImagenUrl)
                 @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert", aria_live = "polite", aria_atomic = "true" })
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Titulo, new { id = "titulo-label" })
-                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", required = "required", aria_required = "true", aria_describedby = "titulo-help" } })
+                    @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", required = "required", maxlength = "200", aria_required = "true", aria_describedby = "titulo-help" } })
                     <small id="titulo-help" class="form-text text-muted">Campo requerido. Máximo 200 caracteres</small>
                     @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Descripcion, new { id = "descripcion-label" })
-                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4, aria_describedby = "descripcion-help" })
-                    <small id="descripcion-help" class="form-text text-muted">Proporcione detalles sobre la campaña de adopción</small>
+                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4, maxlength = "1000", aria_describedby = "descripcion-help" })
+                    <small id="descripcion-help" class="form-text text-muted">Proporcione detalles sobre la campaña de adopción (máx. 1000 caracteres)</small>
                     @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger", role = "alert" })
                 </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.FechaInicio, new { id = "fecha-inicio-label" })
-                    @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date", required = "required", aria_required = "true", aria_describedby = "fecha-inicio-help" } })
-                    <small id="fecha-inicio-help" class="form-text text-muted">Fecha de inicio de la campaña</small>
-                    @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger", role = "alert" })
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FechaInicio, new { id = "fecha-inicio-label" })
+                            @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date", required = "required", aria_required = "true", aria_describedby = "fecha-inicio-help" } })
+                            <small id="fecha-inicio-help" class="form-text text-muted">Fecha de inicio de la campaña</small>
+                            @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger", role = "alert" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FechaFin, new { id = "fecha-fin-label" })
+                            @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date", aria_describedby = "fecha-fin-help" } })
+                            <small id="fecha-fin-help" class="form-text text-muted">Fecha de fin (debe ser posterior a la fecha de inicio)</small>
+                            @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger", role = "alert" })
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.FechaFin, new { id = "fecha-fin-label" })
-                    @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date", aria_describedby = "fecha-fin-help" } })
-                    <small id="fecha-fin-help" class="form-text text-muted">Fecha de fin (debe ser posterior a la fecha de inicio)</small>
-                    @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger", role = "alert" })
-                </div>
+                    <label class="control-label">Imagen de la Campaña</label>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ImagenUrl, new { id = "imagen-label" })
-                    @Html.EditorFor(model => model.ImagenUrl, new { htmlAttributes = new { @class = "form-control", aria_describedby = "imagen-help" } })
-                    <small id="imagen-help" class="form-text text-muted">URL de la imagen para la campaña</small>
-                    @Html.ValidationMessageFor(model => model.ImagenUrl, "", new { @class = "text-danger", role = "alert" })
+                    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                    {
+                        <div class="current-image-container" style="margin-bottom: 15px;">
+                            <label style="font-weight: 600; color: #555;">Imagen actual:</label>
+                            <div style="max-width: 300px; border: 2px solid #e0e4e8; border-radius: 8px; overflow: hidden; margin-top: 8px;">
+                                <img src="@Url.Content(Model.ImagenUrl)" alt="Imagen actual de la campaña" style="width: 100%; height: auto; display: block;" />
+                            </div>
+                            <small class="text-muted" style="margin-top: 8px; display: block;">
+                                <i class="glyphicon glyphicon-info-sign"></i> 
+                                Deje el campo vacío para mantener esta imagen
+                            </small>
+                        </div>
+                    }
+
+                    <div class="upload-container">
+                        <input type="file" name="ImagenFile" id="ImagenFile" class="form-control" accept="image/*" aria_describedby="imagen-help" />
+                        <small id="imagen-help" class="form-text text-muted">
+                            <i class="glyphicon glyphicon-info-sign"></i> 
+                            Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB
+                        </small>
+                    </div>
+
+                    <div id="preview-container" style="margin-top: 15px; display: none;">
+                        <label style="font-weight: 600; color: #555;">Nueva imagen:</label>
+                        <div style="max-width: 300px; border: 2px solid #8CFAA4; border-radius: 8px; overflow: hidden;">
+                            <img id="imagen-preview" src="#" alt="Vista previa" style="width: 100%; height: auto; display: block;" />
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <div class="checkbox">
-                        <label>
+                        <label style="font-size: 16px; font-weight: 600;">
                             @Html.CheckBoxFor(model => model.Activa, new { aria_describedby = "campana-activa-help" })
-                            Campaña activa
+                            <span style="margin-left: 8px;">Campaña activa</span>
                         </label>
                     </div>
-                    <small id="campana-activa-help" class="form-text text-muted">Si está marcado, la campaña estará visible</small>
+                    <small id="campana-activa-help" class="form-text text-muted">
+                        <i class="glyphicon glyphicon-info-sign"></i>
+                        Si está marcado, la campaña estará visible para los usuarios
+                    </small>
                 </div>
 
+                <hr style="margin: 25px 0; border-color: #e0e4e8;" />
+
                 <div class="form-group" role="group" aria-label="Acciones del formulario">
-                    <button type="submit" class="btn btn-warning" aria-label="Actualizar campaña">
-                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Actualizar
+                    <button type="submit" class="btn btn-warning btn-lg" aria-label="Actualizar campaña">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Actualizar Campaña
                     </button>
-                    <a href="@Url.Action("Index")" class="btn btn-default" aria-label="Cancelar y volver al listado">
+                    <a href="@Url.Action("Index")" class="btn btn-default btn-lg" aria-label="Cancelar y volver al listado">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
                     </a>
                 </div>
@@ -82,17 +119,44 @@
     </div>
 </div>
 
-<style>
-    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 20px; }
-    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
-    .card-header h4 { margin: 0; color: #000; }
-    .card-body { padding: 20px; }
-</style>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         $(document).ready(function () {
+            // Vista previa de imagen
+            $('#ImagenFile').on('change', function(e) {
+                var file = e.target.files[0];
+                if (file) {
+                    // Validar tamaño
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('La imagen no puede superar los 5 MB');
+                        $(this).val('');
+                        $('#preview-container').hide();
+                        return;
+                    }
+
+                    // Validar extensión
+                    var validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                    var fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (validExtensions.indexOf(fileExtension) === -1) {
+                        alert('Solo se permiten imágenes JPG, PNG o GIF');
+                        $(this).val('');
+                        $('#preview-container').hide();
+                        return;
+                    }
+
+                    // Mostrar vista previa
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#imagen-preview').attr('src', e.target.result);
+                        $('#preview-container').fadeIn();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#preview-container').hide();
+                }
+            });
+
             // Validación: FechaFin debe ser >= FechaInicio
             $('#FechaFin').on('change', function () {
                 var fechaInicio = $('#FechaInicio').val();
@@ -113,6 +177,107 @@
                     $('#FechaFin').val('');
                 }
             });
+
+            // Validación de caracteres restantes
+            $('#Titulo').on('input', function() {
+                var maxLength = 200;
+                var currentLength = $(this).val().length;
+                var remaining = maxLength - currentLength;
+
+                if (remaining < 0) {
+                    $(this).val($(this).val().substring(0, maxLength));
+                }
+            });
+
+            $('#Descripcion').on('input', function() {
+                var maxLength = 1000;
+                var currentLength = $(this).val().length;
+                var remaining = maxLength - currentLength;
+
+                if (remaining < 0) {
+                    $(this).val($(this).val().substring(0, maxLength));
+                }
+            });
         });
     </script>
 }
+
+<style>
+    .card { 
+        border: none; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+        border-radius: 12px; 
+        margin-bottom: 20px;
+        background: #fff;
+    }
+    .card-header { 
+        background: linear-gradient(135deg, #FAA88C, #FA8C99);
+        padding: 18px 24px; 
+        border-bottom: 1px solid #f07080; 
+        border-radius: 12px 12px 0 0; 
+    }
+    .card-header h3 { 
+        margin: 0; 
+        color: #000; 
+        font-weight: 700;
+    }
+    .card-body { 
+        padding: 30px; 
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #e0e4e8;
+        padding: 10px 14px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #FAA88C;
+        box-shadow: 0 0 0 3px rgba(250,168,140,0.15);
+    }
+
+    .upload-container {
+        padding: 15px;
+        background: #f8faf9;
+        border: 2px dashed #e0e4e8;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .upload-container:hover {
+        border-color: #FAA88C;
+        background: #fff5f2;
+    }
+
+    .current-image-container {
+        padding: 15px;
+        background: #f0faf4;
+        border-radius: 8px;
+        border: 2px solid #e8f5eb;
+    }
+
+    .text-muted {
+        color: #777;
+        font-size: 13px;
+        display: block;
+        margin-top: 6px;
+    }
+
+    .btn-lg {
+        padding: 12px 28px;
+        font-size: 15px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+    .checkbox label {
+        display: flex;
+        align-items: center;
+    }
+</style>
