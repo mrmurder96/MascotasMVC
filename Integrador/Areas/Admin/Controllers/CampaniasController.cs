@@ -147,10 +147,10 @@ namespace Integrador.Areas.Admin.Controllers
             {
                 try
                 {
-                    // Obtener la campaña existente para preservar la imagen anterior si no se sube una nueva
+                    // Obtener la campaña existente
                     var campaniaExistente = db.Campanias.AsNoTracking().FirstOrDefault(c => c.Id == campania.Id);
 
-                    // Procesar nueva imagen si se cargó
+                    // Si se subió una nueva imagen
                     if (ImagenFile != null && ImagenFile.ContentLength > 0)
                     {
                         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -168,14 +168,20 @@ namespace Integrador.Areas.Admin.Controllers
                             return View(campania);
                         }
 
-                        // Eliminar imagen anterior si existe y no es la por defecto
-                        if (campaniaExistente != null && !string.IsNullOrEmpty(campaniaExistente.ImagenUrl) && 
-                            !campaniaExistente.ImagenUrl.Contains("campania-default.png"))
+                        // Intentar eliminar la imagen anterior si existe en el servidor
+                        if (campaniaExistente != null && !string.IsNullOrEmpty(campaniaExistente.ImagenUrl))
                         {
-                            var oldImagePath = Server.MapPath(campaniaExistente.ImagenUrl);
-                            if (System.IO.File.Exists(oldImagePath))
+                            try
                             {
-                                System.IO.File.Delete(oldImagePath);
+                                var oldImagePath = Server.MapPath(campaniaExistente.ImagenUrl);
+                                if (System.IO.File.Exists(oldImagePath))
+                                {
+                                    System.IO.File.Delete(oldImagePath);
+                                }
+                            }
+                            catch
+                            {
+                                // Si no se puede eliminar (ej: URL externa), continuar
                             }
                         }
 
@@ -194,7 +200,7 @@ namespace Integrador.Areas.Admin.Controllers
                     }
                     else
                     {
-                        // Mantener la imagen existente si no se subió una nueva
+                        // Mantener la imagen existente
                         if (campaniaExistente != null)
                         {
                             campania.ImagenUrl = campaniaExistente.ImagenUrl;

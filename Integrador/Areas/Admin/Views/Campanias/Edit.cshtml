@@ -22,7 +22,6 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.Id)
-                @Html.HiddenFor(model => model.ImagenUrl)
                 @Html.ValidationSummary(true, "", new { @class = "text-danger", role = "alert", aria_live = "polite", aria_atomic = "true" })
 
                 <div class="form-group">
@@ -43,7 +42,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.FechaInicio, new { id = "fecha-inicio-label" })
-                            @Html.EditorFor(model => model.FechaInicio, new { htmlAttributes = new { @class = "form-control", type = "date", required = "required", aria_required = "true", aria_describedby = "fecha-inicio-help" } })
+                            @Html.TextBoxFor(model => model.FechaInicio, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required", aria_required = "true", aria_describedby = "fecha-inicio-help" })
                             <small id="fecha-inicio-help" class="form-text text-muted">Fecha de inicio de la campaña</small>
                             @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger", role = "alert" })
                         </div>
@@ -51,7 +50,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             @Html.LabelFor(model => model.FechaFin, new { id = "fecha-fin-label" })
-                            @Html.EditorFor(model => model.FechaFin, new { htmlAttributes = new { @class = "form-control", type = "date", aria_describedby = "fecha-fin-help" } })
+                            @Html.TextBoxFor(model => model.FechaFin, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", aria_describedby = "fecha-fin-help" })
                             <small id="fecha-fin-help" class="form-text text-muted">Fecha de fin (debe ser posterior a la fecha de inicio)</small>
                             @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger", role = "alert" })
                         </div>
@@ -66,11 +65,11 @@
                         <div class="current-image-container" style="margin-bottom: 15px;">
                             <label style="font-weight: 600; color: #555;">Imagen actual:</label>
                             <div style="max-width: 300px; border: 2px solid #e0e4e8; border-radius: 8px; overflow: hidden; margin-top: 8px;">
-                                <img src="@Url.Content(Model.ImagenUrl)" alt="Imagen actual de la campaña" style="width: 100%; height: auto; display: block;" />
+                                <img src="@Url.Content(Model.ImagenUrl)" alt="Imagen actual de la campaña" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.innerHTML='<div style=\'padding: 20px; text-align: center; background: #f8d7da; color: #721c24;\'><i class=\'glyphicon glyphicon-exclamation-sign\'></i> No se pudo cargar la imagen</div>';" />
                             </div>
                             <small class="text-muted" style="margin-top: 8px; display: block;">
                                 <i class="glyphicon glyphicon-info-sign"></i> 
-                                Deje el campo vacío para mantener esta imagen
+                                Puede subir una nueva imagen para reemplazar esta
                             </small>
                         </div>
                     }
