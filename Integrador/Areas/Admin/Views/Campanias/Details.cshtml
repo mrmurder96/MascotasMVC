@@ -12,25 +12,109 @@
             <h4><i class="glyphicon glyphicon-info-sign"></i> Información de la Campaña</h4>
         </div>
         <div class="card-body">
-            <dl class="dl-horizontal">
-                <dt>ID</dt><dd>@Model.Id</dd>
-                <dt>Título</dt><dd>@Model.Titulo</dd>
-                <dt>Descripción</dt><dd>@Model.Descripcion</dd>
-                <dt>Fecha Inicio</dt><dd>@Model.FechaInicio.ToString("dd/MM/yyyy")</dd>
-                <dt>Fecha Fin</dt><dd>@(Model.FechaFin.HasValue ? Model.FechaFin.Value.ToString("dd/MM/yyyy") : "-")</dd>
-                <dt>Imagen URL</dt><dd>@(Model.ImagenUrl ?? "-")</dd>
-                <dt>Estado</dt><dd>@(Model.Activa ? "Activa" : "Inactiva")</dd>
-            </dl>
+            <div class="row">
+                <div class="col-md-5">
+                    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                    {
+                        <div class="imagen-container" style="margin-bottom: 20px;">
+                            <img src="@Url.Content(Model.ImagenUrl)" 
+                                 alt="Imagen de la campaña @Model.Titulo" 
+                                 class="img-thumbnail" 
+                                 style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px;" 
+                                 onerror="this.parentElement.innerHTML='<div style=\'padding: 40px; text-align: center; background: #f8d7da; color: #721c24; border-radius: 8px;\'><i class=\'glyphicon glyphicon-exclamation-sign\' style=\'font-size: 48px;\'></i><p style=\'margin-top: 15px;\'>No se pudo cargar la imagen</p></div>';" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="height: 300px; background: #f5f5f5; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; border: 2px dashed #ddd;">
+                            <i class="glyphicon glyphicon-picture" style="font-size: 80px; color: #ccc;"></i>
+                            <p style="margin-top: 15px; color: #999;">Sin imagen</p>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-7">
+                    <dl class="dl-horizontal">
+                        <dt>ID</dt>
+                        <dd>@Model.Id</dd>
 
-            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-            <a href="@Url.Action("Index")" class="btn btn-default"><i class="glyphicon glyphicon-arrow-left"></i> Volver</a>
+                        <dt>Título</dt>
+                        <dd><strong>@Model.Titulo</strong></dd>
+
+                        <dt>Descripción</dt>
+                        <dd>@Model.Descripcion</dd>
+
+                        <dt>Fecha Inicio</dt>
+                        <dd>@Model.FechaInicio.ToString("dd/MM/yyyy")</dd>
+
+                        <dt>Fecha Fin</dt>
+                        <dd>@(Model.FechaFin.HasValue ? Model.FechaFin.Value.ToString("dd/MM/yyyy") : "Sin fecha límite")</dd>
+
+                        <dt>Estado</dt>
+                        <dd>
+                            @if (Model.Activa)
+                            {
+                                <span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Activa</span>
+                            }
+                            else
+                            {
+                                <span class="label label-default"><i class="glyphicon glyphicon-remove"></i> Inactiva</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <hr style="margin: 25px 0;" />
+
+            <div class="text-right">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning btn-lg">
+                    <i class="glyphicon glyphicon-edit"></i> Editar
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-default btn-lg">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Volver
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 20px; }
-    .card-header { background-color: #BBFA8C; padding: 15px 20px; border-bottom: 1px solid #93A597; border-radius: 8px 8px 0 0; }
-    .card-header h4 { margin: 0; color: #000; }
-    .card-body { padding: 20px; }
+    .card { 
+        border: none; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+        border-radius: 12px; 
+        margin-bottom: 20px;
+        background: #fff;
+    }
+    .card-header { 
+        background: linear-gradient(135deg, #BBFA8C, #8CFAA4);
+        padding: 18px 24px; 
+        border-bottom: 1px solid #93A597; 
+        border-radius: 12px 12px 0 0; 
+    }
+    .card-header h4 { 
+        margin: 0; 
+        color: #000;
+        font-weight: 700;
+    }
+    .card-body { 
+        padding: 30px; 
+    }
+
+    .dl-horizontal dt {
+        width: 140px;
+        font-weight: 700;
+        color: #555;
+    }
+
+    .dl-horizontal dd {
+        margin-left: 160px;
+        margin-bottom: 15px;
+    }
+
+    .imagen-container {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
 </style>

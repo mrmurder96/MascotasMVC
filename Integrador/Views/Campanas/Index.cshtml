@@ -32,9 +32,10 @@
                                     @if (!string.IsNullOrEmpty(camp.ImagenUrl))
                                     {
                                         <div style="height: 200px; overflow: hidden;">
-                                            <img src="@camp.ImagenUrl" 
+                                            <img src="@Url.Content(camp.ImagenUrl)" 
                                                  alt="Imagen de la campaña @camp.Titulo" 
-                                                 style="width: 100%; height: 100%; object-fit: cover;" />
+                                                 style="width: 100%; height: 100%; object-fit: cover;" 
+                                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'height: 200px; background: #f8d7da; display: flex; align-items: center; justify-content: center;\'><i class=\'glyphicon glyphicon-exclamation-sign\' style=\'font-size: 50px; color: #dc3545;\'></i></div>';" />
                                         </div>
                                     }
                                     else
